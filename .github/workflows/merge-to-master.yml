@@ -31,7 +31,6 @@ jobs:
       run: | 
           echo "current directory `pwd`"
           echo "all files: `ls -a`"
-          sfdx force:source:deploy -p force-app #### -l RunLocalTests
 
     # Authorize SF Org
     - name: Authorize SF Org
