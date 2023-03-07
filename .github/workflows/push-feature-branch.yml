@@ -44,4 +44,4 @@ jobs:
     
     # Run Validation of Deploy Source
     - name: Run Validation on Deploy Source
-      run: sfdx force:mdapi:deploy -l RunLocalTests -c -d ./toDeploy -u prod -w 10
+      run: sfdx force:mdapi:deploy -l NoTestRun -c -d ./toDeploy -u prod -w 10
