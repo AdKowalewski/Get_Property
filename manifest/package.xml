@@ -16,5 +16,9 @@
         <members>*</members>
         <name>CustomObject</name>
     </types>
-    <version>44.0</version>
+    <types>
+        <members>*</members>
+        <name>LightningComponentBundle</name>
+    </types> 
+    <version>57.0</version>
 </Package>
