@@ -49,16 +49,15 @@ public with sharing class ProductController {
         String jsonItem = '';
         name = String.isBlank(name) ? 'null' : '%' + name + '%';
         city = String.isBlank(city) ? 'null' : '%' + city + '%';
-        type = (String.isBlank(type) || type == 'All Types') ? '%' : '%' + type + '%';
+        type = String.isBlank(type) ? 'null' : ((type == 'All Types') ? '%' : '%' + type + '%');
         laundry = (laundry == null) ? false : laundry;
         balcony = (balcony == null) ? false : balcony;
         lk = (lk == null) ? false : lk;
         Integer offset = (pageNumber - 1) * pageSize;
-        Integer totalRecords;
-        totalRecords = [
+        Integer totalRecords = [
             SELECT COUNT() 
             FROM Product2
-            WHERE RecordType.Name = 'Apartments' AND (Name LIKE :name OR Product_Address__City__s LIKE :city OR Apartment_Type__c LIKE :type OR (Laundry__c = :laundry AND Balcony__c = :balcony AND Living_Room_with_Kitchen__c = :lk))
+            WHERE RecordType.Name = 'Apartments' AND (Name LIKE :name OR Product_Address__City__s LIKE :city OR (Apartment_Type__c LIKE :type OR (Laundry__c = :laundry AND Balcony__c = :balcony AND Living_Room_with_Kitchen__c = :lk)))
         ];
         Integer recordEnd = pageSize * pageNumber;
 
@@ -71,7 +70,7 @@ public with sharing class ProductController {
         wrapper.products = [
             SELECT Id, Name, Product_Address__City__s, Default_Image__c, DisplayUrl
             FROM Product2
-            WHERE RecordType.Name = 'Apartments' AND (Name LIKE :name OR Product_Address__City__s LIKE :city OR Apartment_Type__c LIKE :type OR (Laundry__c = :laundry AND Balcony__c = :balcony AND Living_Room_with_Kitchen__c = :lk))
+            WHERE RecordType.Name = 'Apartments' AND (Name LIKE :name OR Product_Address__City__s LIKE :city OR (Apartment_Type__c LIKE :type OR (Laundry__c = :laundry AND Balcony__c = :balcony AND Living_Room_with_Kitchen__c = :lk)))
             LIMIT :pageSize
             OFFSET :offset
         ];     
