@@ -17,7 +17,6 @@ public with sharing class FileController {
 
     @AuraEnabled
     public static void deleteFile(String recordId){
-        System.debug(recordId);
         ContentVersion contentVersion = [
             SELECT Id, ContentDocumentId
             FROM ContentVersion
@@ -29,7 +28,6 @@ public with sharing class FileController {
             FROM ContentDocument
             WHERE Id =:contentVersion.ContentDocumentId
         ];
-        System.debug(contentDocument);
         delete contentDocument;
     } 
 }
