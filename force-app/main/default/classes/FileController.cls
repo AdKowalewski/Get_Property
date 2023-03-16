@@ -17,23 +17,19 @@ public with sharing class FileController {
 
     @AuraEnabled
     public static void deleteFile(String recordId){
-        //try {
-            System.debug(recordId);
-            ContentVersion contentVersion = [
-                SELECT Id, ContentDocumentId
-                FROM ContentVersion
-                WHERE Id =:recordId
-                ORDER BY CreatedDate DESC
-		    ];
-            ContentDocument contentDocument = [
-                SELECT Id, Title
-                FROM ContentDocument
-                WHERE Id =:contentVersion.ContentDocumentId
-            ];
-            System.debug(contentDocument);
-            delete contentDocument;
-        //} catch (Exception e) {
-            //throw new AuraHandledException(e.getMessage());
-        //}
+        System.debug(recordId);
+        ContentVersion contentVersion = [
+            SELECT Id, ContentDocumentId
+            FROM ContentVersion
+            WHERE Id =:recordId
+            ORDER BY CreatedDate DESC
+        ];
+        ContentDocument contentDocument = [
+            SELECT Id, Title
+            FROM ContentDocument
+            WHERE Id =:contentVersion.ContentDocumentId
+        ];
+        System.debug(contentDocument);
+        delete contentDocument;
     } 
 }
