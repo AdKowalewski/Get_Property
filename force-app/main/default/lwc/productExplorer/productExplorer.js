@@ -5,6 +5,7 @@ import ID from '@salesforce/user/Id';
 import ROLE_NAME_FIELD from '@salesforce/schema/User.UserRole.Name';
 import getPremises from '@salesforce/apex/ProductController.getProductPremisesList';
 import getApartments from '@salesforce/apex/ProductController.getProductApartmentsList';
+import main_url from '@salesforce/label/c.main_url';
 
 export default class ProductExplorer extends LightningElement {
 
@@ -35,6 +36,10 @@ export default class ProductExplorer extends LightningElement {
     parking;
     elevator;
     kitchen;
+
+    label = {
+        main_url
+    };
 
     get apartmentTypes() {
         return [
@@ -237,6 +242,6 @@ export default class ProductExplorer extends LightningElement {
 
     selectProduct(event) {
         this.selectedProductId = event.detail.productId;
-        window.open('https://britenet-10a-dev-ed.develop.lightning.force.com/' + this.selectedProductId, '_blank').focus();
+        window.open(main_url + this.selectedProductId, '_blank').focus();
     }
 }
