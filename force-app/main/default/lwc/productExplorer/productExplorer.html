@@ -1,5 +1,6 @@
 <template>
     <lightning-layout title="Product Explorer" multiple-rows="true" class="slds-card">
+        <div class="slds-text-title" style="font-size: 18px; font-weight: bold; margin-left: 1%; margin-top: 1%; margin-bottom: 1%; width: 98%;">Product Explorer</div>
         <!-- search -->
         <lightning-layout-item size="12" style="margin-left: 1%; width: 98%;">            
             <template if:true={isApartments}>
@@ -67,6 +68,7 @@
                 <h2>No products found</h2>
             </template>
             <template if:true={productsDisplayed}>
+                <div class="slds-text-title" style="font-size: 15px; font-weight: bold; margin-top: 1%; margin-bottom: 1%; width: 98%;">Results</div>
                 <div class="slds-scrollable_y">
                     <lightning-layout horizontal-align="center" multiple-rows>
                         <template for:each={products} for:item="product">
