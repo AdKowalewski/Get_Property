@@ -1,11 +1,19 @@
 public with sharing class PriceBookController {
 
     public class PriceBookWrapper {
-
+        public String id { get; set; }
+        public String name { get; set; }
+        public Date startDate { get; set; }
+        public Date endDate { get; set; }
+        public String productType { get; set; }
+        public Boolean isActive { get; set; }
+        public Boolean isStandard { get; set; }
     }
 
     public class PriceBookEntryWrapper {
-        
+        public String productId { get; set; }
+        public String productName { get; set; }
+        public Double price { get; set; }
     }
     
     @AuraEnabled
