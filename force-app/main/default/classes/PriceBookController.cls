@@ -18,7 +18,7 @@ public with sharing class PriceBookController {
     
     @AuraEnabled
     public static String initPriceBooks() {
-        String json = '';
+        String jsonStr = '';
         List<Pricebook2> priceBooks = [
             SELECT Id, Name, Start_Date__c, End_Date__c, Product_Type__c, IsActive, isStandard
             FROM Pricebook2
@@ -35,13 +35,13 @@ public with sharing class PriceBookController {
             wrapper.isStandard = pb.isStandard;
             pbWrappers.add(wrapper);
         }
-        json = JSON.serialize(pbWrappers);
-        return json;
+        jsonStr = JSON.serialize(pbWrappers);
+        return jsonStr;
     }
 
     @AuraEnabled
     public static String searchPriceBooks(String name) {
-        String json = '';
+        String jsonStr = '';
         name = (String.isBlank(name)) ? '%' : '%' + name + '%';
         List<Pricebook2> priceBooks = [
             SELECT Id, Name, Start_Date__c, End_Date__c, Product_Type__c, IsActive, isStandard
@@ -60,8 +60,8 @@ public with sharing class PriceBookController {
             wrapper.isStandard = pb.isStandard;
             pbWrappers.add(wrapper);
         }
-        json = JSON.serialize(pbWrappers);
-        return json;
+        jsonStr = JSON.serialize(pbWrappers);
+        return jsonStr;
     }
 
     @AuraEnabled
