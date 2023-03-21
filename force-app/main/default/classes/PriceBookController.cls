@@ -25,7 +25,7 @@ public with sharing class PriceBookController {
         ];
         List<PriceBookWrapper> pbWrappers = new List<PriceBookWrapper>();
         for(Pricebook2 pb : priceBooks) {
-            PriceBookEntryWrapper wrapper = new PriceBookEntryWrapper();
+            PriceBookWrapper wrapper = new PriceBookWrapper();
             wrapper.id = pb.Id;
             wrapper.name = pb.Name;
             wrapper.startDate = pb.Start_Date__c;
@@ -50,7 +50,7 @@ public with sharing class PriceBookController {
         ];
         List<PriceBookWrapper> pbWrappers = new List<PriceBookWrapper>();
         for(Pricebook2 pb : priceBooks) {
-            PriceBookEntryWrapper wrapper = new PriceBookEntryWrapper();
+            PriceBookWrapper wrapper = new PriceBookWrapper();
             wrapper.id = pb.Id;
             wrapper.name = pb.Name;
             wrapper.startDate = pb.Start_Date__c;
