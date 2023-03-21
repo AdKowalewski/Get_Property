@@ -1,0 +1,23 @@
+<template>
+    <lightning-layout>
+        <lightning-layout-item size="4">
+            <div class="slds-card" style="margin-right: 2%;">
+                <c-price-book-list></c-price-book-list>
+            </div>
+        </lightning-layout-item>
+        <lightning-layout-item size="8">
+            <lightning-layout multiple-rows="true">
+                <lightning-layout-item size="12">
+                    <div class="slds-card" style="margin-bottom: 1%;">
+                        <c-price-book-details></c-price-book-details>
+                    </div>
+                </lightning-layout-item>
+                <lightning-layout-item size="12">
+                    <div class="slds-card">
+                        <c-product-list></c-product-list>
+                    </div>
+                </lightning-layout-item>
+            </lightning-layout>
+        </lightning-layout-item>
+    </lightning-layout>
+</template>
