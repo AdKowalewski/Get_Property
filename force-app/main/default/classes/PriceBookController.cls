@@ -13,17 +13,55 @@ public with sharing class PriceBookController {
     public class PriceBookEntryWrapper {
         public String productId { get; set; }
         public String productName { get; set; }
-        public Double price { get; set; }
+        public Decimal price { get; set; }
     }
     
     @AuraEnabled
     public static String initPriceBooks() {
-
+        String json = '';
+        List<Pricebook2> priceBooks = [
+            SELECT Id, Name, Start_Date__c, End_Date__c, Product_Type__c, IsActive, isStandard
+            FROM Pricebook2
+        ];
+        List<PriceBookWrapper> pbWrappers = new List<PriceBookWrapper>();
+        for(Pricebook2 pb : priceBooks) {
+            PriceBookEntryWrapper wrapper = new PriceBookEntryWrapper();
+            wrapper.id = pb.Id;
+            wrapper.name = pb.Name;
+            wrapper.startDate = pb.Start_Date__c;
+            wrapper.endDate = pb.End_Date__c;
+            wrapper.productType = pb.Product_Type__c;
+            wrapper.isActive = pb.IsActive;
+            wrapper.isStandard = pb.isStandard;
+            pbWrappers.add(wrapper);
+        }
+        json = JSON.serialize(pbWrappers);
+        return json;
     }
 
     @AuraEnabled
-    public static String searchPriceBooks() {
-        
+    public static String searchPriceBooks(String name) {
+        String json = '';
+        name = (String.isBlank(name)) ? '%' : '%' + name + '%';
+        List<Pricebook2> priceBooks = [
+            SELECT Id, Name, Start_Date__c, End_Date__c, Product_Type__c, IsActive, isStandard
+            FROM Pricebook2
+            WHERE Name = :name
+        ];
+        List<PriceBookWrapper> pbWrappers = new List<PriceBookWrapper>();
+        for(Pricebook2 pb : priceBooks) {
+            PriceBookEntryWrapper wrapper = new PriceBookEntryWrapper();
+            wrapper.id = pb.Id;
+            wrapper.name = pb.Name;
+            wrapper.startDate = pb.Start_Date__c;
+            wrapper.endDate = pb.End_Date__c;
+            wrapper.productType = pb.Product_Type__c;
+            wrapper.isActive = pb.IsActive;
+            wrapper.isStandard = pb.isStandard;
+            pbWrappers.add(wrapper);
+        }
+        json = JSON.serialize(pbWrappers);
+        return json;
     }
 
     @AuraEnabled
