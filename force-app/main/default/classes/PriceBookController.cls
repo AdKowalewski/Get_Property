@@ -65,27 +65,27 @@ public with sharing class PriceBookController {
     }
 
     @AuraEnabled
-    public static String getEntriesFromPriceBook() {
+    public static void getEntriesFromPriceBook() {
+
+    }
+
+    @AuraEnabled
+    public static void createPriceBook() {
         
     }
 
     @AuraEnabled
-    public static String createPriceBook() {
+    public static void updatePriceBook() {
         
     }
 
     @AuraEnabled
-    public static String updatePriceBook() {
+    public static void createEntry() {
         
     }
 
     @AuraEnabled
-    public static String createEntry() {
-        
-    }
-
-    @AuraEnabled
-    public static String updateEntry() {
+    public static void updateEntry() {
         
     }
 }
