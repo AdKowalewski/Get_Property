@@ -1,8 +1,8 @@
 <template>
     <lightning-layout title="Product Explorer" multiple-rows="true" class="slds-card">
-        <div class="slds-text-title" style="font-size: 18px; font-weight: bold; margin-left: 1%; margin-top: 1%; margin-bottom: 1%; width: 98%;">Product Explorer</div>
+        <div class="slds-text-title" style="font-size: 18px; font-weight: bold; margin-left: 1%; margin-top: 1%; margin-bottom: 1%; width: 99%;">Product Explorer</div>
         <!-- search -->
-        <lightning-layout-item size="12" style="margin-left: 1%; width: 98%;">            
+        <lightning-layout-item size="12" style="margin-left: 30%; width: 40%;">            
             <template if:true={isApartments}>
                 <lightning-layout horizontal-align="middle" multiple-rows="true">
                     <lightning-layout-item size="12">
@@ -26,7 +26,7 @@
                         <lightning-input type="checkbox" name="balcony" label="Balcony" value={balcony} onchange={handleBalconyChange}></lightning-input>
                     </lightning-layout-item>
                     <lightning-layout-item size="4">
-                        <lightning-input type="checkbox" name="livingRoomKitchen" label="LivingRoomKitchen" value={livingRoomKitchen} onchange={handleLivingRoomKitchenChange}></lightning-input>
+                        <lightning-input type="checkbox" name="livingRoomKitchen" label="Living Room with the Kitchen" value={livingRoomKitchen} onchange={handleLivingRoomKitchenChange}></lightning-input>
                     </lightning-layout-item>
                 </lightning-layout> 
             </template>
@@ -63,12 +63,12 @@
         </template>
 
         <!-- results -->
-        <lightning-layout-item size="12" style="margin-left: 1%; width: 98%;">
+        <lightning-layout-item size="12" style="margin-left: 1%; width: 99%;">
             <template if:true={noProducts}>
                 <h2>No products found</h2>
             </template>
             <template if:true={productsDisplayed}>
-                <div class="slds-text-title" style="font-size: 15px; font-weight: bold; margin-top: 1%; margin-bottom: 1%; width: 98%;">Results</div>
+                <div class="slds-text-title" style="font-size: 15px; font-weight: bold; margin-top: 1%; margin-bottom: 1%;">Results</div>
                 <div class="slds-scrollable_y">
                     <lightning-layout horizontal-align="center" multiple-rows>
                         <template for:each={products} for:item="product">
@@ -82,7 +82,7 @@
         </lightning-layout-item>
 
         <!-- pagination -->
-        <lightning-layout-item size="12" style="margin-left: 1%; width: 98%;">
+        <lightning-layout-item size="12" style="margin-left: 35%; width: 31%;">
             <div class="slds-var-m-vertical_medium">
                 <template if:true={productsDisplayed}>
                     <lightning-layout>

@@ -10,4 +10,15 @@
 .tile-wrapper {
     cursor: pointer;
     padding: 5px;
+    border-radius: 5px;
+    border: lightslategray solid 1px;
+}
+
+.tile-wrapper:hover {
+    background-color: lightgrey;
+}
+
+.lower-third {
+    margin-top: 10px;
+    border-top: lightslategray solid 1px;
 }
