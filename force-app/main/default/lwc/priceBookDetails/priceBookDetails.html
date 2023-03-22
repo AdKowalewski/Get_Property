@@ -1,3 +1,68 @@
 <template>
-    price book details
+    <lightning-layout multiple-rows="true" style="margin-left: 1%; margin-right: 1%;">
+        <lightning-layout-item size="12" style="margin-bottom: 1%;">
+            <div class="slds-text-title" style="font-size: 20px; font-weight: bold; margin-top: 1%; margin-bottom: 1%;">Price Book Details</div>
+        </lightning-layout-item>
+        <lightning-layout-item size="12">
+            <div class="slds-text-title" style="font-size: 15px; font-weight: bold; margin-top: 1%;">Name: {currentName}</div>
+        </lightning-layout-item>
+        <lightning-layout-item size="12">
+            <div class="slds-text-title" style="font-size: 15px; font-weight: bold; margin-top: 1%;">Type: {currentProdType}</div>
+        </lightning-layout-item>
+        <lightning-layout-item size="12" style="margin-bottom: 1%;">
+            <div class="slds-text-title" style="font-size: 15px; font-weight: bold; margin-top: 1%;">Is active from {currentStartDate} to {currentEndDate}</div>
+        </lightning-layout-item>
+        <lightning-layout-item size="12" style="margin-bottom: 1%;">
+            <div class="slds-text-title" style="font-size: 15px; font-weight: bold; margin-top: 1%; margin-bottom: 1%;">Status: {currentIsActive}</div>
+        </lightning-layout-item>
+        <lightning-layout-item size="12" style="margin-bottom: 1%;">
+            <lightning-button variant="brand" label="Edit" class="search-button" onclick={displayEditModal}></lightning-button>
+            <lightning-button variant="destructive-text" label="Deactivate" class="search-button" onclick={handleDeactivation} disabled={currentIsActive}></lightning-button>
+        </lightning-layout-item>
+    </lightning-layout>
+
+    <template if:true={showEditModal}>
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    <lightning-button-icon icon-name="utility:close"
+                                          onclick={handleCancel}
+                                          variant="bare-inverse"
+                                          class="slds-modal__close"></lightning-button-icon>
+                    <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Edit Price Book</h2>
+                </header>
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                    <form class="slds-form_stacked">
+                        <lightning-input 
+                            label="Name"
+                            data-recid="Name"
+                            value={currentName}
+                            onchange={handleEditPricebookNameChange}
+                            required="true"></lightning-input>
+                        <lightning-input
+                            type="date" 
+                            label="Start Date"
+                            data-recid="Start Date"
+                            value={currentStartDate}
+                            onchange={handleEditPricebookStartDateChange}></lightning-input>
+                        <lightning-input
+                            type="date" 
+                            label="End Date"
+                            data-recid="End Date"
+                            value={currentEndDate}
+                            onchange={handleEditPricebookEndDateChange}></lightning-input>
+                    </form>
+                </div>
+                <footer class="slds-modal__footer">
+                    <lightning-button variant="brand"
+                                      label="Save"
+                                      onclick={handleEdit}></lightning-button>
+                    <lightning-button variant="neutral"
+                                      label="Cancel"
+                                      onclick={handleCancel}></lightning-button>
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
 </template>

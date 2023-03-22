@@ -1,13 +1,80 @@
 <template>
-    <lightning-layout multiple-rows="true">
-        <lightning-layout-item>
-            <lightning-input></lightning-input>
+    <lightning-layout multiple-rows="true" style="margin-left: 1%; margin-right: 1%;">
+        <lightning-layout-item size="12" style="margin-bottom: 1%;">
+            <div class="slds-text-title" style="font-size: 20px; font-weight: bold; margin-top: 1%; margin-bottom: 1%;">Search Price Books</div>
+            <lightning-input type="text" value={pricebookSearch} onchange={handleSearchPricebooks}></lightning-input>
         </lightning-layout-item>
-        <lightning-layout-item>
-            <lightning-button>+ Add</lightning-button>
+        <lightning-layout-item size="12" style="margin-bottom: 1%;">
+            <div class="slds-text-title" style="font-size: 20px; font-weight: bold; margin-top: 1%; margin-bottom: 1%;">List of Price Books</div>
+            <lightning-button variant="brand" label="+ Add" class="search-button" onclick={displayCreateModal}></lightning-button>
         </lightning-layout-item>
-        <lightning-layout-item>
-            price book list
+        <lightning-layout-item size="12" style="margin-bottom: 1%;">
+            <template for:each={pricebooks} for:item="pricebook">
+                <div 
+                    key={pricebook.id} 
+                    data-record-id={pricebook.id}
+                    data-name={pricebook.name}
+                    data-prod-type={pricebook.productType}
+                    data-start-date={pricebook.startDate}
+                    data-end-date={pricebook.endDate}
+                    data-is-active={pricebook.isActive}
+                    onclick={handleSelectPricebook} 
+                    style="border: grey solid 1px; padding: 1%; border-radius: 3px;" 
+                    class="pricebookContainer">
+                    {pricebook.name}
+                </div>
+            </template>
         </lightning-layout-item>
     </lightning-layout>
+
+    <template if:true={showCreateModal}>
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    <lightning-button-icon icon-name="utility:close"
+                                          onclick={handleCancel}
+                                          variant="bare-inverse"
+                                          class="slds-modal__close"></lightning-button-icon>
+                    <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Add Price Book</h2>
+                </header>
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                    <form class="slds-form_stacked">
+                        <lightning-input 
+                            label="Name"
+                            data-recid="Name"
+                            value={newPricebookName}
+                            onchange={handleNewPricebookNameChange}
+                            required="true"></lightning-input>
+                        <lightning-input
+                            type="date" 
+                            label="Start Date"
+                            data-recid="Start Date"
+                            value={newPricebookStartDate}
+                            onchange={handleNewPricebookStartDateChange}></lightning-input>
+                        <lightning-input
+                            type="date" 
+                            label="End Date"
+                            data-recid="End Date"
+                            value={newPricebookEndDate}
+                            onchange={handleNewPricebookEndDateChange}></lightning-input>
+                        <lightning-combobox
+                            name="product_type"
+                            label="Product Type"
+                            value={newPricebookProductType}
+                            options={productTypes}
+                            onchange={handleNewPricebookProductTypeChange}></lightning-combobox>
+                    </form>
+                </div>
+                <footer class="slds-modal__footer">
+                    <lightning-button variant="brand"
+                                      label="Save"
+                                      onclick={handleInsert}></lightning-button>
+                    <lightning-button variant="neutral"
+                                      label="Cancel"
+                                      onclick={handleCancel}></lightning-button>
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
 </template>
