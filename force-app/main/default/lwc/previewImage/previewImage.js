@@ -23,6 +23,12 @@ export default class PreviewImage extends LightningElement {
         console.log('currentRecordId: ' + currentRecordId);
         if(selectedVal === "delete") {
             await fileDelete({recordId: currentRecordId});
+            await updateRecord({
+                fields: {
+                    [PRODUCT2_ID_FIELD.fieldApiName]: this.recordId,
+                    [DEFAULT_IMAGE_URL.fieldApiName]: null
+                }
+            });
             this.dispatchEvent(new CustomEvent('deletefile'));
             this.dispatchEvent(
                 new ShowToastEvent({
