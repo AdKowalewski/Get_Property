@@ -83,6 +83,27 @@ export default class PriceBookList extends LightningElement {
         this.newPricebookProductType = event.target.value;
     }
 
+    @api
+    fetchPricebooks() {
+        pricebooksInit()
+            .then(data => {
+                this.pricebooks = JSON.parse(data);
+            })
+            .catch(error => {
+                this.error = error;
+                this.dispatchEvent(
+                    new ShowToastEvent({
+                        title: 'Error',
+                        message: this.error,
+                        variant: 'error'
+                    })
+                );
+            });
+        this.dispatchEvent(
+            new CustomEvent('refreshpricebook')
+        );
+    }
+
     handleInsert() {
         pricebookCreate({
             name: this.newPricebookName, 
@@ -90,33 +111,44 @@ export default class PriceBookList extends LightningElement {
             endDate: this.newPricebookEndDate, 
             productType: this.newPricebookProductType})
             .then(result => {
-                this.pricebookSearch = '';
-                this.showCreateModal = false;
-                pricebooksInit()
-                    .then(data => {
-                        this.pricebooks = JSON.parse(data);
-                    })
-                    .catch(error => {
-                        this.error = error;
-                        this.dispatchEvent(
-                            new ShowToastEvent({
-                                title: 'Error',
-                                message: this.error,
-                                variant: 'error'
-                            })
-                        );
-                    });
-                this.dispatchEvent(
-                    new ShowToastEvent({
-                        title: 'Success',
-                        message: 'Price Book ' + this.newPricebookName + ' created successfully',
-                        variant: 'success'
-                    })
-                );
-                this.newPricebookName = '';
-                this.newPricebookStartDate = null;
-                this.newPricebookEndDate = null;
-                this.newPricebookProductType = null;
+                let data = JSON.parse(result);
+                if(data.message == '') {
+                    this.pricebookSearch = '';
+                    this.showCreateModal = false;
+                    pricebooksInit()
+                        .then(data => {
+                            this.pricebooks = JSON.parse(data);
+                        })
+                        .catch(error => {
+                            this.error = error;
+                            this.dispatchEvent(
+                                new ShowToastEvent({
+                                    title: 'Error',
+                                    message: this.error,
+                                    variant: 'error'
+                                })
+                            );
+                        });
+                    this.dispatchEvent(
+                        new ShowToastEvent({
+                            title: 'Success',
+                            message: 'Price Book ' + this.newPricebookName + ' created successfully',
+                            variant: 'success'
+                        })
+                    );
+                    this.newPricebookName = '';
+                    this.newPricebookStartDate = null;
+                    this.newPricebookEndDate = null;
+                    this.newPricebookProductType = null;
+                } else if(data.message != '') {
+                    this.dispatchEvent(
+                        new ShowToastEvent({
+                            title: 'Error',
+                            message: data.message,
+                            variant: 'error'
+                        })
+                    );
+                }             
             })
             .catch(error => {
                 this.error = error;

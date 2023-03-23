@@ -16,5 +16,11 @@ export default class PriceBookManager extends LightningElement {
         this.selectedStartDate = event.detail.startDate;
         this.selectedEndDate = event.detail.endDate;
         this.selectedIsActive = event.detail.isActive;
+        this.template.querySelector('c-product-list').getPBEntries();
+        this.template.querySelector('c-product-list').getNewProducts();
+    }
+
+    handlePBEdit() {
+        this.template.querySelector('c-price-book-list').fetchPricebooks();
     }
 }

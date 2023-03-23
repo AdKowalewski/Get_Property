@@ -4,7 +4,7 @@
             <lightning-layout multiple-rows="true">
                 <lightning-layout-item size="12">
                     <div class="slds-card" style="margin-right: 2%;">
-                        <c-price-book-list onpricebookselect={handlePricebookSelect}></c-price-book-list>
+                        <c-price-book-list onpricebookselect={handlePricebookSelect} onrefreshpricebook={handlePricebookSelect}></c-price-book-list>
                     </div>
                 </lightning-layout-item>
             </lightning-layout>
@@ -25,7 +25,7 @@
                 </lightning-layout-item>
                 <lightning-layout-item size="12">
                     <div class="slds-card">
-                        <c-product-list></c-product-list>
+                        <c-product-list current-pricebook-id={selectedId} current-pricebook-type={selectedProdType}></c-product-list>
                     </div>
                 </lightning-layout-item>
             </lightning-layout>

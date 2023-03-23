@@ -1,3 +1,172 @@
 <template>
-    product list
+    <div class="slds-text-title" style="font-size: 20px; font-weight: bold; margin-left: 1%; margin-right: 1%; margin-top: 1%;">Price Book Entries</div>
+    <lightning-layout multiple-rows="true" style="margin-left: 1%; margin-right: 1%;">
+        <lightning-layout-item size="12" style="margin-bottom: 1%;">
+            <lightning-input type="text" placeholder="Search Products" value={productSearch} onchange={handleSearchProducts}></lightning-input>
+        </lightning-layout-item>
+        <lightning-layout-item size="12" style="margin-bottom: 1%;">
+            <lightning-button-group>
+                <lightning-button variant="brand" label="+ Add Product" class="search-button" onclick={displayModal}></lightning-button>
+                <lightning-button variant="neutral" label="Update all" class="search-button" onclick={displayAllModal} disabled={updateAllDisabled}></lightning-button>
+            </lightning-button-group>
+        </lightning-layout-item>
+    </lightning-layout>
+    <template if:false={displayTable}>
+        <h2 style="margin-left: 1%; margin-bottom: 1%;">No products yet</h2>
+    </template>
+    <template if:true={displayTable}>
+        <table class="slds-table slds-table_cell-buffer slds-table_bordered" style="margin-left: 1%; margin-right: 1%; width: 98%; margin-bottom: 1%;">
+            <tr>
+                <th><b>Actions</b></th>
+                <th><b>Name</b></th>
+                <th><b>Price</b></th>
+                <th><b>Discount</b></th>
+                <th><b>Discount Type</b></th>
+            </tr>
+            <template for:each={products} for:item="product">
+                <tr key={product.id} data-product-id={product.id}>
+                    <td data-product-id={product.id} data-discount={product.discount} data-discount-type={product.discountType}>
+                        <lightning-button 
+                            variant="neutral" 
+                            label="Update" 
+                            class="search-button" 
+                            onclick={displaySingleModal} 
+                            data-product-id={product.id} 
+                            data-discount={product.discount} 
+                            data-discount-type={product.discountType}
+                            data-price={product.price}></lightning-button>
+                    </td>
+                    <td class="point" data-product-id={product.productId} onclick={goToProduct}>{product.productName}</td>
+                    <td>{product.price}</td>
+                    <td>{product.discount}</td>
+                    <td>{product.discountType}</td>
+                </tr>
+            </template>
+        </table>
+    </template>
+
+    <template if:true={showModal}>
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    <lightning-button-icon icon-name="utility:close"
+                                          onclick={handleCancel}
+                                          variant="bare-inverse"
+                                          class="slds-modal__close"></lightning-button-icon>
+                    <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Add Product</h2>
+                </header>
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                    <form class="slds-form_stacked">
+                        <lightning-combobox
+                            name="product_name"
+                            label="Product Name"
+                            value={newProductName}
+                            options={newProductNames}
+                            onchange={handleNewProductNameChange}></lightning-combobox>
+                        <lightning-input
+                            type="number" 
+                            label="Price"
+                            data-recid="Price"
+                            value={newProductPrice}
+                            step=".01"
+                            onchange={handleNewProductPriceChange}></lightning-input>
+                    </form>
+                </div>
+                <footer class="slds-modal__footer">
+                    <lightning-button variant="brand"
+                                      label="Save"
+                                      onclick={handleAddProduct}></lightning-button>
+                    <lightning-button variant="neutral"
+                                      label="Cancel"
+                                      onclick={handleCancel}></lightning-button>
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
+
+    <template if:true={showSingleModal}>
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    <lightning-button-icon icon-name="utility:close"
+                                          onclick={handleCancel}
+                                          variant="bare-inverse"
+                                          class="slds-modal__close"></lightning-button-icon>
+                    <h2 id="modal-heading-02" class="slds-text-heading_medium slds-hyphenate">Edit Price Book Entry</h2>
+                </header>
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-2">
+                    <form class="slds-form_stacked">
+                        <lightning-input
+                            type="number" 
+                            label="Price"
+                            data-recid="Price"
+                            value={currentPrice}
+                            step=".01"
+                            onchange={handleCurrentPriceChange}></lightning-input>
+                        <lightning-combobox
+                            label="Discount Type"
+                            value={currentDiscountType}
+                            options={discountTypes}
+                            onchange={handleCurrentDiscountTypeChange}></lightning-combobox>
+                        <lightning-input
+                            type="number" 
+                            label="Discount"
+                            data-recid="Discount"
+                            value={currentDiscount}
+                            step=".01"
+                            onchange={handleCurrentDiscountChange}></lightning-input>
+                    </form>
+                </div>
+                <footer class="slds-modal__footer">
+                    <lightning-button variant="brand"
+                                      label="Save"
+                                      onclick={handleSingleEdit}></lightning-button>
+                    <lightning-button variant="neutral"
+                                      label="Cancel"
+                                      onclick={handleCancel}></lightning-button>
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
+
+    <template if:true={showAllModal}>
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    <lightning-button-icon icon-name="utility:close"
+                                          onclick={handleCancel}
+                                          variant="bare-inverse"
+                                          class="slds-modal__close"></lightning-button-icon>
+                    <h2 id="modal-heading-03" class="slds-text-heading_medium slds-hyphenate">Edit All Price Book Entries</h2>
+                </header>
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-3">
+                    <form class="slds-form_stacked">
+                        <lightning-combobox
+                            label="Discount Type"
+                            value={allDiscountType}
+                            options={discountTypes}
+                            onchange={handleAllDiscountTypeChange}></lightning-combobox>
+                        <lightning-input
+                            type="number" 
+                            label="Discount"
+                            data-recid="Discount"
+                            value={allDiscount}
+                            step=".01"
+                            onchange={handleAllDiscountChange}></lightning-input>
+                    </form>
+                </div>
+                <footer class="slds-modal__footer">
+                    <lightning-button variant="brand"
+                                      label="Save"
+                                      onclick={handleAllEdit}></lightning-button>
+                    <lightning-button variant="neutral"
+                                      label="Cancel"
+                                      onclick={handleCancel}></lightning-button>
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
 </template>

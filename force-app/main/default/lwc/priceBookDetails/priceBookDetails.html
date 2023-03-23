@@ -9,15 +9,17 @@
         <lightning-layout-item size="12">
             <div class="slds-text-title" style="font-size: 15px; font-weight: bold; margin-top: 1%;">Type: {currentProdType}</div>
         </lightning-layout-item>
-        <lightning-layout-item size="12" style="margin-bottom: 1%;">
-            <div class="slds-text-title" style="font-size: 15px; font-weight: bold; margin-top: 1%;">Is active from {currentStartDate} to {currentEndDate}</div>
+        <lightning-layout-item size="12">
+            <div class="slds-text-title" style="font-size: 15px; font-weight: bold; margin-top: 1%;">Date range from {currentStartDate} to {currentEndDate}</div>
         </lightning-layout-item>
         <lightning-layout-item size="12" style="margin-bottom: 1%;">
-            <div class="slds-text-title" style="font-size: 15px; font-weight: bold; margin-top: 1%; margin-bottom: 1%;">Status: {currentIsActive}</div>
+            <div class="slds-text-title" style="font-size: 15px; font-weight: bold; margin-top: 1%; margin-bottom: 1%;">Is Active: {currentIsActive}</div>
         </lightning-layout-item>
         <lightning-layout-item size="12" style="margin-bottom: 1%;">
-            <lightning-button variant="brand" label="Edit" class="search-button" onclick={displayEditModal}></lightning-button>
-            <lightning-button variant="destructive-text" label="Deactivate" class="search-button" onclick={handleDeactivation} disabled={currentIsActive}></lightning-button>
+            <lightning-button-group>
+                <lightning-button variant="brand" label="Edit" class="search-button" onclick={displayEditModal}></lightning-button>
+                <lightning-button variant="destructive-text" label="Deactivate" class="search-button" onclick={handleDeactivation} disabled={currentIsActive}></lightning-button>
+            </lightning-button-group>
         </lightning-layout-item>
     </lightning-layout>
 
@@ -36,20 +38,20 @@
                         <lightning-input 
                             label="Name"
                             data-recid="Name"
-                            value={currentName}
+                            value={currentNameEdit}
                             onchange={handleEditPricebookNameChange}
                             required="true"></lightning-input>
                         <lightning-input
                             type="date" 
                             label="Start Date"
                             data-recid="Start Date"
-                            value={currentStartDate}
+                            value={currentStartDateEdit}
                             onchange={handleEditPricebookStartDateChange}></lightning-input>
                         <lightning-input
                             type="date" 
                             label="End Date"
                             data-recid="End Date"
-                            value={currentEndDate}
+                            value={currentEndDateEdit}
                             onchange={handleEditPricebookEndDateChange}></lightning-input>
                     </form>
                 </div>

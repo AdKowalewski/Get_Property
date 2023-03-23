@@ -18,6 +18,16 @@ public with sharing class PriceBookController {
         public String pricebookName { get; set; }
         public Decimal price { get; set; }
         public Decimal discount { get; set; }
+        public String discountType { get; set; }
+    }
+
+    public class ProductWrapper {
+        public String id { get; set; }
+        public String name { get; set; }
+    }
+
+    public class ResponseWrapper {
+        public String message { get; set; }
     }
     
     @AuraEnabled
@@ -112,7 +122,7 @@ public with sharing class PriceBookController {
     public static String getStandardPricebookEntries() {
         String jsonStr = '';
         List<PricebookEntry> entries = [
-            SELECT Id, Product2.Id, Product2.Name, Pricebook2.Id, Pricebook2.Name, UnitPrice, Discount__c
+            SELECT Id, Product2.Id, Product2.Name, Pricebook2.Id, Pricebook2.Name, UnitPrice, Discount__c, Discount_Type__c
             FROM PricebookEntry 
             WHERE Pricebook2.Name = 'Standard Price Book'
         ];
@@ -126,6 +136,7 @@ public with sharing class PriceBookController {
             wrapper.pricebookName = entry.Pricebook2.Name;
             wrapper.price = entry.UnitPrice;
             wrapper.discount = entry.Discount__c;
+            wrapper.discountType = entry.Discount_Type__c;
             eWrappers.add(wrapper);
         }
         jsonStr = JSON.serialize(eWrappers);
@@ -136,7 +147,7 @@ public with sharing class PriceBookController {
     public static String getEntriesFromPriceBook(String id) {
         String jsonStr = '';
         List<PricebookEntry> entries = [
-            SELECT Id, Product2.Id, Product2.Name, Pricebook2.Id, Pricebook2.Name, UnitPrice, Discount__c
+            SELECT Id, Product2.Id, Product2.Name, Pricebook2.Id, Pricebook2.Name, UnitPrice, Discount__c, Discount_Type__c
             FROM PricebookEntry 
             WHERE Pricebook2.Id = :id
         ];
@@ -150,6 +161,7 @@ public with sharing class PriceBookController {
             wrapper.pricebookName = entry.Pricebook2.Name;
             wrapper.price = entry.UnitPrice;
             wrapper.discount = entry.Discount__c;
+            wrapper.discountType = entry.Discount_Type__c;
             eWrappers.add(wrapper);
         }
         jsonStr = JSON.serialize(eWrappers);
@@ -161,7 +173,7 @@ public with sharing class PriceBookController {
         String jsonStr = '';
         name = (String.isBlank(name)) ? '%' : '%' + name + '%';
         List<PricebookEntry> entries = [
-            SELECT Id, Product2.Id, Product2.Name, Pricebook2.Id, Pricebook2.Name, UnitPrice, Discount__c
+            SELECT Id, Product2.Id, Product2.Name, Pricebook2.Id, Pricebook2.Name, UnitPrice, Discount__c, Discount_Type__c
             FROM PricebookEntry 
             WHERE Pricebook2.Id = :id AND Product2.Name LIKE :name
         ];
@@ -175,6 +187,7 @@ public with sharing class PriceBookController {
             wrapper.pricebookName = entry.Pricebook2.Name;
             wrapper.price = entry.UnitPrice;
             wrapper.discount = entry.Discount__c;
+            wrapper.discountType = entry.Discount_Type__c;
             eWrappers.add(wrapper);
         }
         jsonStr = JSON.serialize(eWrappers);
@@ -183,7 +196,7 @@ public with sharing class PriceBookController {
 
     @AuraEnabled
     public static String createPriceBook(String name, Date startDate, Date endDate, String productType) {
-        String message = '';
+        String jsonStr = '';
 
         Pricebook2 pricebook = new Pricebook2();
         pricebook.Name = name;
@@ -194,50 +207,90 @@ public with sharing class PriceBookController {
         List<Pricebook2> check = [
             SELECT Id, Name, Start_Date__c, End_Date__c, Product_Type__c, IsActive, IsStandard
             FROM Pricebook2
-            WHERE Product_Type__c = :pricebook.Product_Type__c AND IsActive = true
+            WHERE Product_Type__c = :productType
         ];
 
-        if(check.size() == 0) {
-            insert pricebook;
-        } else {
-            message += 'There is date overlapping with Price Books: ';
-            for(Pricebook2 pb : check) {
-                message += pb.Name + ', ';
+        List<Pricebook2> check2 = new List<Pricebook2>();
+        for(Pricebook2 pb : check) {
+            if(pricebook.End_Date__c < pb.Start_Date__c || pricebook.Start_Date__c > pb.End_Date__c) {
+                check2.add(pb);
             }
         }
 
-        return JSON.serialize(message);
+        List<Pricebook2> check3 = new List<Pricebook2>();
+        for(Pricebook2 pb : check) {
+            if(!check2.contains(pb)) {
+                check3.add(pb);
+            }
+        }
+
+        ResponseWrapper wrapper = new ResponseWrapper();
+        if(check3.size() == 0) {
+            insert pricebook;
+            wrapper.message = '';
+        } else {
+            String message = 'There is date overlapping with Price Books: ';
+            for(Pricebook2 pb : check3) {
+                message += pb.Name + ', ';
+            }
+            wrapper.message = message;
+        }
+
+        jsonStr = JSON.serialize(wrapper);
+        return jsonStr;
     }
 
     @AuraEnabled
     public static String updatePriceBook(String id, String name, Date startDate, Date endDate) {
-        String message = '';
+        String jsonStr = '';
 
         Pricebook2 pricebook = [
             SELECT Id, Name, Start_Date__c, End_Date__c, Product_Type__c, IsActive, IsStandard
             FROM Pricebook2
             WHERE Id = :id 
         ];
+        if(String.isNotBlank(name) && startDate == null && endDate == null) {
+            pricebook.Name = name;
+        } else {
+            pricebook.Name = name;
+            pricebook.Start_Date__c = startDate;
+            pricebook.End_Date__c = endDate;
+        }
 
         List<Pricebook2> check = [
             SELECT Id, Name, Start_Date__c, End_Date__c, Product_Type__c, IsActive, IsStandard
             FROM Pricebook2
-            WHERE Product_Type__c = :pricebook.Product_Type__c AND IsActive = true
+            WHERE Product_Type__c = :pricebook.Product_Type__c AND (NOT(Id = :id))
         ];
 
-        if(check.size() == 0) {
-            pricebook.Name = name;
-            pricebook.Start_Date__c = startDate;
-            pricebook.End_Date__c = endDate;
-            update pricebook;
-        } else {
-            message += 'There is date overlapping with Price Books: ';
-            for(Pricebook2 pb : check) {
-                message += pb.Name + ', ';
+        List<Pricebook2> check2 = new List<Pricebook2>();
+        for(Pricebook2 pb : check) {
+            if(pricebook.End_Date__c < pb.Start_Date__c || pricebook.Start_Date__c > pb.End_Date__c) {
+                check2.add(pb);
             }
         }
 
-        return JSON.serialize(message);
+        List<Pricebook2> check3 = new List<Pricebook2>();
+        for(Pricebook2 pb : check) {
+            if(!check2.contains(pb)) {
+                check3.add(pb);
+            }
+        }
+
+        ResponseWrapper wrapper = new ResponseWrapper();
+        if(check3.size() == 0) {
+            update pricebook;  
+            wrapper.message = '';
+        } else {
+            String message = 'There is date overlapping with Price Books: ';
+            for(Pricebook2 pb : check3) {
+                message += pb.Name + ', ';
+            }
+            wrapper.message = message;
+        }
+
+        jsonStr = JSON.serialize(wrapper);
+        return jsonStr;
     }
 
     @AuraEnabled
@@ -255,34 +308,93 @@ public with sharing class PriceBookController {
     }
 
     @AuraEnabled
-    public static void createEntry(String productId, String productName, String pricebookId, String pricebookName, Decimal price, Decimal discount) {
-        if(discount == null) {
-            discount = 0.0;
-        }
-        PricebookEntry entry = new PricebookEntry();
-        entry.Product2.Id = productId;
-        entry.Product2.Name = productName;
-        entry.Pricebook2.Id = pricebookId;
-        entry.Pricebook2.Name = pricebookName;
-        entry.UnitPrice = price;
-        entry.Discount__c = discount;
+    public static void createEntry(String productId, String pricebookId, Decimal price) {
+        PricebookEntry entry = new PricebookEntry(
+            Pricebook2Id = pricebookId,
+            Product2Id = productId,
+            UnitPrice = price,
+            UseStandardPrice = false,
+            IsActive = true,
+            Discount__c = 0.0,
+            Discount_Type__c = 'Percentage'
+        );
         insert entry;
     }
-
+    
     @AuraEnabled
-    public static void updateEntry(String id, String discountType, Decimal discount) {
+    public static void updateSingleEntry(String id, String discountType, Decimal discount, Decimal price) {
         PricebookEntry entry = [
-            SELECT Id, UnitPrice, Discount__c
+            SELECT Id, UnitPrice, Discount__c, Discount_Type__c
             FROM PricebookEntry 
             WHERE Id = :id
         ];
+        entry.UnitPrice = price;
         entry.Discount__c = discount;
-        if(discountType == 'percentage') {
-            Decimal sub = entry.UnitPrice * discount;
+        entry.Discount_Type__c = discountType;
+        if(discountType == 'Percentage') {
+            Decimal sub = entry.UnitPrice * (discount / 100);
             entry.UnitPrice = entry.UnitPrice - sub;
-        } else if(discountType == 'amount') {
+        } else if(discountType == 'Amount') {
             entry.UnitPrice = entry.UnitPrice - discount;
         }
         update entry;
+    }
+
+    @AuraEnabled
+    public static void updateAllEntries(String pricebookId, String discountType, Decimal discount) {
+        List<PricebookEntry> entriesToUpdate = [
+            SELECT Id, Product2.Id, Product2.Name, Pricebook2.Id, Pricebook2.Name, UnitPrice, Discount__c, Discount_Type__c
+            FROM PricebookEntry 
+            WHERE Pricebook2.Id = :pricebookId
+        ];
+        for(PricebookEntry entry : entriesToUpdate) {
+            entry.Discount__c = discount;
+            entry.Discount_Type__c = discountType;
+            if(discountType == 'Percentage') {
+                Decimal sub = entry.UnitPrice * (discount / 100);
+                entry.UnitPrice = entry.UnitPrice - sub;
+            } else if(discountType == 'Amount') {
+                entry.UnitPrice = entry.UnitPrice - discount;
+            }
+        }
+        update entriesToUpdate;
+    }
+
+    @AuraEnabled
+    public static String getApartments() {
+        String jsonStr = '';
+        List<Product2> products = [
+            SELECT Id, Name
+            FROM Product2
+            WHERE RecordType.Name = 'Apartments'
+        ];
+        List<ProductWrapper> wrappers = new List<ProductWrapper>();
+        for(Product2 prod : products) {
+            ProductWrapper wrapper = new ProductWrapper();
+            wrapper.id = prod.Id;
+            wrapper.name = prod.Name;
+            wrappers.add(wrapper);
+        }
+        jsonStr = JSON.serialize(wrappers);
+        return jsonStr;
+    }
+
+    @AuraEnabled
+    public static String getPremises() {
+        String jsonStr = '';
+        List<Product2> products = [
+            SELECT Id, Name
+            FROM Product2
+            WHERE RecordType.Name = 'Business Premises'
+        ];
+        List<ProductWrapper> wrappers = new List<ProductWrapper>();
+        for(Product2 prod : products) {
+            ProductWrapper wrapper = new ProductWrapper();
+            wrapper.id = prod.Id;
+            wrapper.name = prod.Name;
+            wrappers.add(wrapper);
+        }
+        jsonStr = JSON.serialize(wrappers);
+        return jsonStr;
     }
 }

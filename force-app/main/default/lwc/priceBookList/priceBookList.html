@@ -1,12 +1,9 @@
 <template>
     <lightning-layout multiple-rows="true" style="margin-left: 1%; margin-right: 1%;">
         <lightning-layout-item size="12" style="margin-bottom: 1%;">
-            <div class="slds-text-title" style="font-size: 20px; font-weight: bold; margin-top: 1%; margin-bottom: 1%;">Search Price Books</div>
-            <lightning-input type="text" value={pricebookSearch} onchange={handleSearchPricebooks}></lightning-input>
-        </lightning-layout-item>
-        <lightning-layout-item size="12" style="margin-bottom: 1%;">
-            <div class="slds-text-title" style="font-size: 20px; font-weight: bold; margin-top: 1%; margin-bottom: 1%;">List of Price Books</div>
-            <lightning-button variant="brand" label="+ Add" class="search-button" onclick={displayCreateModal}></lightning-button>
+            <div class="slds-text-title" style="font-size: 20px; font-weight: bold; margin-top: 1%;">List of Price Books</div>
+            <lightning-input type="text" style="margin-bottom: 1%;" placeholder="Search Price Books" value={pricebookSearch} onchange={handleSearchPricebooks}></lightning-input>
+            <lightning-button variant="brand" label="+ Add Price Book" class="search-button" onclick={displayCreateModal}></lightning-button>
         </lightning-layout-item>
         <lightning-layout-item size="12" style="margin-bottom: 1%;">
             <template for:each={pricebooks} for:item="pricebook">
