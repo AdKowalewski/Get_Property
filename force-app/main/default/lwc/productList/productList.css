@@ -5,3 +5,8 @@
 .point:hover {
     color: blue;
 }
+
+table tbody.tableBody {
+    overflow-y: scroll;
+    max-height: 30vh !important;
+}

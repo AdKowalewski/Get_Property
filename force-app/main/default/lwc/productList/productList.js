@@ -169,7 +169,7 @@ export default class ProductList extends LightningElement {
         this.currentEntryId = event.target.dataset.productId;
         this.currentDiscount = event.target.dataset.discount;
         this.currentDiscountType = event.target.dataset.discountType;
-        this.currentPrice = event.target.dataset.price;
+        this.currentPrice = parseFloat(event.target.dataset.price);
     }
 
     displayAllModal() {

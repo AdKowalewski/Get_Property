@@ -15,33 +15,37 @@
         <h2 style="margin-left: 1%; margin-bottom: 1%;">No products yet</h2>
     </template>
     <template if:true={displayTable}>
-        <table class="slds-table slds-table_cell-buffer slds-table_bordered" style="margin-left: 1%; margin-right: 1%; width: 98%; margin-bottom: 1%;">
-            <tr>
-                <th><b>Actions</b></th>
-                <th><b>Name</b></th>
-                <th><b>Price</b></th>
-                <th><b>Discount</b></th>
-                <th><b>Discount Type</b></th>
-            </tr>
-            <template for:each={products} for:item="product">
-                <tr key={product.id} data-product-id={product.id}>
-                    <td data-product-id={product.id} data-discount={product.discount} data-discount-type={product.discountType}>
-                        <lightning-button 
-                            variant="neutral" 
-                            label="Update" 
-                            class="search-button" 
-                            onclick={displaySingleModal} 
-                            data-product-id={product.id} 
-                            data-discount={product.discount} 
-                            data-discount-type={product.discountType}
-                            data-price={product.price}></lightning-button>
-                    </td>
-                    <td class="point" data-product-id={product.productId} onclick={goToProduct}>{product.productName}</td>
-                    <td>{product.price}</td>
-                    <td>{product.discount}</td>
-                    <td>{product.discountType}</td>
+        <table class="slds-table slds-table_cell-buffer slds-table_bordered" style="height: 300px; margin-left: 1%; margin-right: 1%; width: 98%; margin-bottom: 1%;">
+            <thead>
+                <tr>
+                    <th><b>Actions</b></th>
+                    <th><b>Name</b></th>
+                    <th><b>Price</b></th>
+                    <th><b>Discount</b></th>
+                    <th><b>Discount Type</b></th>
                 </tr>
-            </template>
+            </thead>
+            <tbody class="tableBody">
+                <template for:each={products} for:item="product">
+                    <tr key={product.id} data-product-id={product.id}>
+                        <td data-product-id={product.id} data-discount={product.discount} data-discount-type={product.discountType}>
+                            <lightning-button 
+                                variant="neutral" 
+                                label="Update" 
+                                class="search-button" 
+                                onclick={displaySingleModal} 
+                                data-product-id={product.id} 
+                                data-discount={product.discount} 
+                                data-discount-type={product.discountType}
+                                data-price={product.price}></lightning-button>
+                        </td>
+                        <td class="point" data-product-id={product.productId} onclick={goToProduct}>{product.productName}</td>
+                        <td>{product.price}</td>
+                        <td>{product.discount}</td>
+                        <td>{product.discountType}</td>
+                    </tr>
+                </template>
+            </tbody>
         </table>
     </template>
 
