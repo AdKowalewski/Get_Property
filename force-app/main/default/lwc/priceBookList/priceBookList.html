@@ -6,20 +6,25 @@
             <lightning-button variant="brand" label="+ Add Price Book" class="search-button" onclick={displayCreateModal}></lightning-button>
         </lightning-layout-item>
         <lightning-layout-item size="12" style="margin-bottom: 1%;">
-            <template for:each={pricebooks} for:item="pricebook">
-                <div 
-                    key={pricebook.id} 
-                    data-record-id={pricebook.id}
-                    data-name={pricebook.name}
-                    data-prod-type={pricebook.productType}
-                    data-start-date={pricebook.startDate}
-                    data-end-date={pricebook.endDate}
-                    data-is-active={pricebook.isActive}
-                    onclick={handleSelectPricebook} 
-                    style="border: grey solid 1px; padding: 1%; border-radius: 3px;" 
-                    class="pricebookContainer">
-                    {pricebook.name}
-                </div>
+            <template if:false={arePriceBooks}>
+                <h2>No Price Books found</h2>
+            </template>
+            <template if:true={arePriceBooks}>
+                <template for:each={pricebooks} for:item="pricebook">
+                    <div 
+                        key={pricebook.id} 
+                        data-record-id={pricebook.id}
+                        data-name={pricebook.name}
+                        data-prod-type={pricebook.productType}
+                        data-start-date={pricebook.startDate}
+                        data-end-date={pricebook.endDate}
+                        data-is-active={pricebook.isActive}
+                        onclick={handleSelectPricebook} 
+                        style="border: grey solid 1px; padding: 1%; border-radius: 3px;" 
+                        class="pricebookContainer">
+                        {pricebook.name}
+                    </div>
+                </template>
             </template>
         </lightning-layout-item>
     </lightning-layout>

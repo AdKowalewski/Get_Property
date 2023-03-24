@@ -6,7 +6,7 @@ import pricebookCreate from '@salesforce/apex/PriceBookController.createPriceBoo
 
 export default class PriceBookList extends LightningElement {
     
-    @track pricebooks;
+    @track pricebooks = [];
     @track error = null;
     @track pricebookSearch;
     @track showCreateModal = false;
@@ -22,6 +22,16 @@ export default class PriceBookList extends LightningElement {
             { value: 'Business Premises', label: 'Business Premises' },
             { value: 'Apartments', label: 'Apartments' }
         ];
+    }
+
+    get arePriceBooks() {
+        let flag = true;
+        if(this.pricebooks.length == 0) {
+            flag = false;
+        } else if(this.pricebooks.length != 0) {
+            flag = true;
+        }
+        return flag;
     }
 
     connectedCallback() {
