@@ -24,6 +24,20 @@ export default class PriceBookDetails extends LightningElement {
     @track showEditModal = false;
     @track displayDates = true;
 
+    get disableDeactivate() {
+        let flag = false;
+        if(this.currentIsActive == 'false') {
+            flag = true;
+        } else if(this.currentIsActive == 'true') {
+            flag = false;
+        }
+        return flag;
+    }
+
+    renderedCallback() {
+        console.log(this.currentIsActive);
+    }
+
     connectedCallback() {
         getPricebookStd()
             .then(result => {
@@ -71,56 +85,71 @@ export default class PriceBookDetails extends LightningElement {
     }
 
     handleEdit() {
-        pricebookEdit({
-            id: this.currentId, 
-            name: this.currentNameEdit, 
-            startDate: this.currentStartDateEdit, 
-            endDate: this.currentEndDateEdit
-        })
-            .then(result => {
-                this.showEditModal = false;
-                let data = JSON.parse(result);
-                if(data.message == '') {
-                    this.dispatchEvent(
-                        new CustomEvent('pricebookedit')
-                    );
-                    this.dispatchEvent(
-                        new ShowToastEvent({
-                            title: 'Success',
-                            message: 'Price Book updated successfully',
-                            variant: 'success'
-                        })
-                    );
-                    this.currentName = this.currentNameEdit;
-                    this.currentStartDate = this.currentStartDateEdit;
-                    this.currentEndDate = this.currentEndDateEdit;
-                } else if(data.message != '') {
+        if(this.currentEndDateEdit > this.currentStartDateEdit) {
+            pricebookEdit({
+                id: this.currentId, 
+                name: this.currentNameEdit, 
+                startDate: this.currentStartDateEdit, 
+                endDate: this.currentEndDateEdit
+            })
+                .then(result => {
+                    this.showEditModal = false;
+                    let data = JSON.parse(result);
+                    if(data.message == '') {
+                        this.dispatchEvent(
+                            new CustomEvent('pricebookedit')
+                        );
+                        this.dispatchEvent(
+                            new ShowToastEvent({
+                                title: 'Success',
+                                message: 'Price Book updated successfully',
+                                variant: 'success'
+                            })
+                        );
+                        this.currentName = this.currentNameEdit;
+                        this.currentStartDate = this.currentStartDateEdit;
+                        this.currentEndDate = this.currentEndDateEdit;
+                    } else if(data.message != '') {
+                        this.dispatchEvent(
+                            new ShowToastEvent({
+                                title: 'Error',
+                                message: data.message,
+                                variant: 'error'
+                            })
+                        );
+                    }
+                    
+                })
+                .catch(error => {
+                    this.error = error;
                     this.dispatchEvent(
                         new ShowToastEvent({
                             title: 'Error',
-                            message: data.message,
+                            message: this.error,
                             variant: 'error'
                         })
                     );
-                }
-                
-            })
-            .catch(error => {
-                this.error = error;
-                this.dispatchEvent(
-                    new ShowToastEvent({
-                        title: 'Error',
-                        message: this.error,
-                        variant: 'error'
-                    })
-                );
-            })
+                })
+        } else {
+            this.dispatchEvent(
+                new ShowToastEvent({
+                    title: 'Error',
+                    message: 'End date should be after start date',
+                    variant: 'error'
+                })
+            );
+        }       
     }
 
     handleDeactivation() {
-        pricebookDeactivate()
+        pricebookDeactivate({id: this.currentId})
             .then(result => {
                 this.currentIsActive = false;
+                let d = new Date();
+                this.currentEndDate = d.toISOString().slice(0,10);
+                this.dispatchEvent(
+                    new CustomEvent('pricebookedit2')
+                );
                 this.dispatchEvent(
                     new ShowToastEvent({
                         title: 'Success',

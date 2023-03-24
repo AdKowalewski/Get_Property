@@ -18,7 +18,7 @@
         <lightning-layout-item size="12" style="margin-bottom: 1%;">
             <lightning-button-group>
                 <lightning-button variant="brand" label="Edit" class="search-button" onclick={displayEditModal}></lightning-button>
-                <lightning-button variant="destructive-text" label="Deactivate" class="search-button" onclick={handleDeactivation} disabled={currentIsActive}></lightning-button>
+                <lightning-button variant="destructive-text" label="Deactivate" class="search-button" onclick={handleDeactivation} disabled={disableDeactivate}></lightning-button>
             </lightning-button-group>
         </lightning-layout-item>
     </lightning-layout>

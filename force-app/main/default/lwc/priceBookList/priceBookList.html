@@ -47,18 +47,27 @@
                             label="Start Date"
                             data-recid="Start Date"
                             value={newPricebookStartDate}
+                            required="true"
                             onchange={handleNewPricebookStartDateChange}></lightning-input>
                         <lightning-input
                             type="date" 
                             label="End Date"
                             data-recid="End Date"
                             value={newPricebookEndDate}
+                            required="true"
                             onchange={handleNewPricebookEndDateChange}></lightning-input>
+                        <lightning-input
+                            style="display: none;"
+                            type="date" 
+                            label="Today"
+                            data-recid="Today"
+                            value={todayDate}></lightning-input>
                         <lightning-combobox
                             name="product_type"
                             label="Product Type"
                             value={newPricebookProductType}
                             options={productTypes}
+                            required="true"
                             onchange={handleNewPricebookProductTypeChange}></lightning-combobox>
                     </form>
                 </div>

@@ -15,6 +15,7 @@ export default class PriceBookList extends LightningElement {
     @track newPricebookEndDate;
     @track newPricebookProductType = 'Business Premises';
     @api isUpdate = false;
+    @track todayDate;
 
     get productTypes() {
         return [
@@ -105,61 +106,83 @@ export default class PriceBookList extends LightningElement {
     }
 
     handleInsert() {
-        pricebookCreate({
-            name: this.newPricebookName, 
-            startDate: this.newPricebookStartDate, 
-            endDate: this.newPricebookEndDate, 
-            productType: this.newPricebookProductType})
-            .then(result => {
-                let data = JSON.parse(result);
-                if(data.message == '') {
-                    this.pricebookSearch = '';
-                    this.showCreateModal = false;
-                    pricebooksInit()
-                        .then(data => {
-                            this.pricebooks = JSON.parse(data);
-                        })
-                        .catch(error => {
-                            this.error = error;
+        let d = new Date();
+        this.todayDate = d.toISOString();
+        if(this.newPricebookStartDate >= this.todayDate) {
+            if(this.newPricebookEndDate > this.newPricebookStartDate) {
+                pricebookCreate({
+                    name: this.newPricebookName, 
+                    startDate: this.newPricebookStartDate, 
+                    endDate: this.newPricebookEndDate, 
+                    productType: this.newPricebookProductType})
+                    .then(result => {
+                        let data = JSON.parse(result);
+                        if(data.message == '') {
+                            this.pricebookSearch = '';
+                            this.showCreateModal = false;
+                            pricebooksInit()
+                                .then(data => {
+                                    this.pricebooks = JSON.parse(data);
+                                })
+                                .catch(error => {
+                                    this.error = error;
+                                    this.dispatchEvent(
+                                        new ShowToastEvent({
+                                            title: 'Error',
+                                            message: this.error,
+                                            variant: 'error'
+                                        })
+                                    );
+                                });
+                            this.dispatchEvent(
+                                new ShowToastEvent({
+                                    title: 'Success',
+                                    message: 'Price Book ' + this.newPricebookName + ' created successfully',
+                                    variant: 'success'
+                                })
+                            );
+                            this.newPricebookName = '';
+                            this.newPricebookStartDate = null;
+                            this.newPricebookEndDate = null;
+                            this.newPricebookProductType = null;
+                        } else if(data.message != '') {
                             this.dispatchEvent(
                                 new ShowToastEvent({
                                     title: 'Error',
-                                    message: this.error,
+                                    message: data.message,
                                     variant: 'error'
                                 })
                             );
-                        });
-                    this.dispatchEvent(
-                        new ShowToastEvent({
-                            title: 'Success',
-                            message: 'Price Book ' + this.newPricebookName + ' created successfully',
-                            variant: 'success'
-                        })
-                    );
-                    this.newPricebookName = '';
-                    this.newPricebookStartDate = null;
-                    this.newPricebookEndDate = null;
-                    this.newPricebookProductType = null;
-                } else if(data.message != '') {
-                    this.dispatchEvent(
-                        new ShowToastEvent({
-                            title: 'Error',
-                            message: data.message,
-                            variant: 'error'
-                        })
-                    );
-                }             
-            })
-            .catch(error => {
-                this.error = error;
+                        }                         
+                    })
+                    .catch(error => {
+                        this.error = error;
+                        this.dispatchEvent(
+                            new ShowToastEvent({
+                                title: 'Error',
+                                message: this.error,
+                                variant: 'error'
+                            })
+                        );
+                    })
+            } else {
                 this.dispatchEvent(
                     new ShowToastEvent({
                         title: 'Error',
-                        message: this.error,
+                        message: 'End date should be after start date',
                         variant: 'error'
                     })
                 );
-            })
+            }
+        } else {
+            this.dispatchEvent(
+                new ShowToastEvent({
+                    title: 'Error',
+                    message: 'Start date should not be before today',
+                    variant: 'error'
+                })
+            );
+        }           
     }
 
     handleSelectPricebook(event) {

@@ -8,6 +8,7 @@ import singleUpdate from '@salesforce/apex/PriceBookController.updateSingleEntry
 import allUpdate from '@salesforce/apex/PriceBookController.updateAllEntries';
 import apartmentsGet from '@salesforce/apex/PriceBookController.getApartments';
 import premisesGet from '@salesforce/apex/PriceBookController.getPremises';
+import minPrice from '@salesforce/apex/PriceBookController.getMinimalPrice';
 
 export default class ProductList extends LightningElement {
     
@@ -29,6 +30,7 @@ export default class ProductList extends LightningElement {
     @track allDiscountType;
     @track allDiscount;
     @track correctDiscount = true;
+    @track minimal;
 
     get updateAllDisabled() {
         let flag = false;
@@ -83,6 +85,23 @@ export default class ProductList extends LightningElement {
                     })
                 );
             })
+
+        minPrice({id: this.currentPricebookId})
+            .then(result => {
+                let data = JSON.parse(result);
+                this.minimal = parseFloat(data.message);
+                console.log('minimal ' + this.minimal);
+            })
+            .catch(error => {
+                this.error = error;
+                this.dispatchEvent(
+                    new ShowToastEvent({
+                        title: 'Error',
+                        message: this.error,
+                        variant: 'error'
+                    })
+                );
+            })
     }
 
     @api
@@ -101,12 +120,29 @@ export default class ProductList extends LightningElement {
                     })
                 );
             })
+
+        minPrice({id: this.currentPricebookId})
+            .then(result => {
+                let data = JSON.parse(result);
+                this.minimal = parseFloat(data.message);
+                console.log('minimal ' + this.minimal);
+            })
+            .catch(error => {
+                this.error = error;
+                this.dispatchEvent(
+                    new ShowToastEvent({
+                        title: 'Error',
+                        message: this.error,
+                        variant: 'error'
+                    })
+                );
+            })
     }
 
     @api
     getNewProducts() {
         if(this.currentPricebookType == 'Business Premises') {
-            premisesGet()
+            premisesGet({pricebookId: this.currentPricebookId})
                 .then(result => {
                     this.newProducts = JSON.parse(result);
                 })
@@ -121,7 +157,7 @@ export default class ProductList extends LightningElement {
                     );
                 })
         } else if(this.currentPricebookType == 'Apartments') {
-            apartmentsGet()
+            apartmentsGet({pricebookId: this.currentPricebookId})
                 .then(result => {
                     this.newProducts = JSON.parse(result);
                 })
@@ -180,6 +216,8 @@ export default class ProductList extends LightningElement {
         this.showModal = false;
         this.showSingleModal = false;
         this.showAllModal = false;
+        this.allDiscount = 0;
+        this.allDiscountType = null;
     }
 
     handleNewProductNameChange(event) {
@@ -253,6 +291,52 @@ export default class ProductList extends LightningElement {
 
     handleAllDiscountChange(event) {
         this.allDiscount = event.target.value;
+        console.log('minimal ' + this.minimal);
+        if(this.allDiscountType == 'Percentage') {
+            if(this.allDiscount < 0) {
+                this.dispatchEvent(
+                    new ShowToastEvent({
+                        title: 'Error',
+                        message: 'Discount percentage cannot be lower than 0',
+                        variant: 'error'
+                    })
+                );
+                this.correctDiscount = false;
+            } else if(this.allDiscount > 99.9) {
+                this.dispatchEvent(
+                    new ShowToastEvent({
+                        title: 'Error',
+                        message: 'Discount percentage cannot be higher than 99.9',
+                        variant: 'error'
+                    })
+                );
+                this.correctDiscount = false;
+            } else {
+                this.correctDiscount = true;
+            }
+        } else if(this.allDiscountType == 'Amount') {
+            if(this.allDiscount < 0) {
+                this.dispatchEvent(
+                    new ShowToastEvent({
+                        title: 'Error',
+                        message: 'Discount amount cannot be lower than 0',
+                        variant: 'error'
+                    })
+                );
+                this.correctDiscount = false;
+            } else if(this.allDiscount > this.minimal) {
+                this.dispatchEvent(
+                    new ShowToastEvent({
+                        title: 'Error',
+                        message: 'Discount amount cannot be higher than minimal price in current price book',
+                        variant: 'error'
+                    })
+                );
+                this.correctDiscount = false;
+            } else {
+                this.correctDiscount = true;
+            }
+        }
     }
 
     handleAddProduct() {
@@ -273,6 +357,55 @@ export default class ProductList extends LightningElement {
                             })
                         );
                     })
+                minPrice({id: this.currentPricebookId})
+                    .then(result => {
+                        let data = JSON.parse(result);
+                        this.minimal = parseFloat(data.message);
+                        console.log('minimal ' + this.minimal);
+                    })
+                    .catch(error => {
+                        this.error = error;
+                        this.dispatchEvent(
+                            new ShowToastEvent({
+                                title: 'Error',
+                                message: this.error,
+                                variant: 'error'
+                            })
+                        );
+                    })
+                
+                if(this.currentPricebookType == 'Business Premises') {
+                    premisesGet({pricebookId: this.currentPricebookId})
+                        .then(result => {
+                            this.newProducts = JSON.parse(result);
+                        })
+                        .catch(error => {
+                            this.error = error;
+                            this.dispatchEvent(
+                                new ShowToastEvent({
+                                    title: 'Error',
+                                    message: this.error,
+                                    variant: 'error'
+                                })
+                            );
+                        })
+                } else if(this.currentPricebookType == 'Apartments') {
+                    apartmentsGet({pricebookId: this.currentPricebookId})
+                        .then(result => {
+                            this.newProducts = JSON.parse(result);
+                        })
+                        .catch(error => {
+                            this.error = error;
+                            this.dispatchEvent(
+                                new ShowToastEvent({
+                                    title: 'Error',
+                                    message: this.error,
+                                    variant: 'error'
+                                })
+                            );
+                        })
+                }
+
                 this.dispatchEvent(
                     new ShowToastEvent({
                         title: 'Success',
@@ -280,6 +413,8 @@ export default class ProductList extends LightningElement {
                         variant: 'success'
                     })
                 );
+                this.newProductName = null;
+                this.newProductPrice = null;
             })
             // .catch(error => {
             //     this.error = error;
@@ -301,6 +436,22 @@ export default class ProductList extends LightningElement {
                 getPricebookEntries({id: this.currentPricebookId})
                     .then(result => {
                         this.products = JSON.parse(result);
+                    })
+                    .catch(error => {
+                        this.error = error;
+                        this.dispatchEvent(
+                            new ShowToastEvent({
+                                title: 'Error',
+                                message: this.error,
+                                variant: 'error'
+                            })
+                        );
+                    })
+                minPrice({id: this.currentPricebookId})
+                    .then(result => {
+                        let data = JSON.parse(result);
+                        this.minimal = parseFloat(data.message);
+                        console.log('minimal ' + this.minimal);
                     })
                     .catch(error => {
                         this.error = error;
@@ -342,12 +493,29 @@ export default class ProductList extends LightningElement {
     }
 
     handleAllEdit() {
-        allUpdate({pricebookId: this.currentPricebookId, discountType: this.allDiscountType, discount: this.allDiscount})
+        if(this.correctDiscount == true) {
+            allUpdate({pricebookId: this.currentPricebookId, discountType: this.allDiscountType, discount: this.allDiscount})
             .then(result => {
                 this.showAllModal = false;
                 getPricebookEntries({id: this.currentPricebookId})
                     .then(result => {
                         this.products = JSON.parse(result);
+                    })
+                    .catch(error => {
+                        this.error = error;
+                        this.dispatchEvent(
+                            new ShowToastEvent({
+                                title: 'Error',
+                                message: this.error,
+                                variant: 'error'
+                            })
+                        );
+                    })
+                minPrice({id: this.currentPricebookId})
+                    .then(result => {
+                        let data = JSON.parse(result);
+                        this.minimal = parseFloat(data.message);
+                        console.log('minimal ' + this.minimal);
                     })
                     .catch(error => {
                         this.error = error;
@@ -366,6 +534,8 @@ export default class ProductList extends LightningElement {
                         variant: 'success'
                     })
                 );
+                this.allDiscount = 0;
+                this.allDiscountType = null;
             })
             // .catch(error => {
             //     this.error = error;
@@ -377,5 +547,14 @@ export default class ProductList extends LightningElement {
             //         })
             //     );
             // })
+        } else if(this.correctDiscount == false) {
+            this.dispatchEvent(
+                new ShowToastEvent({
+                    title: 'Error',
+                    message: 'Invalid discount value',
+                    variant: 'error'
+                })
+            );
+        }   
     }
 }

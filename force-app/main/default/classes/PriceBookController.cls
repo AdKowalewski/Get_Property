@@ -29,6 +29,10 @@ public with sharing class PriceBookController {
     public class ResponseWrapper {
         public String message { get; set; }
     }
+
+    public class ResponseWrapperNumber {
+        public Decimal message { get; set; }
+    }
     
     @AuraEnabled
     public static String initPriceBooks() {
@@ -169,6 +173,20 @@ public with sharing class PriceBookController {
     }
 
     @AuraEnabled
+    public static String getMinimalPrice(String id) {
+        String jsonStr = '';
+        AggregateResult minimalPrice = [
+            SELECT MIN(UnitPrice)minP
+            FROM PricebookEntry 
+            WHERE Pricebook2.Id = :id
+        ];
+        ResponseWrapperNumber wrapper = new ResponseWrapperNumber();
+        wrapper.message = (Decimal)minimalPrice.get('minP');
+        jsonStr = JSON.serialize(wrapper);
+        return jsonStr;
+    }
+
+    @AuraEnabled
     public static String searchEntriesFromPriceBook(String id, String name) {
         String jsonStr = '';
         name = (String.isBlank(name)) ? '%' : '%' + name + '%';
@@ -300,9 +318,10 @@ public with sharing class PriceBookController {
             FROM Pricebook2
             WHERE Id = :id 
         ];
+        
         if(pricebook.IsActive == true) {
             pricebook.IsActive = false;
-            pricebook.End_Date__c = Date.today().addDays(-1);
+            pricebook.End_Date__c = Date.today();
         }     
         update pricebook;
     }
@@ -361,13 +380,35 @@ public with sharing class PriceBookController {
     }
 
     @AuraEnabled
-    public static String getApartments() {
+    public static String getApartments(String pricebookId) {
         String jsonStr = '';
         List<Product2> products = [
             SELECT Id, Name
             FROM Product2
             WHERE RecordType.Name = 'Apartments'
         ];
+        List<PricebookEntry> pbentries = [
+            SELECT Id, Product2.Name
+            FROM PricebookEntry 
+            WHERE Pricebook2.Id = :pricebookId
+        ];
+        List<String> names = new List<String>();
+        for(PricebookEntry entry : pbentries) {
+            names.add(entry.Product2.Name);
+        }
+
+        List<Integer> indexes = new List<Integer>();
+        for(Integer i = 0; i < products.size(); i++) {
+            for(Integer j = 0; j < names.size(); j++) {
+                if(products.get(i).Name.equals(names.get(j))) {
+                    products.remove(i);
+                }
+            }
+        }
+        // for(Integer i : indexes) {
+        //     products.remove(i);
+        // }
+
         List<ProductWrapper> wrappers = new List<ProductWrapper>();
         for(Product2 prod : products) {
             ProductWrapper wrapper = new ProductWrapper();
@@ -380,13 +421,35 @@ public with sharing class PriceBookController {
     }
 
     @AuraEnabled
-    public static String getPremises() {
+    public static String getPremises(String pricebookId) {
         String jsonStr = '';
         List<Product2> products = [
             SELECT Id, Name
             FROM Product2
             WHERE RecordType.Name = 'Business Premises'
         ];
+        List<PricebookEntry> pbentries = [
+            SELECT Id, Product2.Name
+            FROM PricebookEntry 
+            WHERE Pricebook2.Id = :pricebookId
+        ];
+        List<String> names = new List<String>();
+        for(PricebookEntry entry : pbentries) {
+            names.add(entry.Product2.Name);
+        }
+
+        List<Integer> indexes = new List<Integer>();
+        for(Integer i = 0; i < products.size(); i++) {
+            for(Integer j = 0; j < names.size(); j++) {
+                if(products.get(i).Name.equals(names.get(j))) {
+                    products.remove(i);
+                }
+            }
+        }
+        // for(Integer i : indexes) {
+        //     products.remove(i);
+        // }
+
         List<ProductWrapper> wrappers = new List<ProductWrapper>();
         for(Product2 prod : products) {
             ProductWrapper wrapper = new ProductWrapper();
