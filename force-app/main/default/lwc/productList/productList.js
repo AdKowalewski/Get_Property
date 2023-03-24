@@ -174,6 +174,72 @@ export default class ProductList extends LightningElement {
         }
     }
 
+    renderedCallback() {
+        getPricebookEntries({id: this.currentPricebookId})
+            .then(result => {
+                this.products = JSON.parse(result);
+            })
+            .catch(error => {
+                this.error = error;
+                this.dispatchEvent(
+                    new ShowToastEvent({
+                        title: 'Error',
+                        message: this.error,
+                        variant: 'error'
+                    })
+                );
+            })
+
+        minPrice({id: this.currentPricebookId})
+            .then(result => {
+                let data = JSON.parse(result);
+                this.minimal = parseFloat(data.message);
+                console.log('minimal ' + this.minimal);
+            })
+            .catch(error => {
+                this.error = error;
+                this.dispatchEvent(
+                    new ShowToastEvent({
+                        title: 'Error',
+                        message: this.error,
+                        variant: 'error'
+                    })
+                );
+            })
+
+        if(this.currentPricebookType == 'Business Premises') {
+            premisesGet({pricebookId: this.currentPricebookId})
+                .then(result => {
+                    this.newProducts = JSON.parse(result);
+                })
+                .catch(error => {
+                    this.error = error;
+                    this.dispatchEvent(
+                        new ShowToastEvent({
+                            title: 'Error',
+                            message: this.error,
+                            variant: 'error'
+                        })
+                    );
+                })
+        } else if(this.currentPricebookType == 'Apartments') {
+            apartmentsGet({pricebookId: this.currentPricebookId})
+                .then(result => {
+                    this.newProducts = JSON.parse(result);
+                })
+                .catch(error => {
+                    this.error = error;
+                    this.dispatchEvent(
+                        new ShowToastEvent({
+                            title: 'Error',
+                            message: this.error,
+                            variant: 'error'
+                        })
+                    );
+                })
+        }
+    }
+
     handleSearchProducts(event) {
         this.productSearch = event.target.value;
         searchPricebookEntries({id: this.currentPricebookId, name: this.productSearch})
