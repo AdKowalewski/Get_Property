@@ -108,7 +108,7 @@ export default class PriceBookList extends LightningElement {
     handleInsert() {
         let d = new Date();
         this.todayDate = d.toISOString();
-        if(this.newPricebookName || this.newPricebookStartDate || this.newPricebookEndDate) {
+        if(this.newPricebookName == null || this.newPricebookStartDate == null || this.newPricebookEndDate == null) {
             this.dispatchEvent(
                 new ShowToastEvent({
                     title: 'Error',
