@@ -66,6 +66,7 @@
                             label="Product Name"
                             value={newProductName}
                             options={newProductNames}
+                            required="true"
                             onchange={handleNewProductNameChange}></lightning-combobox>
                         <lightning-input
                             type="number" 
@@ -73,6 +74,7 @@
                             data-recid="Price"
                             value={newProductPrice}
                             step=".01"
+                            required="true"
                             onchange={handleNewProductPriceChange}></lightning-input>
                     </form>
                 </div>
@@ -151,6 +153,7 @@
                             label="Discount Type"
                             value={allDiscountType}
                             options={discountTypes}
+                            required="true"
                             onchange={handleAllDiscountTypeChange}></lightning-combobox>
                         <lightning-input
                             type="number" 
@@ -158,6 +161,7 @@
                             data-recid="Discount"
                             value={allDiscount}
                             step=".01"
+                            required="true"
                             onchange={handleAllDiscountChange}></lightning-input>
                     </form>
                 </div>

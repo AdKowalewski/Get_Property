@@ -13,7 +13,7 @@ export default class PriceBookDetails extends LightningElement {
     @api currentProdType;
     @api currentStartDate;
     @api currentEndDate;
-    @api currentIsActive = false;
+    @api currentIsActive = 'false';
     pricebook;
 
     @track currentNameEdit;

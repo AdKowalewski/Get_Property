@@ -28,7 +28,7 @@ export default class ProductList extends LightningElement {
     @track currentDiscount;
     @track currentPrice;
     @track allDiscountType;
-    @track allDiscount;
+    @track allDiscount = 0.0;
     @track correctDiscount = true;
     @track minimal;
 
@@ -340,7 +340,16 @@ export default class ProductList extends LightningElement {
     }
 
     handleAddProduct() {
-        entryCreate({productId: this.newProductName, pricebookId: this.currentPricebookId, price: this.newProductPrice})
+        if(this.newProductName == null || this.newProductPrice == null) {
+            this.dispatchEvent(
+                new ShowToastEvent({
+                    title: 'Error',
+                    message: 'Product name and price cannot be empty',
+                    variant: 'error'
+                })
+            );
+        } else {
+            entryCreate({productId: this.newProductName, pricebookId: this.currentPricebookId, price: this.newProductPrice})
             .then(result => {
                 this.showModal = false;
                 getPricebookEntries({id: this.currentPricebookId})
@@ -426,6 +435,7 @@ export default class ProductList extends LightningElement {
             //         })
             //     );
             // })
+        }
     }
 
     handleSingleEdit() {
@@ -493,68 +503,78 @@ export default class ProductList extends LightningElement {
     }
 
     handleAllEdit() {
-        if(this.correctDiscount == true) {
-            allUpdate({pricebookId: this.currentPricebookId, discountType: this.allDiscountType, discount: this.allDiscount})
-            .then(result => {
-                this.showAllModal = false;
-                getPricebookEntries({id: this.currentPricebookId})
-                    .then(result => {
-                        this.products = JSON.parse(result);
-                    })
-                    .catch(error => {
-                        this.error = error;
-                        this.dispatchEvent(
-                            new ShowToastEvent({
-                                title: 'Error',
-                                message: this.error,
-                                variant: 'error'
-                            })
-                        );
-                    })
-                minPrice({id: this.currentPricebookId})
-                    .then(result => {
-                        let data = JSON.parse(result);
-                        this.minimal = parseFloat(data.message);
-                        console.log('minimal ' + this.minimal);
-                    })
-                    .catch(error => {
-                        this.error = error;
-                        this.dispatchEvent(
-                            new ShowToastEvent({
-                                title: 'Error',
-                                message: this.error,
-                                variant: 'error'
-                            })
-                        );
-                    })
-                this.dispatchEvent(
-                    new ShowToastEvent({
-                        title: 'Success',
-                        message: 'Prices updated successfully',
-                        variant: 'success'
-                    })
-                );
-                this.allDiscount = 0;
-                this.allDiscountType = null;
-            })
-            // .catch(error => {
-            //     this.error = error;
-            //     this.dispatchEvent(
-            //         new ShowToastEvent({
-            //             title: 'Error',
-            //             message: this.error,
-            //             variant: 'error'
-            //         })
-            //     );
-            // })
-        } else if(this.correctDiscount == false) {
+        if(this.allDiscountType == null || this.allDiscount == null) {
             this.dispatchEvent(
                 new ShowToastEvent({
                     title: 'Error',
-                    message: 'Invalid discount value',
+                    message: 'Discount and discount type cannot be empty',
                     variant: 'error'
                 })
             );
-        }   
+        } else {
+            if(this.correctDiscount == true) {
+                allUpdate({pricebookId: this.currentPricebookId, discountType: this.allDiscountType, discount: this.allDiscount})
+                .then(result => {
+                    this.showAllModal = false;
+                    getPricebookEntries({id: this.currentPricebookId})
+                        .then(result => {
+                            this.products = JSON.parse(result);
+                        })
+                        .catch(error => {
+                            this.error = error;
+                            this.dispatchEvent(
+                                new ShowToastEvent({
+                                    title: 'Error',
+                                    message: this.error,
+                                    variant: 'error'
+                                })
+                            );
+                        })
+                    minPrice({id: this.currentPricebookId})
+                        .then(result => {
+                            let data = JSON.parse(result);
+                            this.minimal = parseFloat(data.message);
+                            console.log('minimal ' + this.minimal);
+                        })
+                        .catch(error => {
+                            this.error = error;
+                            this.dispatchEvent(
+                                new ShowToastEvent({
+                                    title: 'Error',
+                                    message: this.error,
+                                    variant: 'error'
+                                })
+                            );
+                        })
+                    this.dispatchEvent(
+                        new ShowToastEvent({
+                            title: 'Success',
+                            message: 'Prices updated successfully',
+                            variant: 'success'
+                        })
+                    );
+                    this.allDiscount = 0;
+                    this.allDiscountType = null;
+                })
+                // .catch(error => {
+                //     this.error = error;
+                //     this.dispatchEvent(
+                //         new ShowToastEvent({
+                //             title: 'Error',
+                //             message: this.error,
+                //             variant: 'error'
+                //         })
+                //     );
+                // })
+            } else if(this.correctDiscount == false) {
+                this.dispatchEvent(
+                    new ShowToastEvent({
+                        title: 'Error',
+                        message: 'Invalid discount value',
+                        variant: 'error'
+                    })
+                );
+            }
+        }         
     }
 }
