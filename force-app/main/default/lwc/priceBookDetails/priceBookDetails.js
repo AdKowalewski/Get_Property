@@ -93,7 +93,6 @@ export default class PriceBookDetails extends LightningElement {
                 endDate: this.currentEndDateEdit
             })
                 .then(result => {
-                    this.showEditModal = false;
                     let data = JSON.parse(result);
                     if(data.message == '') {
                         this.dispatchEvent(
@@ -106,6 +105,7 @@ export default class PriceBookDetails extends LightningElement {
                                 variant: 'success'
                             })
                         );
+                        this.showEditModal = false;
                         this.currentName = this.currentNameEdit;
                         this.currentStartDate = this.currentStartDateEdit;
                         this.currentEndDate = this.currentEndDateEdit;

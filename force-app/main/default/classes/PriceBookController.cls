@@ -249,7 +249,7 @@ public with sharing class PriceBookController {
         } else {
             String message = 'There is date overlapping with Price Books: ';
             for(Pricebook2 pb : check3) {
-                message += pb.Name + ', ';
+                message += pb.Name + ' ';
             }
             wrapper.message = message;
         }
@@ -302,7 +302,7 @@ public with sharing class PriceBookController {
         } else {
             String message = 'There is date overlapping with Price Books: ';
             for(Pricebook2 pb : check3) {
-                message += pb.Name + ', ';
+                message += pb.Name + ' ';
             }
             wrapper.message = message;
         }
