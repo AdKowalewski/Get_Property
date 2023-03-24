@@ -397,20 +397,22 @@ public with sharing class PriceBookController {
             names.add(entry.Product2.Name);
         }
 
-        List<Integer> indexes = new List<Integer>();
+        Boolean k = false;
+        List<Product2> products2 = new List<Product2>();
         for(Integer i = 0; i < products.size(); i++) {
             for(Integer j = 0; j < names.size(); j++) {
                 if(products.get(i).Name.equals(names.get(j))) {
-                    products.remove(i);
+                    k = true;
                 }
             }
+            if(k == false) {
+                products2.add(products.get(i));
+            }
+            k = false;
         }
-        // for(Integer i : indexes) {
-        //     products.remove(i);
-        // }
 
         List<ProductWrapper> wrappers = new List<ProductWrapper>();
-        for(Product2 prod : products) {
+        for(Product2 prod : products2) {
             ProductWrapper wrapper = new ProductWrapper();
             wrapper.id = prod.Id;
             wrapper.name = prod.Name;
@@ -438,20 +440,22 @@ public with sharing class PriceBookController {
             names.add(entry.Product2.Name);
         }
 
-        List<Integer> indexes = new List<Integer>();
+        Boolean k = false;
+        List<Product2> products2 = new List<Product2>();
         for(Integer i = 0; i < products.size(); i++) {
             for(Integer j = 0; j < names.size(); j++) {
                 if(products.get(i).Name.equals(names.get(j))) {
-                    products.remove(i);
+                    k = true;
                 }
             }
+            if(k == false) {
+                products2.add(products.get(i));
+            }
+            k = false;
         }
-        // for(Integer i : indexes) {
-        //     products.remove(i);
-        // }
 
         List<ProductWrapper> wrappers = new List<ProductWrapper>();
-        for(Product2 prod : products) {
+        for(Product2 prod : products2) {
             ProductWrapper wrapper = new ProductWrapper();
             wrapper.id = prod.Id;
             wrapper.name = prod.Name;
