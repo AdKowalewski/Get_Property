@@ -238,6 +238,21 @@ export default class ProductList extends LightningElement {
                     );
                 })
         }
+
+        searchPricebookEntries({id: this.currentPricebookId, name: this.productSearch})
+            .then(result => {
+                this.products = JSON.parse(result);
+            })
+            .catch(error => {
+                this.error = error;
+                this.dispatchEvent(
+                    new ShowToastEvent({
+                        title: 'Error',
+                        message: this.error,
+                        variant: 'error'
+                    })
+                );
+            })
     }
 
     handleSearchProducts(event) {
