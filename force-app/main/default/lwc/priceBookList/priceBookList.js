@@ -163,7 +163,7 @@ export default class PriceBookList extends LightningElement {
                                 this.newPricebookName = '';
                                 this.newPricebookStartDate = null;
                                 this.newPricebookEndDate = null;
-                                this.newPricebookProductType = null;
+                                this.newPricebookProductType = 'Business Premises';
                             } else if(data.message != '') {
                                 this.dispatchEvent(
                                     new ShowToastEvent({
