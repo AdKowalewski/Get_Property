@@ -595,6 +595,7 @@ export default class ProductList extends LightningElement {
                 //         })
                 //     );
                 // })
+            this.deselectAll();
         } else if(this.correctDiscount == false) {
             this.dispatchEvent(
                 new ShowToastEvent({
