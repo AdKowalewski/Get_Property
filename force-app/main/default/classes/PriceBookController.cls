@@ -380,6 +380,29 @@ public with sharing class PriceBookController {
     }
 
     @AuraEnabled
+    public static void updateSelectedEntries(List<String> ids, String discountType, Decimal discount) {
+        List<PricebookEntry> entriesToUpdate = new List<PricebookEntry>();
+        for(String id : ids) {
+            entriesToUpdate.add([
+                SELECT Id, Product2.Id, Product2.Name, Pricebook2.Id, Pricebook2.Name, UnitPrice, Discount__c, Discount_Type__c
+                FROM PricebookEntry 
+                WHERE Id = :id
+            ]);
+        }
+        for(PricebookEntry entry : entriesToUpdate) {
+            entry.Discount__c = discount;
+            entry.Discount_Type__c = discountType;
+            if(discountType == 'Percentage') {
+                Decimal sub = entry.UnitPrice * (discount / 100);
+                entry.UnitPrice = entry.UnitPrice - sub;
+            } else if(discountType == 'Amount') {
+                entry.UnitPrice = entry.UnitPrice - discount;
+            }
+        }
+        update entriesToUpdate;
+    }
+
+    @AuraEnabled
     public static String getApartments(String pricebookId) {
         String jsonStr = '';
         List<Product2> products = [
