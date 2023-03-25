@@ -37,9 +37,9 @@ export default class ProductList extends LightningElement {
 
     get updateAllDisabled() {
         let flag = false;
-        if(this.products.length == 0) {
+        if(this.products.length == 0 || !this.checkIfAnySelected()) {
             flag = true;
-        } else if(this.products.length != 0) {
+        } else if(this.products.length != 0 && this.checkIfAnySelected()) {
             flag = false;
         }
         return flag;
@@ -623,6 +623,7 @@ export default class ProductList extends LightningElement {
                     if(box.checked) {
                         allUpdate({pricebookId: this.currentPricebookId, discountType: this.allDiscountType, discount: this.allDiscount})
                             .then(result => {
+                                this.deselectAll();
                                 this.minimal = null;
                                 this.showAllModal = false;
                                 getPricebookEntries({id: this.currentPricebookId})
@@ -670,6 +671,7 @@ export default class ProductList extends LightningElement {
                     } else {
                         selectedUpdate({ids: this.idList, discountType: this.allDiscountType, discount: this.allDiscount})
                             .then(result => {
+                                this.deselectAll();
                                 this.minimal = null;
                                 this.showAllModal = false;
                                 getPricebookEntries({id: this.currentPricebookId})
@@ -715,7 +717,6 @@ export default class ProductList extends LightningElement {
                                 this.allDiscountType = null;
                             })
                     }
-                    this.deselectAll();
                 } else {
                     this.dispatchEvent(
                         new ShowToastEvent({
