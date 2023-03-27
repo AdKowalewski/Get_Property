@@ -1,3 +1,7 @@
+.pricebookContainer {
+    cursor: pointer;
+}
+
 .pricebookContainer:hover {
     background-color: lightgrey;
 }
