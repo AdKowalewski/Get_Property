@@ -6,7 +6,7 @@
         </lightning-layout-item>
         <lightning-layout-item size="12" style="margin-bottom: 1%;">
             <lightning-button-group>
-                <lightning-button variant="brand" label="+ Add Product" class="search-button" onclick={displayModal}></lightning-button>
+                <lightning-button variant="brand" label="+ Add Product" class="search-button" onclick={displayModal} disabled={addProductDisabled}></lightning-button>
                 <lightning-button variant="neutral" label="Update Selected" class="search-button" onclick={displayAllModal} disabled={updateAllDisabled}></lightning-button>
             </lightning-button-group>
         </lightning-layout-item>

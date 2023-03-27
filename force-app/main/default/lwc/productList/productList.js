@@ -10,13 +10,14 @@ import apartmentsGet from '@salesforce/apex/PriceBookController.getApartments';
 import premisesGet from '@salesforce/apex/PriceBookController.getPremises';
 import minPrice from '@salesforce/apex/PriceBookController.getMinimalPrice';
 import selectedUpdate from '@salesforce/apex/PriceBookController.updateSelectedEntries';
+import allProdGet from '@salesforce/apex/PriceBookController.getAllProducts';
 
 export default class ProductList extends LightningElement {
     
     @api currentPricebookId;
     @api currentPricebookType;
     @track products = [];
-    @track newProducts;
+    @track newProducts = [];
     @track error;
     @track productSearch;
     @track showModal = false;
@@ -70,6 +71,16 @@ export default class ProductList extends LightningElement {
             );
         }
         return newProds;
+    }
+
+    get addProductDisabled() {
+        let flag = false;
+        if(this.newProducts.length == 0) {
+            flag = true;
+        } else if(this.newProducts.length != 0) {
+            flag = false;
+        }
+        return flag;
     }
 
     connectedCallback() {
@@ -147,8 +158,8 @@ export default class ProductList extends LightningElement {
 
     @api
     getNewProducts() {
-        if(this.currentPricebookType == 'Business Premises') {
-            premisesGet({pricebookId: this.currentPricebookId})
+        if(this.currentPricebookId == '01s7S000002VqAzQAK') {
+            allProdGet({pricebookId: this.currentPricebookId})
                 .then(result => {
                     this.newProducts = JSON.parse(result);
                 })
@@ -162,22 +173,39 @@ export default class ProductList extends LightningElement {
                         })
                     );
                 })
-        } else if(this.currentPricebookType == 'Apartments') {
-            apartmentsGet({pricebookId: this.currentPricebookId})
-                .then(result => {
-                    this.newProducts = JSON.parse(result);
-                })
-                .catch(error => {
-                    this.error = error;
-                    this.dispatchEvent(
-                        new ShowToastEvent({
-                            title: 'Error',
-                            message: this.error,
-                            variant: 'error'
-                        })
-                    );
-                })
-        }
+        } else {
+            if(this.currentPricebookType == 'Business Premises') {
+                premisesGet({pricebookId: this.currentPricebookId})
+                    .then(result => {
+                        this.newProducts = JSON.parse(result);
+                    })
+                    .catch(error => {
+                        this.error = error;
+                        this.dispatchEvent(
+                            new ShowToastEvent({
+                                title: 'Error',
+                                message: this.error,
+                                variant: 'error'
+                            })
+                        );
+                    })
+            } else if(this.currentPricebookType == 'Apartments') {
+                apartmentsGet({pricebookId: this.currentPricebookId})
+                    .then(result => {
+                        this.newProducts = JSON.parse(result);
+                    })
+                    .catch(error => {
+                        this.error = error;
+                        this.dispatchEvent(
+                            new ShowToastEvent({
+                                title: 'Error',
+                                message: this.error,
+                                variant: 'error'
+                            })
+                        );
+                    })
+            }
+        }       
     }
 
     renderedCallback() {
@@ -219,8 +247,8 @@ export default class ProductList extends LightningElement {
         //         );
         //     })
 
-        if(this.currentPricebookType == 'Business Premises') {
-            premisesGet({pricebookId: this.currentPricebookId})
+        if(this.currentPricebookId == '01s7S000002VqAzQAK') {
+            allProdGet({pricebookId: this.currentPricebookId})
                 .then(result => {
                     this.newProducts = JSON.parse(result);
                 })
@@ -234,22 +262,39 @@ export default class ProductList extends LightningElement {
                         })
                     );
                 })
-        } else if(this.currentPricebookType == 'Apartments') {
-            apartmentsGet({pricebookId: this.currentPricebookId})
-                .then(result => {
-                    this.newProducts = JSON.parse(result);
-                })
-                .catch(error => {
-                    this.error = error;
-                    this.dispatchEvent(
-                        new ShowToastEvent({
-                            title: 'Error',
-                            message: this.error,
-                            variant: 'error'
-                        })
-                    );
-                })
-        }
+        } else {
+            if(this.currentPricebookType == 'Business Premises') {
+                premisesGet({pricebookId: this.currentPricebookId})
+                    .then(result => {
+                        this.newProducts = JSON.parse(result);
+                    })
+                    .catch(error => {
+                        this.error = error;
+                        this.dispatchEvent(
+                            new ShowToastEvent({
+                                title: 'Error',
+                                message: this.error,
+                                variant: 'error'
+                            })
+                        );
+                    })
+            } else if(this.currentPricebookType == 'Apartments') {
+                apartmentsGet({pricebookId: this.currentPricebookId})
+                    .then(result => {
+                        this.newProducts = JSON.parse(result);
+                    })
+                    .catch(error => {
+                        this.error = error;
+                        this.dispatchEvent(
+                            new ShowToastEvent({
+                                title: 'Error',
+                                message: this.error,
+                                variant: 'error'
+                            })
+                        );
+                    })
+            }
+        }  
 
         searchPricebookEntries({id: this.currentPricebookId, name: this.productSearch})
             .then(result => {

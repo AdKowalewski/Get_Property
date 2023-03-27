@@ -400,6 +400,49 @@ public with sharing class PriceBookController {
     }
 
     @AuraEnabled
+    public static String getAllProducts(String pricebookId) {
+        String jsonStr = '';
+        List<Product2> products = [
+            SELECT Id, Name
+            FROM Product2
+            WHERE RecordType.Name = 'Apartments' OR RecordType.Name = 'Business Premises'
+        ];
+        List<PricebookEntry> pbentries = [
+            SELECT Id, Product2.Name
+            FROM PricebookEntry 
+            WHERE Pricebook2.Id = :pricebookId
+        ];
+        List<String> names = new List<String>();
+        for(PricebookEntry entry : pbentries) {
+            names.add(entry.Product2.Name);
+        }
+
+        Boolean k = false;
+        List<Product2> products2 = new List<Product2>();
+        for(Integer i = 0; i < products.size(); i++) {
+            for(Integer j = 0; j < names.size(); j++) {
+                if(products.get(i).Name.equals(names.get(j))) {
+                    k = true;
+                }
+            }
+            if(k == false) {
+                products2.add(products.get(i));
+            }
+            k = false;
+        }
+
+        List<ProductWrapper> wrappers = new List<ProductWrapper>();
+        for(Product2 prod : products2) {
+            ProductWrapper wrapper = new ProductWrapper();
+            wrapper.id = prod.Id;
+            wrapper.name = prod.Name;
+            wrappers.add(wrapper);
+        }
+        jsonStr = JSON.serialize(wrappers);
+        return jsonStr;
+    }
+
+    @AuraEnabled
     public static String getApartments(String pricebookId) {
         String jsonStr = '';
         List<Product2> products = [
