@@ -11,6 +11,7 @@ import premisesGet from '@salesforce/apex/PriceBookController.getPremises';
 import minPrice from '@salesforce/apex/PriceBookController.getMinimalPrice';
 import selectedUpdate from '@salesforce/apex/PriceBookController.updateSelectedEntries';
 import allProdGet from '@salesforce/apex/PriceBookController.getAllProducts';
+import entryDelete from '@salesforce/apex/PriceBookController.deletePriceBookEntry';
 
 export default class ProductList extends LightningElement {
     
@@ -23,6 +24,7 @@ export default class ProductList extends LightningElement {
     @track showModal = false;
     @track showSingleModal = false;
     @track showAllModal = false;
+    @track showDeleteModal = false;
     @track newProductName;
     @track newProductPrice;
     @track currentEntryId;
@@ -361,6 +363,7 @@ export default class ProductList extends LightningElement {
         this.showModal = false;
         this.showSingleModal = false;
         this.showAllModal = false;
+        this.showDeleteModal = false;
         this.allDiscount = null;
         this.allDiscountType = null;
     }
@@ -880,5 +883,99 @@ export default class ProductList extends LightningElement {
             }
         }
         return min;
+    }
+
+    displayDeleteModal(event) {
+        this.showDeleteModal = true;
+        this.currentEntryId = event.target.dataset.productId;
+    }
+
+    handleEntryDelete() {
+        entryDelete({id: this.currentEntryId})
+            .then(result => {
+                this.showDeleteModal = false;
+                getPricebookEntries({id: this.currentPricebookId})
+                    .then(result => {
+                        this.products = JSON.parse(result);
+                        for(const item of this.products) {
+                            item.price = parseFloat(item.price);
+                        }
+                    })
+                    .catch(error => {
+                        this.error = error;
+                        this.dispatchEvent(
+                            new ShowToastEvent({
+                                title: 'Error',
+                                message: this.error,
+                                variant: 'error'
+                            })
+                        );
+                    })
+                if(this.currentPricebookId == '01s7S000002VqAzQAK') {
+                    allProdGet({pricebookId: this.currentPricebookId})
+                        .then(result => {
+                            this.newProducts = JSON.parse(result);
+                        })
+                        .catch(error => {
+                            this.error = error;
+                            this.dispatchEvent(
+                                new ShowToastEvent({
+                                    title: 'Error',
+                                    message: this.error,
+                                    variant: 'error'
+                                })
+                            );
+                        })
+                } else {
+                    if(this.currentPricebookType == 'Business Premises') {
+                        premisesGet({pricebookId: this.currentPricebookId})
+                            .then(result => {
+                                this.newProducts = JSON.parse(result);
+                            })
+                            .catch(error => {
+                                this.error = error;
+                                this.dispatchEvent(
+                                    new ShowToastEvent({
+                                        title: 'Error',
+                                        message: this.error,
+                                        variant: 'error'
+                                    })
+                                );
+                            })
+                    } else if(this.currentPricebookType == 'Apartments') {
+                        apartmentsGet({pricebookId: this.currentPricebookId})
+                            .then(result => {
+                                this.newProducts = JSON.parse(result);
+                            })
+                            .catch(error => {
+                                this.error = error;
+                                this.dispatchEvent(
+                                    new ShowToastEvent({
+                                        title: 'Error',
+                                        message: this.error,
+                                        variant: 'error'
+                                    })
+                                );
+                            })
+                    }
+                }
+                this.dispatchEvent(
+                    new ShowToastEvent({
+                        title: 'Success',
+                        message: 'Price Book Entry deleted successfully',
+                        variant: 'success'
+                    })
+                );
+            })
+            // .catch(error => {
+            //     this.error = error;
+            //     this.dispatchEvent(
+            //         new ShowToastEvent({
+            //             title: 'Error',
+            //             message: this.error,
+            //             variant: 'error'
+            //         })
+            //     );
+            // })
     }
 }

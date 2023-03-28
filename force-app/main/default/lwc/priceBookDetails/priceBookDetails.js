@@ -5,6 +5,7 @@ import getById from '@salesforce/apex/PriceBookController.getPricebookById';
 import getPricebookEntriesStd from '@salesforce/apex/PriceBookController.getStandardPricebookEntries';
 import pricebookDeactivate from '@salesforce/apex/PriceBookController.deactivatePricebook';
 import pricebookEdit from '@salesforce/apex/PriceBookController.updatePriceBook';
+import pricebookDelete from '@salesforce/apex/PriceBookController.deletePriceBook';
 
 export default class PriceBookDetails extends LightningElement {
     
@@ -22,6 +23,7 @@ export default class PriceBookDetails extends LightningElement {
 
     @track error;
     @track showEditModal = false;
+    @track showDeleteModal = false;
     @track displayDates = true;
 
     get disableDeactivate() {
@@ -70,6 +72,7 @@ export default class PriceBookDetails extends LightningElement {
 
     handleCancel() {
         this.showEditModal = false;
+        this.showDeleteModal = false;
     }
 
     handleEditPricebookNameChange(event) {
@@ -157,6 +160,45 @@ export default class PriceBookDetails extends LightningElement {
                         variant: 'success'
                     })
                 );
+            })
+            .catch(error => {
+                this.error = error;
+                this.dispatchEvent(
+                    new ShowToastEvent({
+                        title: 'Error',
+                        message: this.error,
+                        variant: 'error'
+                    })
+                );
+            })
+    }
+
+    displayDeleteModal() {
+        this.showDeleteModal = true;
+    }
+
+    handleDelete() {
+        pricebookDelete({id: this.currentId})
+            .then(result => {       
+                let data = JSON.parse(result);
+                if(data.message == '') {
+                    this.showDeleteModal = false;
+                    this.dispatchEvent(
+                        new ShowToastEvent({
+                            title: 'Success',
+                            message: 'Price Book deleted successfully',
+                            variant: 'success'
+                        })
+                    );
+                } else if(data.message != '') {
+                    this.dispatchEvent(
+                        new ShowToastEvent({
+                            title: 'Error',
+                            message: data.message,
+                            variant: 'error'
+                        })
+                    ); 
+                }
             })
             .catch(error => {
                 this.error = error;

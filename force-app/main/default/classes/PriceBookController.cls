@@ -527,4 +527,38 @@ public with sharing class PriceBookController {
         jsonStr = JSON.serialize(wrappers);
         return jsonStr;
     }
+
+    @AuraEnabled
+    public static String deletePriceBook(String id) {
+        String jsonStr = '';
+        ResponseWrapper wrapper = new ResponseWrapper();
+        Pricebook2 pricebook = [
+            SELECT Id, Name
+            FROM Pricebook2
+            WHERE Id = :id
+        ];
+        List<PricebookEntry> entries = [
+            SELECT Id, Pricebook2.Id
+            FROM PricebookEntry
+            WHERE Pricebook2.Id = :id
+        ];
+        if(entries.size() == 0) {
+            wrapper.message = '';
+            delete pricebook;
+        } else {
+            wrapper.message = 'Delete Price Book Entries first';
+        }
+        jsonStr = JSON.serialize(wrapper);
+        return jsonStr;
+    }
+
+    @AuraEnabled
+    public static void deletePriceBookEntry(String id) {
+        PricebookEntry entry = [
+            SELECT Id, Name
+            FROM PricebookEntry
+            WHERE Id = :id
+        ];
+        delete entry;
+    }
 }

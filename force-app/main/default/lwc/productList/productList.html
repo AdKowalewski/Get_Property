@@ -35,15 +35,23 @@
                             <lightning-input data-id={product.id} data-product-id={product.id} data-price={product.price} type="checkbox" onchange={handleSelectId}></lightning-input>
                         </td>
                         <td data-product-id={product.id} data-discount={product.discount} data-discount-type={product.discountType}>
-                            <lightning-button 
-                                variant="neutral" 
-                                label="Update" 
-                                class="search-button" 
-                                onclick={displaySingleModal} 
-                                data-product-id={product.id} 
-                                data-discount={product.discount} 
-                                data-discount-type={product.discountType}
-                                data-price={product.price}></lightning-button>
+                            <lightning-button-group>
+                                <lightning-button 
+                                    variant="neutral" 
+                                    label="Update" 
+                                    class="search-button" 
+                                    onclick={displaySingleModal} 
+                                    data-product-id={product.id} 
+                                    data-discount={product.discount} 
+                                    data-discount-type={product.discountType}
+                                    data-price={product.price}></lightning-button>
+                                <lightning-button 
+                                    variant="destructive-text" 
+                                    label="Delete" 
+                                    class="search-button" 
+                                    onclick={displayDeleteModal} 
+                                    data-product-id={product.id}></lightning-button>
+                            </lightning-button-group>
                         </td>
                         <td class="point" data-product-id={product.productId} onclick={goToProduct}>{product.productName}</td>
                         <td>{product.price} EUR</td>
@@ -175,6 +183,32 @@
                     <lightning-button variant="brand"
                                       label="Save"
                                       onclick={handleAllEdit}></lightning-button>
+                    <lightning-button variant="neutral"
+                                      label="Cancel"
+                                      onclick={handleCancel}></lightning-button>
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
+
+    <template if:true={showDeleteModal}>
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    <lightning-button-icon icon-name="utility:close"
+                                          onclick={handleCancel}
+                                          variant="bare-inverse"
+                                          class="slds-modal__close"></lightning-button-icon>
+                    <h2 id="modal-heading-04" class="slds-text-heading_medium slds-hyphenate">Delete Price Book Entry</h2>
+                </header>
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-4">
+                    <h2>Are you sure you want to delete this Price Book Entry?</h2>
+                </div>
+                <footer class="slds-modal__footer">
+                    <lightning-button variant="brand"
+                                      label="Delete"
+                                      onclick={handleEntryDelete}></lightning-button>
                     <lightning-button variant="neutral"
                                       label="Cancel"
                                       onclick={handleCancel}></lightning-button>
