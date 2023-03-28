@@ -6,8 +6,9 @@
         </lightning-layout-item>
         <lightning-layout-item size="12" style="margin-bottom: 1%;">
             <lightning-button-group>
-                <lightning-button variant="brand" label="+ Add Product" class="search-button" onclick={displayModal} disabled={addProductDisabled}></lightning-button>
+                <lightning-button variant="neutral" label="Add Product" class="search-button" onclick={displayModal} disabled={addProductDisabled}></lightning-button>
                 <lightning-button variant="neutral" label="Update Selected" class="search-button" onclick={displayAllModal} disabled={updateAllDisabled}></lightning-button>
+                <lightning-button variant="destructive-text" label="Delete All Products" class="search-button" onclick={displayDeleteAllModal} disabled={deleteAllDisabled}></lightning-button>
             </lightning-button-group>
         </lightning-layout-item>
     </lightning-layout>
@@ -209,6 +210,32 @@
                     <lightning-button variant="brand"
                                       label="Delete"
                                       onclick={handleEntryDelete}></lightning-button>
+                    <lightning-button variant="neutral"
+                                      label="Cancel"
+                                      onclick={handleCancel}></lightning-button>
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
+
+    <template if:true={showDeleteAllModal}>
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    <lightning-button-icon icon-name="utility:close"
+                                          onclick={handleCancel}
+                                          variant="bare-inverse"
+                                          class="slds-modal__close"></lightning-button-icon>
+                    <h2 id="modal-heading-05" class="slds-text-heading_medium slds-hyphenate">Delete Price Book Entries</h2>
+                </header>
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-5">
+                    <h2>Are you sure you want to delete all Price Book Entries?</h2>
+                </div>
+                <footer class="slds-modal__footer">
+                    <lightning-button variant="brand"
+                                      label="Delete"
+                                      onclick={handleEntryDeleteAll}></lightning-button>
                     <lightning-button variant="neutral"
                                       label="Cancel"
                                       onclick={handleCancel}></lightning-button>

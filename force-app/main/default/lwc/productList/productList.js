@@ -12,6 +12,7 @@ import minPrice from '@salesforce/apex/PriceBookController.getMinimalPrice';
 import selectedUpdate from '@salesforce/apex/PriceBookController.updateSelectedEntries';
 import allProdGet from '@salesforce/apex/PriceBookController.getAllProducts';
 import entryDelete from '@salesforce/apex/PriceBookController.deletePriceBookEntry';
+import entryDeleteAll from '@salesforce/apex/PriceBookController.deleteAllPriceBookEntries';
 
 export default class ProductList extends LightningElement {
     
@@ -25,6 +26,7 @@ export default class ProductList extends LightningElement {
     @track showSingleModal = false;
     @track showAllModal = false;
     @track showDeleteModal = false;
+    @track showDeleteAllModal = false;
     @track newProductName;
     @track newProductPrice;
     @track currentEntryId;
@@ -37,6 +39,16 @@ export default class ProductList extends LightningElement {
     @track minimal;
     @track idList = [];
     @track priceList = [];
+
+    get deleteAllDisabled() {
+        let flag = false;
+        if(this.products.length == 0) {
+            flag = true;
+        } else if(this.products.length != 0) {
+            flag = false;
+        }
+        return flag;
+    }
 
     get updateAllDisabled() {
         let flag = false;
@@ -364,6 +376,7 @@ export default class ProductList extends LightningElement {
         this.showSingleModal = false;
         this.showAllModal = false;
         this.showDeleteModal = false;
+        this.showDeleteAllModal = false;
         this.allDiscount = null;
         this.allDiscountType = null;
     }
@@ -888,6 +901,89 @@ export default class ProductList extends LightningElement {
     displayDeleteModal(event) {
         this.showDeleteModal = true;
         this.currentEntryId = event.target.dataset.productId;
+    }
+
+    displayDeleteAllModal() {
+        this.showDeleteAllModal = true;
+    }
+
+    handleEntryDeleteAll() {
+        entryDeleteAll({pricebookId: this.currentPricebookId})
+            .then(result => {
+                this.showDeleteAllModal = false;
+                getPricebookEntries({id: this.currentPricebookId})
+                    .then(result => {
+                        this.products = JSON.parse(result);
+                        for(const item of this.products) {
+                            item.price = parseFloat(item.price);
+                        }
+                    })
+                    .catch(error => {
+                        this.error = error;
+                        this.dispatchEvent(
+                            new ShowToastEvent({
+                                title: 'Error',
+                                message: this.error,
+                                variant: 'error'
+                            })
+                        );
+                    })
+                if(this.currentPricebookId == '01s7S000002VqAzQAK') {
+                    allProdGet({pricebookId: this.currentPricebookId})
+                        .then(result => {
+                            this.newProducts = JSON.parse(result);
+                        })
+                        .catch(error => {
+                            this.error = error;
+                            this.dispatchEvent(
+                                new ShowToastEvent({
+                                    title: 'Error',
+                                    message: this.error,
+                                    variant: 'error'
+                                })
+                            );
+                        })
+                } else {
+                    if(this.currentPricebookType == 'Business Premises') {
+                        premisesGet({pricebookId: this.currentPricebookId})
+                            .then(result => {
+                                this.newProducts = JSON.parse(result);
+                            })
+                            .catch(error => {
+                                this.error = error;
+                                this.dispatchEvent(
+                                    new ShowToastEvent({
+                                        title: 'Error',
+                                        message: this.error,
+                                        variant: 'error'
+                                    })
+                                );
+                            })
+                    } else if(this.currentPricebookType == 'Apartments') {
+                        apartmentsGet({pricebookId: this.currentPricebookId})
+                            .then(result => {
+                                this.newProducts = JSON.parse(result);
+                            })
+                            .catch(error => {
+                                this.error = error;
+                                this.dispatchEvent(
+                                    new ShowToastEvent({
+                                        title: 'Error',
+                                        message: this.error,
+                                        variant: 'error'
+                                    })
+                                );
+                            })
+                    }
+                }
+                this.dispatchEvent(
+                    new ShowToastEvent({
+                        title: 'Success',
+                        message: 'All Price Book Entries deleted successfully',
+                        variant: 'success'
+                    })
+                );
+            })
     }
 
     handleEntryDelete() {

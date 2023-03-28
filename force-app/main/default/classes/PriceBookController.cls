@@ -561,4 +561,14 @@ public with sharing class PriceBookController {
         ];
         delete entry;
     }
+
+    @AuraEnabled
+    public static void deleteAllPriceBookEntries(String pricebookId) {
+        List<PricebookEntry> entriesToDelete = [
+            SELECT Id, Name, Pricebook2.Id
+            FROM PricebookEntry
+            WHERE Pricebook2.Id = :pricebookId
+        ];
+        delete entriesToDelete;
+    }
 }
