@@ -25,7 +25,7 @@ export default class PriceBookDetails extends LightningElement {
     @track displayDates = true;
 
     get disableDeactivate() {
-        let flag = true;
+        let flag = false;
         if(this.currentIsActive == 'false') {
             flag = true;
         } else if(this.currentIsActive == 'true') {
