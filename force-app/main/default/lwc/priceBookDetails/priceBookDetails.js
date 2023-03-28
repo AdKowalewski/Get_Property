@@ -44,9 +44,9 @@ export default class PriceBookDetails extends LightningElement {
                 let data = JSON.parse(result);
                 this.currentId = data.id;
                 this.currentName = data.name;
-                this.currentProdType = data.productType;
-                this.currentStartDate = data.startDate;
-                this.currentEndDate = data.endDate;
+                this.currentProdType = 'standard';
+                this.currentStartDate = 'undefined';
+                this.currentEndDate = 'undefined';
                 this.currentIsActive = data.isActive;
             })
             .catch(error => {
@@ -59,6 +59,14 @@ export default class PriceBookDetails extends LightningElement {
                     })
                 );
             })
+    }
+
+    renderedCallback() {
+        if(this.currentId == '01s7S000002VqAzQAK') {
+            this.currentProdType = 'standard';
+            this.currentStartDate = 'undefined';
+            this.currentEndDate = 'undefined';
+        }
     }
 
     displayEditModal() {
