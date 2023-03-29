@@ -3,7 +3,7 @@
         <lightning-layout-item size="12" style="margin-bottom: 1%;">
             <div class="slds-text-title" style="font-size: 20px; font-weight: bold; margin-top: 1%;">List of Price Books</div>
             <lightning-input type="text" style="margin-bottom: 1%;" placeholder="Search Price Books" value={pricebookSearch} onchange={handleSearchPricebooks}></lightning-input>
-            <lightning-button variant="brand" label="+ Add Price Book" class="search-button" onclick={displayCreateModal}></lightning-button>
+            <lightning-button variant="neutral" label="New Price Book" class="search-button" onclick={displayCreateModal}></lightning-button>
         </lightning-layout-item>
         <lightning-layout-item size="12" style="margin-bottom: 1%;">
             <template if:false={arePriceBooks}>
