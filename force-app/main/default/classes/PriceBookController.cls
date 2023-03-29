@@ -19,6 +19,7 @@ public with sharing class PriceBookController {
         public Decimal price { get; set; }
         public Decimal discount { get; set; }
         public String discountType { get; set; }
+        public String displayUrl { get; set; }
     }
 
     public class ProductWrapper {
@@ -126,7 +127,7 @@ public with sharing class PriceBookController {
     public static String getStandardPricebookEntries() {
         String jsonStr = '';
         List<PricebookEntry> entries = [
-            SELECT Id, Product2.Id, Product2.Name, Pricebook2.Id, Pricebook2.Name, UnitPrice, Discount__c, Discount_Type__c
+            SELECT Id, Product2.Id, Product2.Name, Pricebook2.Id, Pricebook2.Name, UnitPrice, Discount__c, Discount_Type__c, Product2.DisplayUrl
             FROM PricebookEntry 
             WHERE Pricebook2.Name = 'Standard Price Book'
         ];
@@ -141,6 +142,7 @@ public with sharing class PriceBookController {
             wrapper.price = entry.UnitPrice;
             wrapper.discount = entry.Discount__c;
             wrapper.discountType = entry.Discount_Type__c;
+            wrapper.displayUrl = entry.Product2.DisplayUrl;
             eWrappers.add(wrapper);
         }
         jsonStr = JSON.serialize(eWrappers);
@@ -151,7 +153,7 @@ public with sharing class PriceBookController {
     public static String getEntriesFromPriceBook(String id) {
         String jsonStr = '';
         List<PricebookEntry> entries = [
-            SELECT Id, Product2.Id, Product2.Name, Pricebook2.Id, Pricebook2.Name, UnitPrice, Discount__c, Discount_Type__c
+            SELECT Id, Product2.Id, Product2.Name, Pricebook2.Id, Pricebook2.Name, UnitPrice, Discount__c, Discount_Type__c, Product2.DisplayUrl
             FROM PricebookEntry 
             WHERE Pricebook2.Id = :id
         ];
@@ -166,6 +168,7 @@ public with sharing class PriceBookController {
             wrapper.price = entry.UnitPrice;
             wrapper.discount = entry.Discount__c;
             wrapper.discountType = entry.Discount_Type__c;
+            wrapper.displayUrl = entry.Product2.DisplayUrl;
             eWrappers.add(wrapper);
         }
         jsonStr = JSON.serialize(eWrappers);
@@ -191,7 +194,7 @@ public with sharing class PriceBookController {
         String jsonStr = '';
         name = (String.isBlank(name)) ? '%' : '%' + name + '%';
         List<PricebookEntry> entries = [
-            SELECT Id, Product2.Id, Product2.Name, Pricebook2.Id, Pricebook2.Name, UnitPrice, Discount__c, Discount_Type__c
+            SELECT Id, Product2.Id, Product2.Name, Pricebook2.Id, Pricebook2.Name, UnitPrice, Discount__c, Discount_Type__c, Product2.DisplayUrl
             FROM PricebookEntry 
             WHERE Pricebook2.Id = :id AND Product2.Name LIKE :name
         ];
@@ -206,6 +209,7 @@ public with sharing class PriceBookController {
             wrapper.price = entry.UnitPrice;
             wrapper.discount = entry.Discount__c;
             wrapper.discountType = entry.Discount_Type__c;
+            wrapper.displayUrl = entry.Product2.DisplayUrl;
             eWrappers.add(wrapper);
         }
         jsonStr = JSON.serialize(eWrappers);

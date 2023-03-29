@@ -22,11 +22,12 @@
                     <th>
                         <lightning-input data-id="selAll" type="checkbox" label="Select all" onchange={handleSelectAll}></lightning-input>
                     </th>
-                    <th><b>Actions</b></th>
+                    <th><b>Image</b></th>
                     <th><b>Name</b></th>
                     <th><b>Price</b></th>
                     <th><b>Discount</b></th>
                     <th><b>Discount Type</b></th>
+                    <th><b>Actions</b></th>
                 </tr>
             </thead>
             <tbody class="tableBody">
@@ -35,6 +36,13 @@
                         <td data-product-id={product.id} data-price={product.price}>
                             <lightning-input data-id={product.id} data-product-id={product.id} data-price={product.price} type="checkbox" onchange={handleSelectId}></lightning-input>
                         </td>
+                        <td class="point" data-product-id={product.productId} onclick={goToProduct}>
+                            <img src={product.displayUrl} alt="image" width="150" height="100"/>
+                        </td>
+                        <td class="point" data-product-id={product.productId} onclick={goToProduct}>{product.productName}</td>
+                        <td>{product.price} EUR</td>
+                        <td>{product.discount}</td>
+                        <td>{product.discountType}</td>
                         <td data-product-id={product.id} data-discount={product.discount} data-discount-type={product.discountType}>
                             <lightning-button-group>
                                 <lightning-button 
@@ -54,10 +62,6 @@
                                     data-product-id={product.id}></lightning-button>
                             </lightning-button-group>
                         </td>
-                        <td class="point" data-product-id={product.productId} onclick={goToProduct}>{product.productName}</td>
-                        <td>{product.price} EUR</td>
-                        <td>{product.discount}</td>
-                        <td>{product.discountType}</td>
                     </tr>
                 </template>
             </tbody>
