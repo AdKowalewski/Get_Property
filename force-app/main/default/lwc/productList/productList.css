@@ -10,3 +10,8 @@ table tbody.tableBody {
     overflow-y: scroll;
     max-height: 30vh !important;
 }
+
+.prod-image {
+    min-height: 100px;
+    max-height: 100px;
+}
