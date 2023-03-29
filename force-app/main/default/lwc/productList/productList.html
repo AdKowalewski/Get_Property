@@ -44,7 +44,30 @@
                         <td>{product.discount}</td>
                         <td>{product.discountType}</td>
                         <td data-product-id={product.id} data-discount={product.discount} data-discount-type={product.discountType}>
-                            <lightning-button-group>
+                            <lightning-button-menu
+                                alternative-text="Show Menu"
+                                variant="border-filled"
+                                icon-size="xx-medium"
+                                data-product-id={product.id} 
+                                data-discount={product.discount} 
+                                data-discount-type={product.discountType}
+                                data-price={product.price}
+                                onselect={handleSelect}
+                            >
+                                <lightning-menu-item
+                                    value="Update"
+                                    label="Update"
+                                    data-product-id={product.id} 
+                                    data-discount={product.discount} 
+                                    data-discount-type={product.discountType}
+                                    data-price={product.price}
+                                ></lightning-menu-item>
+                                <lightning-menu-item
+                                    value="Delete"
+                                    label="Delete"
+                                ></lightning-menu-item>
+                            </lightning-button-menu>
+                            <!-- <lightning-button-group>
                                 <lightning-button 
                                     variant="neutral" 
                                     label="Update" 
@@ -60,7 +83,7 @@
                                     class="search-button" 
                                     onclick={displayDeleteModal} 
                                     data-product-id={product.id}></lightning-button>
-                            </lightning-button-group>
+                            </lightning-button-group> -->
                         </td>
                     </tr>
                 </template>

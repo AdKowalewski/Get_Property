@@ -1074,4 +1074,18 @@ export default class ProductList extends LightningElement {
             //     );
             // })
     }
+
+    handleSelect(event) {
+        let selectedVal = event.detail.value;
+        if(selectedVal === 'Update') {
+            this.showSingleModal = true;
+            this.currentEntryId = event.target.dataset.productId;
+            this.currentDiscount = event.target.dataset.discount;
+            this.currentDiscountType = event.target.dataset.discountType;
+            this.currentPrice = parseFloat(event.target.dataset.price);
+        } else if(selectedVal === 'Delete') {
+            this.showDeleteModal = true;
+            this.currentEntryId = event.target.dataset.productId;
+        }
+    }
 }
