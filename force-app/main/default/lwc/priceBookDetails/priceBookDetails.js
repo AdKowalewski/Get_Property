@@ -24,6 +24,7 @@ export default class PriceBookDetails extends LightningElement {
     @track error;
     @track showEditModal = false;
     @track showDeleteModal = false;
+    @track showDeactivateModal = false;
     @track displayDates = true;
 
     get disableDeactivate() {
@@ -70,9 +71,14 @@ export default class PriceBookDetails extends LightningElement {
         this.showEditModal = true;
     }
 
+    displayDeactivateModal() {
+        this.showDeactivateModal = true;
+    }
+
     handleCancel() {
         this.showEditModal = false;
         this.showDeleteModal = false;
+        this.showDeactivateModal = false;
     }
 
     handleEditPricebookNameChange(event) {
