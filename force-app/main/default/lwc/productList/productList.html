@@ -37,7 +37,7 @@
                             <lightning-input data-id={product.id} data-product-id={product.id} data-price={product.price} type="checkbox" onchange={handleSelectId}></lightning-input>
                         </td>
                         <td class="point" data-product-id={product.productId} onclick={goToProduct}>
-                            <img src={product.displayUrl} alt="image" width="150" height="100"/>
+                            <img src={product.displayUrl} alt="image" width="150" height="100" data-product-id={product.productId} onclick={goToProduct}/>
                         </td>
                         <td class="point" data-product-id={product.productId} onclick={goToProduct}>{product.productName}</td>
                         <td>{product.price} EUR</td>
