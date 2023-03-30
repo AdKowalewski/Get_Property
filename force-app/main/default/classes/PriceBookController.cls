@@ -364,6 +364,24 @@ public with sharing class PriceBookController {
     }
 
     @AuraEnabled
+    public static void updateSingleEntryUp(String id, String discountType, Decimal discount) {
+        PricebookEntry entry = [
+            SELECT Id, UnitPrice, Discount__c, Discount_Type__c
+            FROM PricebookEntry 
+            WHERE Id = :id
+        ];
+        entry.Discount__c = 0;
+        // entry.Discount_Type__c = discountType;
+        if(discountType == 'Percentage') {
+            Decimal sub = entry.UnitPrice * (discount / 100);
+            entry.UnitPrice = entry.UnitPrice + sub;
+        } else if(discountType == 'Amount') {
+            entry.UnitPrice = entry.UnitPrice + discount;
+        }
+        update entry;
+    }
+
+    @AuraEnabled
     public static void updateAllEntries(String pricebookId, String discountType, Decimal discount) {
         List<PricebookEntry> entriesToUpdate = [
             SELECT Id, Product2.Id, Product2.Name, Pricebook2.Id, Pricebook2.Name, UnitPrice, Discount__c, Discount_Type__c
@@ -384,6 +402,26 @@ public with sharing class PriceBookController {
     }
 
     @AuraEnabled
+    public static void updateAllEntriesUp(String pricebookId, String discountType, Decimal discount) {
+        List<PricebookEntry> entriesToUpdate = [
+            SELECT Id, Product2.Id, Product2.Name, Pricebook2.Id, Pricebook2.Name, UnitPrice, Discount__c, Discount_Type__c
+            FROM PricebookEntry 
+            WHERE Pricebook2.Id = :pricebookId
+        ];
+        for(PricebookEntry entry : entriesToUpdate) {
+            entry.Discount__c = 0;
+            // entry.Discount_Type__c = discountType;
+            if(discountType == 'Percentage') {
+                Decimal sub = entry.UnitPrice * (discount / 100);
+                entry.UnitPrice = entry.UnitPrice + sub;
+            } else if(discountType == 'Amount') {
+                entry.UnitPrice = entry.UnitPrice + discount;
+            }
+        }
+        update entriesToUpdate;
+    }
+
+    @AuraEnabled
     public static void updateSelectedEntries(List<String> ids, String discountType, Decimal discount) {
         List<PricebookEntry> entriesToUpdate = [
             SELECT Id, Product2.Id, Product2.Name, Pricebook2.Id, Pricebook2.Name, UnitPrice, Discount__c, Discount_Type__c
@@ -398,6 +436,26 @@ public with sharing class PriceBookController {
                 entry.UnitPrice = entry.UnitPrice - sub;
             } else if(discountType == 'Amount') {
                 entry.UnitPrice = entry.UnitPrice - discount;
+            }
+        }
+        update entriesToUpdate;
+    }
+
+    @AuraEnabled
+    public static void updateSelectedEntriesUp(List<String> ids, String discountType, Decimal discount) {
+        List<PricebookEntry> entriesToUpdate = [
+            SELECT Id, Product2.Id, Product2.Name, Pricebook2.Id, Pricebook2.Name, UnitPrice, Discount__c, Discount_Type__c
+            FROM PricebookEntry 
+            WHERE Id IN :ids
+        ];
+        for(PricebookEntry entry : entriesToUpdate) {
+            entry.Discount__c = 0;
+            // entry.Discount_Type__c = discountType;
+            if(discountType == 'Percentage') {
+                Decimal sub = entry.UnitPrice * (discount / 100);
+                entry.UnitPrice = entry.UnitPrice + sub;
+            } else if(discountType == 'Amount') {
+                entry.UnitPrice = entry.UnitPrice + discount;
             }
         }
         update entriesToUpdate;

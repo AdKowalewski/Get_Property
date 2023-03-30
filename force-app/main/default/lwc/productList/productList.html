@@ -7,7 +7,8 @@
         <lightning-layout-item size="12" style="margin-bottom: 1%;">
             <lightning-button-group>
                 <lightning-button variant="neutral" label="Add Product" class="search-button" onclick={displayModal} disabled={addProductDisabled}></lightning-button>
-                <lightning-button variant="neutral" label="Update Selected" class="search-button" onclick={displayAllModal} disabled={updateAllDisabled}></lightning-button>
+                <lightning-button variant="neutral" label="Discount Selected" class="search-button" onclick={displayAllModal} disabled={updateAllDisabled}></lightning-button>
+                <lightning-button variant="neutral" label="Increase Selected" class="search-button" onclick={displayAllModalUp} disabled={updateAllDisabled}></lightning-button>
                 <lightning-button variant="destructive-text" label="Delete All Products" class="search-button" onclick={displayDeleteAllModal} disabled={deleteAllDisabled}></lightning-button>
             </lightning-button-group>
         </lightning-layout-item>
@@ -55,8 +56,16 @@
                                 onselect={handleSelect}
                             >
                                 <lightning-menu-item
-                                    value="Update"
-                                    label="Update"
+                                    value="Discount"
+                                    label="Discount"
+                                    data-product-id={product.id} 
+                                    data-discount={product.discount} 
+                                    data-discount-type={product.discountType}
+                                    data-price={product.price}
+                                ></lightning-menu-item>
+                                <lightning-menu-item
+                                    value="Increase"
+                                    label="Increase"
                                     data-product-id={product.id} 
                                     data-discount={product.discount} 
                                     data-discount-type={product.discountType}
@@ -141,17 +150,17 @@
                                           onclick={handleCancel}
                                           variant="bare-inverse"
                                           class="slds-modal__close"></lightning-button-icon>
-                    <h2 id="modal-heading-02" class="slds-text-heading_medium slds-hyphenate">Edit Price Book Entry</h2>
+                    <h2 id="modal-heading-02" class="slds-text-heading_medium slds-hyphenate">Edit Price Book Entry Discount</h2>
                 </header>
                 <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-2">
                     <form class="slds-form_stacked">
-                        <lightning-input
+                        <!-- <lightning-input
                             type="number" 
                             label="Price"
                             data-recid="Price"
                             value={currentPrice}
                             step=".01"
-                            onchange={handleCurrentPriceChange}></lightning-input>
+                            onchange={handleCurrentPriceChange}></lightning-input> -->
                         <lightning-combobox
                             label="Discount Type"
                             value={currentDiscountType}
@@ -170,6 +179,46 @@
                     <lightning-button variant="brand"
                                       label="Save"
                                       onclick={handleSingleEdit}></lightning-button>
+                    <lightning-button variant="neutral"
+                                      label="Cancel"
+                                      onclick={handleCancel}></lightning-button>
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
+
+    <template if:true={showSingleModalUp}>
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    <lightning-button-icon icon-name="utility:close"
+                                          onclick={handleCancel}
+                                          variant="bare-inverse"
+                                          class="slds-modal__close"></lightning-button-icon>
+                    <h2 id="modal-heading-022" class="slds-text-heading_medium slds-hyphenate">Increase Price Book Entry Price</h2>
+                </header>
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-22">
+                    <form class="slds-form_stacked">
+                        <lightning-combobox
+                            label="Increase Type"
+                            value={currentDiscountType}
+                            options={discountTypes}
+                            onchange={handleCurrentDiscountTypeChange}></lightning-combobox>
+                        <lightning-input
+                            type="number" 
+                            label="Increase"
+                            data-recid="Increase"
+                            value={currentIncrease}
+                            step=".01"
+                            onchange={handleCurrentIncreaseChange}
+                            required="true"></lightning-input>
+                    </form>
+                </div>
+                <footer class="slds-modal__footer">
+                    <lightning-button variant="brand"
+                                      label="Save"
+                                      onclick={handleSingleEditUp}></lightning-button>
                     <lightning-button variant="neutral"
                                       label="Cancel"
                                       onclick={handleCancel}></lightning-button>
@@ -211,6 +260,47 @@
                     <lightning-button variant="brand"
                                       label="Save"
                                       onclick={handleAllEdit}></lightning-button>
+                    <lightning-button variant="neutral"
+                                      label="Cancel"
+                                      onclick={handleCancel}></lightning-button>
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
+
+    <template if:true={showAllModalUp}>
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    <lightning-button-icon icon-name="utility:close"
+                                          onclick={handleCancel}
+                                          variant="bare-inverse"
+                                          class="slds-modal__close"></lightning-button-icon>
+                    <h2 id="modal-heading-033" class="slds-text-heading_medium slds-hyphenate">Increase Prices In Selected Price Book Entries</h2>
+                </header>
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-33">
+                    <form class="slds-form_stacked">
+                        <lightning-combobox
+                            label="Increase Type"
+                            value={allDiscountType}
+                            options={discountTypes}
+                            required="true"
+                            onchange={handleAllDiscountTypeChange}></lightning-combobox>
+                        <lightning-input
+                            type="number" 
+                            label="Increase"
+                            data-recid="Increase"
+                            value={allIncrease}
+                            step=".01"
+                            required="true"
+                            onchange={handleAllIncreaseChange}></lightning-input>
+                    </form>
+                </div>
+                <footer class="slds-modal__footer">
+                    <lightning-button variant="brand"
+                                      label="Save"
+                                      onclick={handleAllEditUp}></lightning-button>
                     <lightning-button variant="neutral"
                                       label="Cancel"
                                       onclick={handleCancel}></lightning-button>

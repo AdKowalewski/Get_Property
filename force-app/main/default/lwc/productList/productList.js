@@ -6,10 +6,13 @@ import searchPricebookEntries from '@salesforce/apex/PriceBookController.searchE
 import entryCreate from '@salesforce/apex/PriceBookController.createEntry';
 import singleUpdate from '@salesforce/apex/PriceBookController.updateSingleEntry';
 import allUpdate from '@salesforce/apex/PriceBookController.updateAllEntries';
+import selectedUpdate from '@salesforce/apex/PriceBookController.updateSelectedEntries';
+import singleUpdateUp from '@salesforce/apex/PriceBookController.updateSingleEntryUp';
+import allUpdateUp from '@salesforce/apex/PriceBookController.updateAllEntriesUp';
+import selectedUpdateUp from '@salesforce/apex/PriceBookController.updateSelectedEntriesUp';
 import apartmentsGet from '@salesforce/apex/PriceBookController.getApartments';
 import premisesGet from '@salesforce/apex/PriceBookController.getPremises';
 import minPrice from '@salesforce/apex/PriceBookController.getMinimalPrice';
-import selectedUpdate from '@salesforce/apex/PriceBookController.updateSelectedEntries';
 import allProdGet from '@salesforce/apex/PriceBookController.getAllProducts';
 import entryDelete from '@salesforce/apex/PriceBookController.deletePriceBookEntry';
 import entryDeleteAll from '@salesforce/apex/PriceBookController.deleteAllPriceBookEntries';
@@ -25,6 +28,8 @@ export default class ProductList extends LightningElement {
     @track showModal = false;
     @track showSingleModal = false;
     @track showAllModal = false;
+    @track showSingleModalUp = false;
+    @track showAllModalUp = false;
     @track showDeleteModal = false;
     @track showDeleteAllModal = false;
     @track newProductName;
@@ -39,6 +44,8 @@ export default class ProductList extends LightningElement {
     @track minimal;
     @track idList = [];
     @track priceList = [];
+    @track currentIncrease;
+    @track allIncrease;
 
     get deleteAllDisabled() {
         let flag = false;
@@ -371,14 +378,60 @@ export default class ProductList extends LightningElement {
         console.log('min ' + this.minimal);
     }
 
+    displaySingleModalUp(event) {
+        this.showSingleModalUp = true;
+        this.currentEntryId = event.target.dataset.productId;
+        this.currentDiscount = event.target.dataset.discount;
+        this.currentDiscountType = event.target.dataset.discountType;
+        this.currentPrice = parseFloat(event.target.dataset.price);
+    }
+
+    displayAllModalUp() {
+        this.showAllModalUp = true;
+    }
+
     handleCancel() {
         this.showModal = false;
         this.showSingleModal = false;
         this.showAllModal = false;
+        this.showSingleModalUp = false;
+        this.showAllModalUp = false;
         this.showDeleteModal = false;
         this.showDeleteAllModal = false;
         this.allDiscount = null;
         this.allDiscountType = null;
+    }
+
+    handleCurrentIncreaseChange(event) {
+        this.currentIncrease = event.target.value;
+        if(this.currentIncrease < 0) {
+            this.dispatchEvent(
+                new ShowToastEvent({
+                    title: 'Error',
+                    message: 'Value cannot be lower than 0',
+                    variant: 'error'
+                })
+            );
+            this.correctDiscount = false;
+        } else {
+            this.correctDiscount = true;
+        }
+    }
+
+    handleAllIncreaseChange(event) {
+        this.allIncrease = event.target.value;
+        if(this.allIncrease < 0) {
+            this.dispatchEvent(
+                new ShowToastEvent({
+                    title: 'Error',
+                    message: 'Value cannot be lower than 0',
+                    variant: 'error'
+                })
+            );
+            this.correctDiscount = false;
+        } else {
+            this.correctDiscount = true;
+        }
     }
 
     handleNewProductNameChange(event) {
@@ -668,6 +721,85 @@ export default class ProductList extends LightningElement {
         } 
     }
 
+    handleSingleEditUp() {
+        if(this.currentIncrease != null && this.currentIncrease != undefined) {
+            if(this.correctDiscount == true) {
+                singleUpdateUp({id: this.currentEntryId, discountType: this.currentDiscountType, discount: this.currentIncrease})
+                    .then(result => {
+                        this.minimal = null;
+                        this.showSingleModalUp = false;
+                        getPricebookEntries({id: this.currentPricebookId})
+                            .then(result => {
+                                this.products = JSON.parse(result);
+                                for(const item of this.products) {
+                                    item.price = parseFloat(item.price);
+                                }
+                            })
+                            .catch(error => {
+                                this.error = error;
+                                this.dispatchEvent(
+                                    new ShowToastEvent({
+                                        title: 'Error',
+                                        message: this.error,
+                                        variant: 'error'
+                                    })
+                                );
+                            })
+                        // minPrice({id: this.currentPricebookId})
+                        //     .then(result => {
+                        //         let data = JSON.parse(result);
+                        //         this.minimal = parseFloat(data.message);
+                        //     })
+                        //     .catch(error => {
+                        //         this.error = error;
+                        //         this.dispatchEvent(
+                        //             new ShowToastEvent({
+                        //                 title: 'Error',
+                        //                 message: this.error,
+                        //                 variant: 'error'
+                        //             })
+                        //         );
+                        //     })
+                        this.dispatchEvent(
+                            new ShowToastEvent({
+                                title: 'Success',
+                                message: 'Price updated successfully',
+                                variant: 'success'
+                            })
+                        );
+                        this.currentIncrease = null;
+                    })
+                    // .catch(error => {
+                    //     this.error = error;
+                    //     this.dispatchEvent(
+                    //         new ShowToastEvent({
+                    //             title: 'Error',
+                    //             message: this.error,
+                    //             variant: 'error'
+                    //         })
+                    //     );
+                    // })
+                this.deselectAll();
+            } else if(this.correctDiscount == false) {
+                this.dispatchEvent(
+                    new ShowToastEvent({
+                        title: 'Error',
+                        message: 'Invalid increase value',
+                        variant: 'error'
+                    })
+                );
+            } 
+        } else if(this.currentIncrease == null || this.currentIncrease == undefined) {
+            this.dispatchEvent(
+                new ShowToastEvent({
+                    title: 'Error',
+                    message: 'Increase value cannot be empty',
+                    variant: 'error'
+                })
+            );
+        }
+    }
+
     handleAllEdit() {
         let box = this.template.querySelector('[data-id="selAll"]');
         if(this.allDiscountType == null || this.allDiscount == null) {
@@ -792,6 +924,137 @@ export default class ProductList extends LightningElement {
                     new ShowToastEvent({
                         title: 'Error',
                         message: 'Invalid discount value',
+                        variant: 'error'
+                    })
+                );
+            }
+        }         
+    }
+
+    handleAllEditUp() {
+        let box = this.template.querySelector('[data-id="selAll"]');
+        if(this.allDiscountType == null || this.allIncrease == null) {
+            this.dispatchEvent(
+                new ShowToastEvent({
+                    title: 'Error',
+                    message: 'Increase and increase type cannot be empty',
+                    variant: 'error'
+                })
+            );
+        } else {
+            if(this.correctDiscount == true) {
+                if(this.checkIfAnySelected()) {
+                    if(box.checked) {
+                        allUpdateUp({pricebookId: this.currentPricebookId, discountType: this.allDiscountType, discount: this.allIncrease})
+                            .then(result => {
+                                this.deselectAll();
+                                this.minimal = null;
+                                this.showAllModalUp = false;
+                                getPricebookEntries({id: this.currentPricebookId})
+                                    .then(result => {
+                                        this.products = JSON.parse(result);
+                                        for(const item of this.products) {
+                                            item.price = parseFloat(item.price);
+                                        }
+                                    })
+                                    .catch(error => {
+                                        this.error = error;
+                                        this.dispatchEvent(
+                                            new ShowToastEvent({
+                                                title: 'Error',
+                                                message: this.error,
+                                                variant: 'error'
+                                            })
+                                        );
+                                    })
+                                // minPrice({id: this.currentPricebookId})
+                                //     .then(result => {
+                                //         let data = JSON.parse(result);
+                                //         this.minimal = parseFloat(data.message);
+                                //     })
+                                //     .catch(error => {
+                                //         this.error = error;
+                                //         this.dispatchEvent(
+                                //             new ShowToastEvent({
+                                //                 title: 'Error',
+                                //                 message: this.error,
+                                //                 variant: 'error'
+                                //             })
+                                //         );
+                                //     })
+                                this.dispatchEvent(
+                                    new ShowToastEvent({
+                                        title: 'Success',
+                                        message: 'Prices updated successfully',
+                                        variant: 'success'
+                                    })
+                                );
+                                this.allIncrease = null;
+                                this.allDiscountType = null;
+                            })
+                    } else {
+                        selectedUpdateUp({ids: this.idList, discountType: this.allDiscountType, discount: this.allIncrease})
+                            .then(result => {
+                                this.deselectAll();
+                                this.minimal = null;
+                                this.showAllModalUp = false;
+                                getPricebookEntries({id: this.currentPricebookId})
+                                    .then(result => {
+                                        this.products = JSON.parse(result);
+                                        for(const item of this.products) {
+                                            item.price = parseFloat(item.price);
+                                        }
+                                    })
+                                    .catch(error => {
+                                        this.error = error;
+                                        this.dispatchEvent(
+                                            new ShowToastEvent({
+                                                title: 'Error',
+                                                message: this.error,
+                                                variant: 'error'
+                                            })
+                                        );
+                                    })
+                                // minPrice({id: this.currentPricebookId})
+                                //     .then(result => {
+                                //         let data = JSON.parse(result);
+                                //         this.minimal = parseFloat(data.message);
+                                //     })
+                                //     .catch(error => {
+                                //         this.error = error;
+                                //         this.dispatchEvent(
+                                //             new ShowToastEvent({
+                                //                 title: 'Error',
+                                //                 message: this.error,
+                                //                 variant: 'error'
+                                //             })
+                                //         );
+                                //     })
+                                this.dispatchEvent(
+                                    new ShowToastEvent({
+                                        title: 'Success',
+                                        message: 'Prices updated successfully',
+                                        variant: 'success'
+                                    })
+                                );
+                                this.allIncrease = null;
+                                this.allDiscountType = null;
+                            })
+                    }
+                } else {
+                    this.dispatchEvent(
+                        new ShowToastEvent({
+                            title: 'Error',
+                            message: 'Select any product first',
+                            variant: 'error'
+                        })
+                    ); 
+                }
+            } else if(this.correctDiscount == false) {
+                this.dispatchEvent(
+                    new ShowToastEvent({
+                        title: 'Error',
+                        message: 'Invalid increase value',
                         variant: 'error'
                     })
                 );
@@ -1077,8 +1340,14 @@ export default class ProductList extends LightningElement {
 
     handleSelect(event) {
         let selectedVal = event.detail.value;
-        if(selectedVal === 'Update') {
+        if(selectedVal === 'Discount') {
             this.showSingleModal = true;
+            this.currentEntryId = event.target.dataset.productId;
+            this.currentDiscount = event.target.dataset.discount;
+            this.currentDiscountType = event.target.dataset.discountType;
+            this.currentPrice = parseFloat(event.target.dataset.price);
+        } else if(selectedVal === 'Increase') {
+            this.showSingleModalUp = true;
             this.currentEntryId = event.target.dataset.productId;
             this.currentDiscount = event.target.dataset.discount;
             this.currentDiscountType = event.target.dataset.discountType;
