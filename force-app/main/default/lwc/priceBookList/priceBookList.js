@@ -3,6 +3,8 @@ import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import pricebooksInit from '@salesforce/apex/PriceBookController.initPriceBooks';
 import pricebooksSearch from '@salesforce/apex/PriceBookController.searchPriceBooks';
 import pricebookCreate from '@salesforce/apex/PriceBookController.createPriceBook';
+import D3 from '@salesforce/resourceUrl/D3Lib';
+import { loadScript } from 'lightning/platformResourceLoader';
 
 export default class PriceBookList extends LightningElement {
     
@@ -10,12 +12,16 @@ export default class PriceBookList extends LightningElement {
     @track error = null;
     @track pricebookSearch;
     @track showCreateModal = false;
+    @track showChartModal = false;
     @track newPricebookName;
     @track newPricebookStartDate;
     @track newPricebookEndDate;
     @track newPricebookProductType = 'Business Premises';
     @api isUpdate = false;
     @track todayDate;
+    @track chartData = [];
+    svgWidth = 1000;
+    svgHeight = 500;
 
     get productTypes() {
         return [
@@ -38,6 +44,14 @@ export default class PriceBookList extends LightningElement {
         pricebooksInit()
             .then(data => {
                 this.pricebooks = JSON.parse(data);
+                this.chartData = [];
+                for(let item of this.pricebooks) {
+                    this.chartData.push({
+                        name: item.name,
+                        start: new Date(item.startDate),
+                        end: new Date(item.endDate)
+                    });
+                }
             })
             .catch(error => {
                 this.error = error;
@@ -49,6 +63,23 @@ export default class PriceBookList extends LightningElement {
                     })
                 );
             })
+    }
+
+    renderedCallback() {
+        Promise.all([
+            loadScript(this, D3 + '/package/dist/d3.min.js')
+        ]).then(() => {
+            console.log('loaded successfully');
+            this.drawChart();      
+        }).catch(error => {
+            this.dispatchEvent(
+                new ShowToastEvent({
+                    title: 'Error',
+                    message: 'Error loading D3 library',
+                    variant: 'error'
+                })
+            );
+        });
     }
 
     handleSearchPricebooks(event) {
@@ -74,8 +105,13 @@ export default class PriceBookList extends LightningElement {
         this.showCreateModal = true;
     }
 
+    displayChartModal() {
+        this.showChartModal = true;
+    }
+
     handleCancel() {
         this.showCreateModal = false;
+        this.showChartModal = false;
     }
 
     handleNewPricebookNameChange(event) {
@@ -99,6 +135,14 @@ export default class PriceBookList extends LightningElement {
         pricebooksInit()
             .then(data => {
                 this.pricebooks = JSON.parse(data);
+                this.chartData = [];
+                for(const item of this.pricebooks) {
+                    this.chartData.push({
+                        name: item.name,
+                        start: new Date(item.startDate),
+                        end: new Date(item.endDate)
+                    });
+                }
             })
             .catch(error => {
                 this.error = error;
@@ -143,6 +187,14 @@ export default class PriceBookList extends LightningElement {
                                 pricebooksInit()
                                     .then(data => {
                                         this.pricebooks = JSON.parse(data);
+                                        this.chartData = [];
+                                        for(const item of this.pricebooks) {
+                                            this.chartData.push({
+                                                name: item.name,
+                                                start: new Date(item.startDate),
+                                                end: new Date(item.endDate)
+                                            });
+                                        }
                                     })
                                     .catch(error => {
                                         this.error = error;
@@ -219,5 +271,52 @@ export default class PriceBookList extends LightningElement {
                 }
             })
         );
+    }
+
+    drawChart() {
+        const svg = d3.select(this.template.querySelector('svg.d3'))
+            .attr('width', this.svgWidth)
+            .attr('height', this.svgHeight);
+
+        const xScale = d3.scaleTime()
+            .domain([d3.min(this.chartData, d => d.start), d3.max(this.chartData, d => d.end)])
+            .range([144, this.svgWidth]);
+
+        const yScale = d3.scaleBand()
+            .domain(this.chartData.map(d => d.name))
+            .range([30, this.svgHeight]);
+    
+        let xAxis = d3.axisTop()
+            .scale(xScale);
+
+        svg.append('g').attr("transform", "translate(0, 30)").style('font-size', '12px').call(xAxis);
+
+        let yAxis = d3.axisLeft()
+            .scale(yScale);
+
+        svg.append('g').attr("transform", "translate(144, 0)").style('font-size', '12px').call(yAxis);
+
+        const barsGroup = svg.append('g');
+        barsGroup.selectAll('rect')
+            .data(this.chartData)
+            .enter()
+            .append('rect')
+            .attr('x', d => xScale(d.start))
+            .attr('y', d => yScale(d.name))
+            .attr('width', d => xScale(d.end) - xScale(d.start))
+            .attr('height', yScale.bandwidth())
+            .attr('fill', '#69b3a2');
+
+        // const labelsGroup = svg.append("g");
+        // labelsGroup.selectAll('text')
+        //     .data(this.chartData)
+        //     .enter()
+        //     .append('text')
+        //     .attr('x', d => xScale(d.start))
+        //     .attr('y', d => yScale(d.name) + yScale.bandwidth() / 2)
+        //     .text(d => d.name)
+        //     .attr('alignment-baseline', 'middle')
+        //     .attr('dx', '5px')
+        //     .attr('fill', 'white');
     }
 }

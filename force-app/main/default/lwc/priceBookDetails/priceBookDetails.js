@@ -48,8 +48,8 @@ export default class PriceBookDetails extends LightningElement {
                 this.currentId = data.id;
                 this.currentName = data.name;
                 this.currentProdType = 'Standard';
-                this.currentStartDate = 'undefined';
-                this.currentEndDate = 'undefined';
+                this.currentStartDate = data.startDate;
+                this.currentEndDate = data.endDate;
                 this.currentIsActive = data.isActive;
             })
             .catch(error => {

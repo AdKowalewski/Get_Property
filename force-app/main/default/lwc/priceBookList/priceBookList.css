@@ -5,3 +5,8 @@
 .pricebookContainer:hover {
     background-color: lightgrey;
 }
+
+.slds-modal__container {
+    max-width: 80rem !important;
+    width: 80% !important;
+}
