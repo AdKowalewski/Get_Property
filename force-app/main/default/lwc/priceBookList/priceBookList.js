@@ -46,11 +46,13 @@ export default class PriceBookList extends LightningElement {
                 this.pricebooks = JSON.parse(data);
                 this.chartData = [];
                 for(let item of this.pricebooks) {
-                    this.chartData.push({
-                        name: item.name,
-                        start: new Date(item.startDate),
-                        end: new Date(item.endDate)
-                    });
+                    if(item.startDate != null && item.endDate != null) {
+                        this.chartData.push({
+                            name: item.name,
+                            start: new Date(item.startDate),
+                            end: new Date(item.endDate)
+                        });
+                    }         
                 }
             })
             .catch(error => {
