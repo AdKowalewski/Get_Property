@@ -1,4 +1,4 @@
-import { LightningElement, api, track, wire } from 'lwc';
+import { LightningElement, api } from 'lwc';
 
 export default class ProductTile extends LightningElement {
 
