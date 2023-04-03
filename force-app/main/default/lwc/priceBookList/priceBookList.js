@@ -247,6 +247,14 @@ export default class PriceBookList extends LightningElement {
         const yScale = d3.scaleBand()
             .domain(this.chartData.map(d => d.name))
             .range([30, this.svgHeight]);
+
+        const y = d3.scaleLinear().domain([0, 1]).range([this.svgHeight, 30]);
+        const yAxisGrid = d3.axisLeft(y).tickSize(-this.svgWidth).tickFormat('').ticks(this.chartData.length);
+            
+        svg.append('g')
+            .attr('class', 'y axis-grid')
+            .attr("transform", "translate(144, 0)")
+            .call(yAxisGrid);
     
         let xAxis = d3.axisTop()
             .scale(xScale);
@@ -266,7 +274,8 @@ export default class PriceBookList extends LightningElement {
             .attr('x', d => xScale(d.start))
             .attr('y', d => yScale(d.name))
             .attr('width', d => xScale(d.end) - xScale(d.start))
-            .attr('height', yScale.bandwidth())
+            .attr('height', yScale.bandwidth() - 40)
+            .attr("transform", "translate(0, 20)")
             .attr('fill', '#34a8eb');
     }
 }
