@@ -265,6 +265,6 @@ export default class PriceBookList extends LightningElement {
             .attr('y', d => yScale(d.name))
             .attr('width', d => xScale(d.end) - xScale(d.start))
             .attr('height', yScale.bandwidth())
-            .attr('fill', '#69b3a2');
+            .attr('fill', '#34a8eb');
     }
 }
