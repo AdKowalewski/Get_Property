@@ -1,8 +1,6 @@
-import { LightningElement, api, track, wire } from 'lwc';
+import { LightningElement, api, track } from 'lwc';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import getPricebookStd from '@salesforce/apex/PriceBookController.getStandardPricebook';
-import getById from '@salesforce/apex/PriceBookController.getPricebookById';
-import getPricebookEntriesStd from '@salesforce/apex/PriceBookController.getStandardPricebookEntries';
 import pricebookDeactivate from '@salesforce/apex/PriceBookController.deactivatePricebook';
 import pricebookEdit from '@salesforce/apex/PriceBookController.updatePriceBook';
 import pricebookDelete from '@salesforce/apex/PriceBookController.deletePriceBook';
@@ -35,10 +33,6 @@ export default class PriceBookDetails extends LightningElement {
             flag = false;
         }
         return flag;
-    }
-
-    renderedCallback() {
-        console.log(this.currentIsActive);
     }
 
     connectedCallback() {

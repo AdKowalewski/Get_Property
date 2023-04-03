@@ -76,23 +76,6 @@
                                     label="Delete"
                                 ></lightning-menu-item>
                             </lightning-button-menu>
-                            <!-- <lightning-button-group>
-                                <lightning-button 
-                                    variant="neutral" 
-                                    label="Update" 
-                                    class="search-button" 
-                                    onclick={displaySingleModal} 
-                                    data-product-id={product.id} 
-                                    data-discount={product.discount} 
-                                    data-discount-type={product.discountType}
-                                    data-price={product.price}></lightning-button>
-                                <lightning-button 
-                                    variant="destructive-text" 
-                                    label="Delete" 
-                                    class="search-button" 
-                                    onclick={displayDeleteModal} 
-                                    data-product-id={product.id}></lightning-button>
-                            </lightning-button-group> -->
                         </td>
                     </tr>
                 </template>
@@ -105,9 +88,9 @@
             <div class="slds-modal__container">
                 <header class="slds-modal__header">
                     <lightning-button-icon icon-name="utility:close"
-                                          onclick={handleCancel}
-                                          variant="bare-inverse"
-                                          class="slds-modal__close"></lightning-button-icon>
+                        onclick={handleCancel}
+                        variant="bare-inverse"
+                        class="slds-modal__close"></lightning-button-icon>
                     <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Add Product</h2>
                 </header>
                 <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
@@ -131,11 +114,11 @@
                 </div>
                 <footer class="slds-modal__footer">
                     <lightning-button variant="brand"
-                                      label="Save"
-                                      onclick={handleAddProduct}></lightning-button>
+                        label="Save"
+                        onclick={handleAddProduct}></lightning-button>
                     <lightning-button variant="neutral"
-                                      label="Cancel"
-                                      onclick={handleCancel}></lightning-button>
+                        label="Cancel"
+                        onclick={handleCancel}></lightning-button>
                 </footer>
             </div>
         </section>
@@ -147,20 +130,13 @@
             <div class="slds-modal__container">
                 <header class="slds-modal__header">
                     <lightning-button-icon icon-name="utility:close"
-                                          onclick={handleCancel}
-                                          variant="bare-inverse"
-                                          class="slds-modal__close"></lightning-button-icon>
+                        onclick={handleCancel}
+                        variant="bare-inverse"
+                        class="slds-modal__close"></lightning-button-icon>
                     <h2 id="modal-heading-02" class="slds-text-heading_medium slds-hyphenate">Edit Price Book Entry Discount</h2>
                 </header>
                 <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-2">
                     <form class="slds-form_stacked">
-                        <!-- <lightning-input
-                            type="number" 
-                            label="Price"
-                            data-recid="Price"
-                            value={currentPrice}
-                            step=".01"
-                            onchange={handleCurrentPriceChange}></lightning-input> -->
                         <lightning-combobox
                             label="Discount Type"
                             value={currentDiscountType}
@@ -177,11 +153,11 @@
                 </div>
                 <footer class="slds-modal__footer">
                     <lightning-button variant="brand"
-                                      label="Save"
-                                      onclick={handleSingleEdit}></lightning-button>
+                        label="Save"
+                        onclick={handleSingleEdit}></lightning-button>
                     <lightning-button variant="neutral"
-                                      label="Cancel"
-                                      onclick={handleCancel}></lightning-button>
+                        label="Cancel"
+                        onclick={handleCancel}></lightning-button>
                 </footer>
             </div>
         </section>
@@ -193,9 +169,9 @@
             <div class="slds-modal__container">
                 <header class="slds-modal__header">
                     <lightning-button-icon icon-name="utility:close"
-                                          onclick={handleCancel}
-                                          variant="bare-inverse"
-                                          class="slds-modal__close"></lightning-button-icon>
+                        onclick={handleCancel}
+                        variant="bare-inverse"
+                        class="slds-modal__close"></lightning-button-icon>
                     <h2 id="modal-heading-022" class="slds-text-heading_medium slds-hyphenate">Increase Price Book Entry Price</h2>
                 </header>
                 <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-22">
@@ -217,11 +193,11 @@
                 </div>
                 <footer class="slds-modal__footer">
                     <lightning-button variant="brand"
-                                      label="Save"
-                                      onclick={handleSingleEditUp}></lightning-button>
+                        label="Save"
+                        onclick={handleSingleEditUp}></lightning-button>
                     <lightning-button variant="neutral"
-                                      label="Cancel"
-                                      onclick={handleCancel}></lightning-button>
+                        label="Cancel"
+                        onclick={handleCancel}></lightning-button>
                 </footer>
             </div>
         </section>
@@ -233,9 +209,9 @@
             <div class="slds-modal__container">
                 <header class="slds-modal__header">
                     <lightning-button-icon icon-name="utility:close"
-                                          onclick={handleCancel}
-                                          variant="bare-inverse"
-                                          class="slds-modal__close"></lightning-button-icon>
+                        onclick={handleCancel}
+                        variant="bare-inverse"
+                        class="slds-modal__close"></lightning-button-icon>
                     <h2 id="modal-heading-03" class="slds-text-heading_medium slds-hyphenate">Edit Selected Price Book Entries</h2>
                 </header>
                 <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-3">
@@ -258,11 +234,11 @@
                 </div>
                 <footer class="slds-modal__footer">
                     <lightning-button variant="brand"
-                                      label="Save"
-                                      onclick={handleAllEdit}></lightning-button>
+                        label="Save"
+                        onclick={handleAllEdit}></lightning-button>
                     <lightning-button variant="neutral"
-                                      label="Cancel"
-                                      onclick={handleCancel}></lightning-button>
+                        label="Cancel"
+                        onclick={handleCancel}></lightning-button>
                 </footer>
             </div>
         </section>
@@ -274,9 +250,9 @@
             <div class="slds-modal__container">
                 <header class="slds-modal__header">
                     <lightning-button-icon icon-name="utility:close"
-                                          onclick={handleCancel}
-                                          variant="bare-inverse"
-                                          class="slds-modal__close"></lightning-button-icon>
+                        onclick={handleCancel}
+                        variant="bare-inverse"
+                        class="slds-modal__close"></lightning-button-icon>
                     <h2 id="modal-heading-033" class="slds-text-heading_medium slds-hyphenate">Increase Prices In Selected Price Book Entries</h2>
                 </header>
                 <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-33">
@@ -299,11 +275,11 @@
                 </div>
                 <footer class="slds-modal__footer">
                     <lightning-button variant="brand"
-                                      label="Save"
-                                      onclick={handleAllEditUp}></lightning-button>
+                        label="Save"
+                        onclick={handleAllEditUp}></lightning-button>
                     <lightning-button variant="neutral"
-                                      label="Cancel"
-                                      onclick={handleCancel}></lightning-button>
+                        label="Cancel"
+                        onclick={handleCancel}></lightning-button>
                 </footer>
             </div>
         </section>
@@ -315,9 +291,9 @@
             <div class="slds-modal__container">
                 <header class="slds-modal__header">
                     <lightning-button-icon icon-name="utility:close"
-                                          onclick={handleCancel}
-                                          variant="bare-inverse"
-                                          class="slds-modal__close"></lightning-button-icon>
+                        onclick={handleCancel}
+                        variant="bare-inverse"
+                        class="slds-modal__close"></lightning-button-icon>
                     <h2 id="modal-heading-04" class="slds-text-heading_medium slds-hyphenate">Delete Price Book Entry</h2>
                 </header>
                 <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-4">
@@ -325,11 +301,11 @@
                 </div>
                 <footer class="slds-modal__footer">
                     <lightning-button variant="brand"
-                                      label="Delete"
-                                      onclick={handleEntryDelete}></lightning-button>
+                        label="Delete"
+                        onclick={handleEntryDelete}></lightning-button>
                     <lightning-button variant="neutral"
-                                      label="Cancel"
-                                      onclick={handleCancel}></lightning-button>
+                        label="Cancel"
+                        onclick={handleCancel}></lightning-button>
                 </footer>
             </div>
         </section>
@@ -341,9 +317,9 @@
             <div class="slds-modal__container">
                 <header class="slds-modal__header">
                     <lightning-button-icon icon-name="utility:close"
-                                          onclick={handleCancel}
-                                          variant="bare-inverse"
-                                          class="slds-modal__close"></lightning-button-icon>
+                        onclick={handleCancel}
+                        variant="bare-inverse"
+                        class="slds-modal__close"></lightning-button-icon>
                     <h2 id="modal-heading-05" class="slds-text-heading_medium slds-hyphenate">Delete Price Book Entries</h2>
                 </header>
                 <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-5">
@@ -351,11 +327,11 @@
                 </div>
                 <footer class="slds-modal__footer">
                     <lightning-button variant="brand"
-                                      label="Delete"
-                                      onclick={handleEntryDeleteAll}></lightning-button>
+                        label="Delete"
+                        onclick={handleEntryDeleteAll}></lightning-button>
                     <lightning-button variant="neutral"
-                                      label="Cancel"
-                                      onclick={handleCancel}></lightning-button>
+                        label="Cancel"
+                        onclick={handleCancel}></lightning-button>
                 </footer>
             </div>
         </section>

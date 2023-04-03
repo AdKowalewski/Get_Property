@@ -371,7 +371,6 @@ public with sharing class PriceBookController {
             WHERE Id = :id
         ];
         entry.Discount__c = 0;
-        // entry.Discount_Type__c = discountType;
         if(discountType == 'Percentage') {
             Decimal sub = entry.UnitPrice * (discount / 100);
             entry.UnitPrice = entry.UnitPrice + sub;
@@ -410,7 +409,6 @@ public with sharing class PriceBookController {
         ];
         for(PricebookEntry entry : entriesToUpdate) {
             entry.Discount__c = 0;
-            // entry.Discount_Type__c = discountType;
             if(discountType == 'Percentage') {
                 Decimal sub = entry.UnitPrice * (discount / 100);
                 entry.UnitPrice = entry.UnitPrice + sub;
@@ -450,7 +448,6 @@ public with sharing class PriceBookController {
         ];
         for(PricebookEntry entry : entriesToUpdate) {
             entry.Discount__c = 0;
-            // entry.Discount_Type__c = discountType;
             if(discountType == 'Percentage') {
                 Decimal sub = entry.UnitPrice * (discount / 100);
                 entry.UnitPrice = entry.UnitPrice + sub;

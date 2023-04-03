@@ -1,4 +1,4 @@
-import { LightningElement, api, track, wire } from 'lwc';
+import { LightningElement, api, track } from 'lwc';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import pricebooksInit from '@salesforce/apex/PriceBookController.initPriceBooks';
 import pricebooksSearch from '@salesforce/apex/PriceBookController.searchPriceBooks';
@@ -40,7 +40,7 @@ export default class PriceBookList extends LightningElement {
         return flag;
     }
 
-    connectedCallback() {
+    init() {
         pricebooksInit()
             .then(data => {
                 this.pricebooks = JSON.parse(data);
@@ -65,11 +65,14 @@ export default class PriceBookList extends LightningElement {
             })
     }
 
+    connectedCallback() {
+        this.init();
+    }
+
     renderedCallback() {
         Promise.all([
             loadScript(this, D3 + '/package/dist/d3.min.js')
         ]).then(() => {
-            console.log('loaded successfully');
             this.drawChart();      
         }).catch(error => {
             this.dispatchEvent(
@@ -87,7 +90,6 @@ export default class PriceBookList extends LightningElement {
         pricebooksSearch({name: this.pricebookSearch})
             .then(result => {              
                 this.pricebooks = JSON.parse(result);
-                console.log('results: ' + this.pricebooks);
             })
             .catch(error => {
                 this.error = error;
@@ -132,28 +134,7 @@ export default class PriceBookList extends LightningElement {
 
     @api
     fetchPricebooks() {
-        pricebooksInit()
-            .then(data => {
-                this.pricebooks = JSON.parse(data);
-                this.chartData = [];
-                for(const item of this.pricebooks) {
-                    this.chartData.push({
-                        name: item.name,
-                        start: new Date(item.startDate),
-                        end: new Date(item.endDate)
-                    });
-                }
-            })
-            .catch(error => {
-                this.error = error;
-                this.dispatchEvent(
-                    new ShowToastEvent({
-                        title: 'Error',
-                        message: this.error,
-                        variant: 'error'
-                    })
-                );
-            });
+        this.init();
         this.dispatchEvent(
             new CustomEvent('refreshpricebook')
         );
@@ -184,28 +165,7 @@ export default class PriceBookList extends LightningElement {
                             if(data.message == '') {
                                 this.pricebookSearch = '';
                                 this.showCreateModal = false;
-                                pricebooksInit()
-                                    .then(data => {
-                                        this.pricebooks = JSON.parse(data);
-                                        this.chartData = [];
-                                        for(const item of this.pricebooks) {
-                                            this.chartData.push({
-                                                name: item.name,
-                                                start: new Date(item.startDate),
-                                                end: new Date(item.endDate)
-                                            });
-                                        }
-                                    })
-                                    .catch(error => {
-                                        this.error = error;
-                                        this.dispatchEvent(
-                                            new ShowToastEvent({
-                                                title: 'Error',
-                                                message: this.error,
-                                                variant: 'error'
-                                            })
-                                        );
-                                    });
+                                this.init();
                                 this.dispatchEvent(
                                     new ShowToastEvent({
                                         title: 'Success',
@@ -306,17 +266,5 @@ export default class PriceBookList extends LightningElement {
             .attr('width', d => xScale(d.end) - xScale(d.start))
             .attr('height', yScale.bandwidth())
             .attr('fill', '#69b3a2');
-
-        // const labelsGroup = svg.append("g");
-        // labelsGroup.selectAll('text')
-        //     .data(this.chartData)
-        //     .enter()
-        //     .append('text')
-        //     .attr('x', d => xScale(d.start))
-        //     .attr('y', d => yScale(d.name) + yScale.bandwidth() / 2)
-        //     .text(d => d.name)
-        //     .attr('alignment-baseline', 'middle')
-        //     .attr('dx', '5px')
-        //     .attr('fill', 'white');
     }
 }
