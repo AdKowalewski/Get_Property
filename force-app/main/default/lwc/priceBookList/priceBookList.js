@@ -299,8 +299,8 @@ export default class PriceBookList extends LightningElement {
         svg.append("circle").attr("cx",144).attr("cy",560).attr("r", 6).style("fill", d3.rgb(73, 230, 133));
         svg.append("circle").attr("cx",144).attr("cy",590).attr("r", 6).style("fill", d3.rgb(73, 190, 230));
         svg.append("circle").attr("cx",144).attr("cy",620).attr("r", 6).style("fill", d3.rgb(145, 148, 146));
-        svg.append("text").attr("x", 184).attr("y", 560).text("Business Premises Price Books").style("font-size", "15px").attr("alignment-baseline","middle");
-        svg.append("text").attr("x", 184).attr("y", 590).text("Apartments Price Books").style("font-size", "15px").attr("alignment-baseline","middle");
-        svg.append("text").attr("x", 184).attr("y", 620).text("Standard Price Book").style("font-size", "15px").attr("alignment-baseline","middle");
+        svg.append("text").attr("x", 164).attr("y", 560).text("Business Premises Price Books").style("font-size", "15px").attr("alignment-baseline","middle");
+        svg.append("text").attr("x", 164).attr("y", 590).text("Apartments Price Books").style("font-size", "15px").attr("alignment-baseline","middle");
+        svg.append("text").attr("x", 164).attr("y", 620).text("Standard Price Book").style("font-size", "15px").attr("alignment-baseline","middle");
     }
 }
