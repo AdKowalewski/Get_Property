@@ -20,9 +20,9 @@ export default class PriceBookList extends LightningElement {
     @api isUpdate = false;
     @track todayDate;
     @track chartData = [];
-    svgWidth = 1200;
-    svgInnerHeight = 500;
-    svgHeight = 650;
+    svgWidth = 1180;
+    svgInnerHeight = 480;
+    svgHeight = 600;
 
     get productTypes() {
         return [
@@ -47,7 +47,7 @@ export default class PriceBookList extends LightningElement {
                 this.pricebooks = JSON.parse(data);
                 this.chartData = [];
                 for(let item of this.pricebooks) {
-                    if(item.startDate != null && item.endDate != null) {
+                    if(item.name !== 'Standard Price Book') {
                         this.chartData.push({
                             name: item.name,
                             start: new Date(item.startDate),
@@ -248,11 +248,11 @@ export default class PriceBookList extends LightningElement {
 
         const yScale = d3.scaleBand()
             .domain(this.chartData.map(d => d.name))
-            .range([30, this.svgInnerHeight]);
+            .range([30, this.svgInnerHeight + 30]);
       
-        const xAxisGrid = d3.axisBottom(xScale).tickSize(this.svgInnerHeight).tickFormat('').ticks(d3.timeDay.every(2));
+        const xAxisGrid = d3.axisBottom(xScale).tickSize(this.svgInnerHeight).tickFormat('').ticks(d3.timeDay.every(1));
         const y = d3.scaleLinear().domain([0, 1]).range([this.svgInnerHeight, 30]);
-        const yAxisGrid = d3.axisLeft(y).tickSize(-this.svgWidth).tickFormat('').ticks(this.chartData.length);
+        const yAxisGrid = d3.axisLeft(yScale).tickSize(-this.svgWidth).tickFormat('').ticks(this.chartData.length);
 
         svg.append('g')
             .attr('class', 'x axis-grid')
@@ -266,13 +266,14 @@ export default class PriceBookList extends LightningElement {
 
         let xAxis = d3.axisTop()
             .scale(xScale)
-            .ticks(d3.timeDay.every(4))
+            .ticks(d3.timeDay.every(2))
             .tickFormat(d => d3.timeFormat('%d.%m')(d));
 
         svg.append('g').attr("transform", "translate(0, 30)").style('font-size', '12px').call(xAxis);
 
         let yAxis = d3.axisLeft()
-            .scale(yScale);
+            .scale(yScale)
+            .ticks(this.chartData.length);
 
         svg.append('g').attr("transform", "translate(144, 0)").style('font-size', '12px').call(yAxis);
 
@@ -286,7 +287,7 @@ export default class PriceBookList extends LightningElement {
             .attr('width', d => xScale(d.end) - xScale(d.start))
             .attr('height', yScale.bandwidth() - 40)
             .attr("transform", "translate(0, 20)")
-            .attr('fill', function(d) {
+            .attr('fill', d => {
                 if(d.type === 'Business Premises') {
                     return d3.rgb(73, 230, 133);
                 } else if(d.type === 'Apartments') {
@@ -296,11 +297,9 @@ export default class PriceBookList extends LightningElement {
                 }
             });
 
-        svg.append("circle").attr("cx",144).attr("cy",560).attr("r", 6).style("fill", d3.rgb(73, 230, 133));
-        svg.append("circle").attr("cx",144).attr("cy",590).attr("r", 6).style("fill", d3.rgb(73, 190, 230));
-        svg.append("circle").attr("cx",144).attr("cy",620).attr("r", 6).style("fill", d3.rgb(145, 148, 146));
-        svg.append("text").attr("x", 164).attr("y", 560).text("Business Premises Price Books").style("font-size", "15px").attr("alignment-baseline","middle");
-        svg.append("text").attr("x", 164).attr("y", 590).text("Apartments Price Books").style("font-size", "15px").attr("alignment-baseline","middle");
-        svg.append("text").attr("x", 164).attr("y", 620).text("Standard Price Book").style("font-size", "15px").attr("alignment-baseline","middle");
+        svg.append("circle").attr("cx",144).attr("cy",540).attr("r", 6).style("fill", d3.rgb(73, 230, 133));
+        svg.append("circle").attr("cx",144).attr("cy",570).attr("r", 6).style("fill", d3.rgb(73, 190, 230));
+        svg.append("text").attr("x", 164).attr("y", 540).text("Business Premises Price Books").style("font-size", "15px").attr("alignment-baseline","middle");
+        svg.append("text").attr("x", 164).attr("y", 570).text("Apartments Price Books").style("font-size", "15px").attr("alignment-baseline","middle");
     }
 }

@@ -27,9 +27,9 @@ export default class PriceBookDetails extends LightningElement {
 
     get disableDeactivate() {
         let flag = false;
-        if(this.currentIsActive == 'false') {
+        if(this.currentIsActive == 'false' || this.currentId == '01s7S000002VqAzQAK') {
             flag = true;
-        } else if(this.currentIsActive == 'true') {
+        } else if(this.currentIsActive == 'true' && this.currentId != '01s7S000002VqAzQAK') {
             flag = false;
         }
         return flag;
@@ -42,8 +42,8 @@ export default class PriceBookDetails extends LightningElement {
                 this.currentId = data.id;
                 this.currentName = data.name;
                 this.currentProdType = 'Standard';
-                this.currentStartDate = data.startDate;
-                this.currentEndDate = data.endDate;
+                this.currentStartDate = 'undefined';
+                this.currentEndDate = 'undefined';
                 this.currentIsActive = data.isActive;
             })
             .catch(error => {
