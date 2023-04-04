@@ -20,7 +20,7 @@ export default class PriceBookList extends LightningElement {
     @api isUpdate = false;
     @track todayDate;
     @track chartData = [];
-    svgWidth = 1000;
+    svgWidth = 1200;
     svgInnerHeight = 500;
     svgHeight = 650;
 
