@@ -286,7 +286,6 @@ export default class PriceBookList extends LightningElement {
             .attr('width', d => xScale(d.end) - xScale(d.start))
             .attr('height', yScale.bandwidth() - 40)
             .attr("transform", "translate(0, 20)")
-            // .attr('fill', '#34a8eb');
             .attr('fill', function(d) {
                 if(d.type === 'Business Premises') {
                     return d3.rgb(73, 230, 133);
@@ -303,5 +302,5 @@ export default class PriceBookList extends LightningElement {
         svg.append("text").attr("x", 184).attr("y", 560).text("Business Premises Price Books").style("font-size", "15px").attr("alignment-baseline","middle");
         svg.append("text").attr("x", 184).attr("y", 590).text("Apartments Price Books").style("font-size", "15px").attr("alignment-baseline","middle");
         svg.append("text").attr("x", 184).attr("y", 620).text("Standard Price Book").style("font-size", "15px").attr("alignment-baseline","middle");
-}
+    }
 }
