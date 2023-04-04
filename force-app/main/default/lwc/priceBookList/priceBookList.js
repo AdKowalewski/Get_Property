@@ -20,9 +20,10 @@ export default class PriceBookList extends LightningElement {
     @api isUpdate = false;
     @track todayDate;
     @track chartData = [];
+    @track strDates = [];
     svgWidth = 1180;
     svgInnerHeight = 480;
-    svgHeight = 600;
+    svgHeight = 620;
 
     get productTypes() {
         return [
@@ -56,6 +57,17 @@ export default class PriceBookList extends LightningElement {
                         });
                     }         
                 }
+                this.chartData.sort(function compare(a, b) {
+                    return a.start - b.start;
+                });
+                for(let i = 0; i < this.chartData.length - 1; i++) {
+                    if(this.chartData[i].end !== this.chartData[i + 1].start) {
+                        this.strDates.push({
+                            startStd: this.chartData[i].end,
+                            endStd: this.chartData[i + 1].start
+                        });
+                    }
+                }           
             })
             .catch(error => {
                 this.error = error;
@@ -246,8 +258,10 @@ export default class PriceBookList extends LightningElement {
             .domain([d3.min(this.chartData, d => d.start), d3.max(this.chartData, d => d.end)])
             .range([144, this.svgWidth]);
 
+        let yDomain = [...this.chartData.map(d => d.name), 'Standard Price Book'];
+
         const yScale = d3.scaleBand()
-            .domain(this.chartData.map(d => d.name))
+            .domain(yDomain)
             .range([30, this.svgInnerHeight + 30]);
       
         const xAxisGrid = d3.axisBottom(xScale).tickSize(this.svgInnerHeight).tickFormat('').ticks(d3.timeDay.every(1));
@@ -297,9 +311,23 @@ export default class PriceBookList extends LightningElement {
                 }
             });
 
+        const stdRects = svg.append('g');
+        stdRects.selectAll('rect')
+            .data(this.strDates)
+            .enter()
+            .append('rect')
+            .attr('x', d => xScale(d.startStd))
+            .attr('y', d => yScale('Standard Price Book'))
+            .attr('width', d => xScale(d.endStd) - xScale(d.startStd))
+            .attr('height', yScale.bandwidth() - 40)
+            .attr('transform', 'translate(0, 20)')
+            .attr('fill', d3.rgb(145, 148, 146));
+
         svg.append("circle").attr("cx",144).attr("cy",540).attr("r", 6).style("fill", d3.rgb(73, 230, 133));
         svg.append("circle").attr("cx",144).attr("cy",570).attr("r", 6).style("fill", d3.rgb(73, 190, 230));
+        svg.append("circle").attr("cx",144).attr("cy",600).attr("r", 6).style("fill", d3.rgb(145, 148, 146));
         svg.append("text").attr("x", 164).attr("y", 540).text("Business Premises Price Books").style("font-size", "15px").attr("alignment-baseline","middle");
         svg.append("text").attr("x", 164).attr("y", 570).text("Apartments Price Books").style("font-size", "15px").attr("alignment-baseline","middle");
+        svg.append("text").attr("x", 164).attr("y", 600).text("Standard Price Book").style("font-size", "15px").attr("alignment-baseline","middle");
     }
 }
