@@ -249,7 +249,8 @@ export default class PriceBookList extends LightningElement {
             .range([30, this.svgHeight]);
       
         const xAxisGrid = d3.axisBottom(xScale).tickSize(this.svgHeight).tickFormat('').ticks(d3.timeDay.every(2));
-        const yAxisGrid = d3.axisLeft(yScale).tickSize(-this.svgWidth).tickFormat('').ticks(this.chartData.length);
+        const y = d3.scaleLinear().domain([0, 1]).range([this.svgHeight, 30]);
+        const yAxisGrid = d3.axisLeft(y).tickSize(-this.svgWidth).tickFormat('').ticks(this.chartData.length);
 
         svg.append('g')
             .attr('class', 'x axis-grid')
