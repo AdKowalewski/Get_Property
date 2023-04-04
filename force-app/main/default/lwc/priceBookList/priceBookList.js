@@ -21,7 +21,8 @@ export default class PriceBookList extends LightningElement {
     @track todayDate;
     @track chartData = [];
     svgWidth = 1000;
-    svgHeight = 500;
+    svgInnerHeight = 500;
+    svgHeight = 650;
 
     get productTypes() {
         return [
@@ -50,7 +51,8 @@ export default class PriceBookList extends LightningElement {
                         this.chartData.push({
                             name: item.name,
                             start: new Date(item.startDate),
-                            end: new Date(item.endDate)
+                            end: new Date(item.endDate),
+                            type: item.productType
                         });
                     }         
                 }
@@ -246,10 +248,10 @@ export default class PriceBookList extends LightningElement {
 
         const yScale = d3.scaleBand()
             .domain(this.chartData.map(d => d.name))
-            .range([30, this.svgHeight]);
+            .range([30, this.svgInnerHeight]);
       
-        const xAxisGrid = d3.axisBottom(xScale).tickSize(this.svgHeight).tickFormat('').ticks(d3.timeDay.every(2));
-        const y = d3.scaleLinear().domain([0, 1]).range([this.svgHeight, 30]);
+        const xAxisGrid = d3.axisBottom(xScale).tickSize(this.svgInnerHeight).tickFormat('').ticks(d3.timeDay.every(2));
+        const y = d3.scaleLinear().domain([0, 1]).range([this.svgInnerHeight, 30]);
         const yAxisGrid = d3.axisLeft(y).tickSize(-this.svgWidth).tickFormat('').ticks(this.chartData.length);
 
         svg.append('g')
@@ -284,6 +286,22 @@ export default class PriceBookList extends LightningElement {
             .attr('width', d => xScale(d.end) - xScale(d.start))
             .attr('height', yScale.bandwidth() - 40)
             .attr("transform", "translate(0, 20)")
-            .attr('fill', '#34a8eb');
-    }
+            // .attr('fill', '#34a8eb');
+            .attr('fill', function(d) {
+                if(d.type === 'Business Premises') {
+                    return d3.rgb(73, 230, 133);
+                } else if(d.type === 'Apartments') {
+                    return d3.rgb(73, 190, 230);
+                } else {
+                    return d3.rgb(145, 148, 146);
+                }
+            });
+
+        svg.append("circle").attr("cx",144).attr("cy",560).attr("r", 6).style("fill", d3.rgb(73, 230, 133));
+        svg.append("circle").attr("cx",144).attr("cy",590).attr("r", 6).style("fill", d3.rgb(73, 190, 230));
+        svg.append("circle").attr("cx",144).attr("cy",620).attr("r", 6).style("fill", d3.rgb(145, 148, 146));
+        svg.append("text").attr("x", 184).attr("y", 560).text("Business Premises Price Books").style("font-size", "15px").attr("alignment-baseline","middle");
+        svg.append("text").attr("x", 184).attr("y", 590).text("Apartments Price Books").style("font-size", "15px").attr("alignment-baseline","middle");
+        svg.append("text").attr("x", 184).attr("y", 620).text("Standard Price Book").style("font-size", "15px").attr("alignment-baseline","middle");
+}
 }
