@@ -14,3 +14,8 @@
 .axis-grid line {
     stroke: #def;
 }
+
+.create-modal-container {
+    max-width: 40rem !important;
+    width: 40% !important;
+}
