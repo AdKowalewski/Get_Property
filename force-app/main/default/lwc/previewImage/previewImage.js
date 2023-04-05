@@ -20,15 +20,15 @@ export default class PreviewImage extends LightningElement {
     async handleSelect(event) {
         let selectedVal = event.detail.value;
         let currentRecordId = event.currentTarget.dataset.id;
-        console.log('currentRecordId: ' + currentRecordId);
         if(selectedVal === "delete") {
-            await fileDelete({recordId: currentRecordId});
+            let defUrl = "/sfc/servlet.shepherd/version/renditionDownload?rendition=THUMB720BY480&versionId=" + this.file.Id + "&operationContext=CHATTER&contentId=" + this.file.ContentDocumentId;
             await updateRecord({
                 fields: {
                     [PRODUCT2_ID_FIELD.fieldApiName]: this.recordId,
-                    [DEFAULT_IMAGE_URL.fieldApiName]: null
+                    [DEFAULT_IMAGE_URL.fieldApiName]: (defUrl === DEFAULT_IMAGE_URL) ? null : DEFAULT_IMAGE_URL
                 }
             });
+            await fileDelete({recordId: currentRecordId});
             this.dispatchEvent(new CustomEvent('deletefile'));
             this.dispatchEvent(
                 new ShowToastEvent({
