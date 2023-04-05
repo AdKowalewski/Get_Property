@@ -34,6 +34,32 @@ public with sharing class PriceBookController {
     public class ResponseWrapperNumber {
         public Decimal message { get; set; }
     }
+
+    private static PriceBookWrapper buildPricebookWrapper(Pricebook2 pb) {
+        PriceBookWrapper wrapper = new PriceBookWrapper();
+        wrapper.id = pb.Id;
+        wrapper.name = pb.Name;
+        wrapper.startDate = pb.Start_Date__c;
+        wrapper.endDate = pb.End_Date__c;
+        wrapper.productType = pb.Product_Type__c;
+        wrapper.isActive = pb.IsActive;
+        wrapper.isStandard = pb.isStandard;
+        return wrapper;
+    }
+
+    private static PriceBookEntryWrapper buildPricebookEntryWrapper(PricebookEntry entry) {
+        PriceBookEntryWrapper wrapper = new PriceBookEntryWrapper();
+        wrapper.id = entry.Id;
+        wrapper.productId = entry.Product2.Id;
+        wrapper.productName = entry.Product2.Name;
+        wrapper.pricebookId = entry.Pricebook2.Id;
+        wrapper.pricebookName = entry.Pricebook2.Name;
+        wrapper.price = entry.UnitPrice;
+        wrapper.discount = entry.Discount__c;
+        wrapper.discountType = entry.Discount_Type__c;
+        wrapper.displayUrl = entry.Product2.DisplayUrl;
+        return wrapper;
+    }
     
     @AuraEnabled
     public static String initPriceBooks() {
@@ -44,14 +70,7 @@ public with sharing class PriceBookController {
         ];
         List<PriceBookWrapper> pbWrappers = new List<PriceBookWrapper>();
         for(Pricebook2 pb : priceBooks) {
-            PriceBookWrapper wrapper = new PriceBookWrapper();
-            wrapper.id = pb.Id;
-            wrapper.name = pb.Name;
-            wrapper.startDate = pb.Start_Date__c;
-            wrapper.endDate = pb.End_Date__c;
-            wrapper.productType = pb.Product_Type__c;
-            wrapper.isActive = pb.IsActive;
-            wrapper.isStandard = pb.isStandard;
+            PriceBookWrapper wrapper = buildPricebookWrapper(pb);
             pbWrappers.add(wrapper);
         }
         jsonStr = JSON.serialize(pbWrappers);
@@ -69,14 +88,7 @@ public with sharing class PriceBookController {
         ];
         List<PriceBookWrapper> pbWrappers = new List<PriceBookWrapper>();
         for(Pricebook2 pb : priceBooks) {
-            PriceBookWrapper wrapper = new PriceBookWrapper();
-            wrapper.id = pb.Id;
-            wrapper.name = pb.Name;
-            wrapper.startDate = pb.Start_Date__c;
-            wrapper.endDate = pb.End_Date__c;
-            wrapper.productType = pb.Product_Type__c;
-            wrapper.isActive = pb.IsActive;
-            wrapper.isStandard = pb.isStandard;
+            PriceBookWrapper wrapper = buildPricebookWrapper(pb);
             pbWrappers.add(wrapper);
         }
         jsonStr = JSON.serialize(pbWrappers);
@@ -91,14 +103,7 @@ public with sharing class PriceBookController {
             FROM Pricebook2
             WHERE Name = 'Standard Price Book'
         ];
-        PriceBookWrapper wrapper = new PriceBookWrapper();
-        wrapper.id = standard.Id;
-        wrapper.name = standard.Name;
-        wrapper.startDate = standard.Start_Date__c;
-        wrapper.endDate = standard.End_Date__c;
-        wrapper.productType = standard.Product_Type__c;
-        wrapper.isActive = standard.IsActive;
-        wrapper.isStandard = standard.isStandard;
+        PriceBookWrapper wrapper = buildPricebookWrapper(standard);
         jsonStr = JSON.serialize(wrapper);
         return jsonStr;
     }
@@ -111,14 +116,7 @@ public with sharing class PriceBookController {
             FROM Pricebook2
             WHERE Id = :id
         ];
-        PriceBookWrapper wrapper = new PriceBookWrapper();
-        wrapper.id = standard.Id;
-        wrapper.name = standard.Name;
-        wrapper.startDate = standard.Start_Date__c;
-        wrapper.endDate = standard.End_Date__c;
-        wrapper.productType = standard.Product_Type__c;
-        wrapper.isActive = standard.IsActive;
-        wrapper.isStandard = standard.isStandard;
+        PriceBookWrapper wrapper = buildPricebookWrapper(standard);
         jsonStr = JSON.serialize(wrapper);
         return jsonStr;
     }
@@ -133,16 +131,7 @@ public with sharing class PriceBookController {
         ];
         List<PriceBookEntryWrapper> eWrappers = new List<PriceBookEntryWrapper>();
         for(PricebookEntry entry : entries) {
-            PriceBookEntryWrapper wrapper = new PriceBookEntryWrapper();
-            wrapper.id = entry.Id;
-            wrapper.productId = entry.Product2.Id;
-            wrapper.productName = entry.Product2.Name;
-            wrapper.pricebookId = entry.Pricebook2.Id;
-            wrapper.pricebookName = entry.Pricebook2.Name;
-            wrapper.price = entry.UnitPrice;
-            wrapper.discount = entry.Discount__c;
-            wrapper.discountType = entry.Discount_Type__c;
-            wrapper.displayUrl = entry.Product2.DisplayUrl;
+            PriceBookEntryWrapper wrapper = buildPricebookEntryWrapper(entry);
             eWrappers.add(wrapper);
         }
         jsonStr = JSON.serialize(eWrappers);
@@ -159,16 +148,7 @@ public with sharing class PriceBookController {
         ];
         List<PriceBookEntryWrapper> eWrappers = new List<PriceBookEntryWrapper>();
         for(PricebookEntry entry : entries) {
-            PriceBookEntryWrapper wrapper = new PriceBookEntryWrapper();
-            wrapper.id = entry.Id;
-            wrapper.productId = entry.Product2.Id;
-            wrapper.productName = entry.Product2.Name;
-            wrapper.pricebookId = entry.Pricebook2.Id;
-            wrapper.pricebookName = entry.Pricebook2.Name;
-            wrapper.price = entry.UnitPrice;
-            wrapper.discount = entry.Discount__c;
-            wrapper.discountType = entry.Discount_Type__c;
-            wrapper.displayUrl = entry.Product2.DisplayUrl;
+            PriceBookEntryWrapper wrapper = buildPricebookEntryWrapper(entry);
             eWrappers.add(wrapper);
         }
         jsonStr = JSON.serialize(eWrappers);
@@ -200,16 +180,7 @@ public with sharing class PriceBookController {
         ];
         List<PriceBookEntryWrapper> eWrappers = new List<PriceBookEntryWrapper>();
         for(PricebookEntry entry : entries) {
-            PriceBookEntryWrapper wrapper = new PriceBookEntryWrapper();
-            wrapper.id = entry.Id;
-            wrapper.productId = entry.Product2.Id;
-            wrapper.productName = entry.Product2.Name;
-            wrapper.pricebookId = entry.Pricebook2.Id;
-            wrapper.pricebookName = entry.Pricebook2.Name;
-            wrapper.price = entry.UnitPrice;
-            wrapper.discount = entry.Discount__c;
-            wrapper.discountType = entry.Discount_Type__c;
-            wrapper.displayUrl = entry.Product2.DisplayUrl;
+            PriceBookEntryWrapper wrapper = buildPricebookEntryWrapper(entry);
             eWrappers.add(wrapper);
         }
         jsonStr = JSON.serialize(eWrappers);
