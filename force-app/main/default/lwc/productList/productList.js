@@ -110,6 +110,9 @@ export default class ProductList extends LightningElement {
                 this.products = JSON.parse(result);
                 for(const item of this.products) {
                     item.price = parseFloat(item.price);
+                    if(item.displayUrl == null) {
+                        item.displayUrl = 'https://britenet-10a-dev-ed--c.develop.vf.force.com/resource/1679500794000/NoImage?';
+                    }
                 }
             })
             .catch(error => {
@@ -131,6 +134,9 @@ export default class ProductList extends LightningElement {
                 this.products = JSON.parse(result);
                 for(const item of this.products) {
                     item.price = parseFloat(item.price);
+                    if(item.displayUrl == null) {
+                        item.displayUrl = 'https://britenet-10a-dev-ed--c.develop.vf.force.com/resource/1679500794000/NoImage?';
+                    }
                 }
             })
             .catch(error => {
@@ -208,6 +214,9 @@ export default class ProductList extends LightningElement {
                 this.products = JSON.parse(result);
                 for(const item of this.products) {
                     item.price = parseFloat(item.price);
+                    if(item.displayUrl == null) {
+                        item.displayUrl = 'https://britenet-10a-dev-ed--c.develop.vf.force.com/resource/1679500794000/NoImage?';
+                    }
                 }
             })
             .catch(error => {
@@ -229,6 +238,9 @@ export default class ProductList extends LightningElement {
                 this.products = JSON.parse(result);
                 for(const item of this.products) {
                     item.price = parseFloat(item.price);
+                    if(item.displayUrl == null) {
+                        item.displayUrl = 'https://britenet-10a-dev-ed--c.develop.vf.force.com/resource/1679500794000/NoImage?';
+                    }
                 }
             })
             .catch(error => {
