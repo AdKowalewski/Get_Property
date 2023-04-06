@@ -1,5 +1,9 @@
 public with sharing class FileController {
 
+    private class ResponseWrapper {
+        public String message { get; set; }
+    }
+
     @AuraEnabled(cacheable=true)
     public static List<ContentVersion> getVersionFiles(String recordId){
         try {
@@ -13,6 +17,21 @@ public with sharing class FileController {
         } catch (Exception e) {
             throw new AuraHandledException(e.getMessage());
         }
+    }
+
+    @AuraEnabled
+    public static String getProductDisplayUrl(String id) {
+        String jsonStr = '';
+        Product2 prod =  [
+            SELECT DisplayUrl
+            FROM Product2
+            WHERE Id = :id
+        ];
+        ResponseWrapper wrapper = new ResponseWrapper();
+        wrapper.message = prod.DisplayUrl;
+        jsonStr = JSON.serialize(wrapper);
+        System.debug(jsonStr);
+        return jsonStr;
     }
 
     @AuraEnabled

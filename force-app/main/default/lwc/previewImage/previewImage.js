@@ -1,5 +1,6 @@
 import { LightningElement, api } from 'lwc';
 import fileDelete from "@salesforce/apex/FileController.deleteFile";
+import getDisplayUrl from "@salesforce/apex/FileController.getProductDisplayUrl";
 import { ShowToastEvent } from "lightning/platformShowToastEvent";
 
 import { updateRecord } from 'lightning/uiRecordApi';
@@ -12,6 +13,7 @@ export default class PreviewImage extends LightningElement {
     @api file;
     @api recordId;
     @api thumbnail;
+    dispUrl = '';
 
     get iconName() {
         return "doctype:image";
@@ -22,12 +24,19 @@ export default class PreviewImage extends LightningElement {
         let currentRecordId = event.currentTarget.dataset.id;
         if(selectedVal === "delete") {
             let defUrl = "/sfc/servlet.shepherd/version/renditionDownload?rendition=THUMB720BY480&versionId=" + this.file.Id + "&operationContext=CHATTER&contentId=" + this.file.ContentDocumentId;
-            await updateRecord({
-                fields: {
-                    [PRODUCT2_ID_FIELD.fieldApiName]: this.recordId,
-                    [DEFAULT_IMAGE_URL.fieldApiName]: (defUrl === DEFAULT_IMAGE_URL) ? null : DEFAULT_IMAGE_URL
-                }
-            });
+            await getDisplayUrl({id: this.recordId})
+                .then(result => {
+                    let data = JSON.parse(result);
+                    this.dispUrl = data.message;
+                })
+            if(defUrl == this.dispUrl) {
+                await updateRecord({
+                    fields: {
+                        [PRODUCT2_ID_FIELD.fieldApiName]: this.recordId,
+                        [DEFAULT_IMAGE_URL.fieldApiName]: null
+                    }
+                });
+            }
             await fileDelete({recordId: currentRecordId});
             this.dispatchEvent(new CustomEvent('deletefile'));
             this.dispatchEvent(
