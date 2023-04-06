@@ -1,7 +1,7 @@
-import { LightningElement, wire, api, track } from "lwc";
-import { refreshApex } from "@salesforce/apex";
-import { ShowToastEvent } from "lightning/platformShowToastEvent";
-import getFileVersions from "@salesforce/apex/FileController.getVersionFiles";
+import { LightningElement, wire, api, track } from 'lwc';
+import { refreshApex } from '@salesforce/apex';
+import { ShowToastEvent } from 'lightning/platformShowToastEvent';
+import getFileVersions from '@salesforce/apex/FileController.getVersionFiles';
 
 export default class ProductGallery extends LightningElement {
 
@@ -12,10 +12,10 @@ export default class ProductGallery extends LightningElement {
     @track files = [];
 
     get acceptedFormats() {
-        return [".png", ".jpg", ".jpeg"];
+        return ['.png', '.jpg', '.jpeg'];
     }
 
-    @wire(getFileVersions, { recordId: "$recordId" })
+    @wire(getFileVersions, { recordId: '$recordId' })
     fileResponse(value) {
         this.wiredActivities = value;
         const { data, error } = value;
@@ -33,12 +33,12 @@ export default class ProductGallery extends LightningElement {
                     ContentDocument: this.fileList[i].ContentDocument,
                     CreatedDate: this.fileList[i].CreatedDate,
                     thumbnailFileCard:
-                        "/sfc/servlet.shepherd/version/renditionDownload?rendition=THUMB720BY480&versionId=" +
+                        '/sfc/servlet.shepherd/version/renditionDownload?rendition=THUMB720BY480&versionId=' +
                         this.fileList[i].Id +
-                        "&operationContext=CHATTER&contentId=" +
+                        '&operationContext=CHATTER&contentId=' +
                         this.fileList[i].ContentDocumentId,
                     downloadUrl:
-                        "/sfc/servlet.shepherd/document/download/" +
+                        '/sfc/servlet.shepherd/document/download/' +
                         this.fileList[i].ContentDocumentId
                 };
                 this.files.push(file);
@@ -48,9 +48,9 @@ export default class ProductGallery extends LightningElement {
         } else if (error) {
             this.dispatchEvent(
                 new ShowToastEvent({
-                    title: "Error loading Files",
+                    title: 'Error loading Files',
                     message: error.body.message,
-                    variant: "error"
+                    variant: 'error'
                 })
             );
         }
@@ -63,9 +63,9 @@ export default class ProductGallery extends LightningElement {
         this.isLoading = false;
         this.dispatchEvent(
             new ShowToastEvent({
-                title: "Success!",
-                message: uploadedFiles.length + " Files Uploaded Successfully.",
-                variant: "success"
+                title: 'Success!',
+                message: uploadedFiles.length + ' Files Uploaded Successfully.',
+                variant: 'success'
             })
         );
     }
