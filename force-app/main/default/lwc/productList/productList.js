@@ -16,6 +16,9 @@ import minPrice from '@salesforce/apex/PriceBookController.getMinimalPrice';
 import allProdGet from '@salesforce/apex/PriceBookController.getAllProducts';
 import entryDelete from '@salesforce/apex/PriceBookController.deletePriceBookEntry';
 import entryDeleteAll from '@salesforce/apex/PriceBookController.deleteAllPriceBookEntries';
+import noImgUrl from '@salesforce/label/c.NoImageUrl';
+import baseUrl from '@salesforce/label/c.BaseUrl';
+import strPricebookId from '@salesforce/label/c.StdPricebookId';
 
 export default class ProductList extends LightningElement {
     
@@ -111,7 +114,7 @@ export default class ProductList extends LightningElement {
                 for(const item of this.products) {
                     item.price = parseFloat(item.price);
                     if(item.displayUrl == null) {
-                        item.displayUrl = 'https://britenet-10a-dev-ed--c.develop.vf.force.com/resource/1679500794000/NoImage?';
+                        item.displayUrl = noImgUrl;
                     }
                 }
             })
@@ -135,7 +138,7 @@ export default class ProductList extends LightningElement {
                 for(const item of this.products) {
                     item.price = parseFloat(item.price);
                     if(item.displayUrl == null) {
-                        item.displayUrl = 'https://britenet-10a-dev-ed--c.develop.vf.force.com/resource/1679500794000/NoImage?';
+                        item.displayUrl = noImgUrl;
                     }
                 }
             })
@@ -153,7 +156,7 @@ export default class ProductList extends LightningElement {
 
     @api
     getNewProducts() {
-        if(this.currentPricebookId == '01s7S000002VqAzQAK') {
+        if(this.currentPricebookId == strPricebookId) {
             allProdGet({pricebookId: this.currentPricebookId})
                 .then(result => {
                     this.newProducts = JSON.parse(result);
@@ -205,7 +208,7 @@ export default class ProductList extends LightningElement {
 
     renderedCallback() {
         if(this.currentPricebookId == null) {
-            this.currentPricebookId = '01s7S000002VqAzQAK';
+            this.currentPricebookId = strPricebookId;
         }
         this.getPBEntries();
         this.getNewProducts(); 
@@ -215,7 +218,7 @@ export default class ProductList extends LightningElement {
                 for(const item of this.products) {
                     item.price = parseFloat(item.price);
                     if(item.displayUrl == null) {
-                        item.displayUrl = 'https://britenet-10a-dev-ed--c.develop.vf.force.com/resource/1679500794000/NoImage?';
+                        item.displayUrl = noImgUrl;
                     }
                 }
             })
@@ -239,7 +242,7 @@ export default class ProductList extends LightningElement {
                 for(const item of this.products) {
                     item.price = parseFloat(item.price);
                     if(item.displayUrl == null) {
-                        item.displayUrl = 'https://britenet-10a-dev-ed--c.develop.vf.force.com/resource/1679500794000/NoImage?';
+                        item.displayUrl = noImgUrl;
                     }
                 }
             })
@@ -256,7 +259,7 @@ export default class ProductList extends LightningElement {
     }
 
     goToProduct(event) {
-        window.open('https://britenet-10a-dev-ed.develop.lightning.force.com/' + event.target.dataset.productId, '_blank').focus();
+        window.open(baseUrl + event.target.dataset.productId, '_blank').focus();
     }
 
     displayModal() {

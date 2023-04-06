@@ -4,6 +4,7 @@ import getPricebookStd from '@salesforce/apex/PriceBookController.getStandardPri
 import pricebookDeactivate from '@salesforce/apex/PriceBookController.deactivatePricebook';
 import pricebookEdit from '@salesforce/apex/PriceBookController.updatePriceBook';
 import pricebookDelete from '@salesforce/apex/PriceBookController.deletePriceBook';
+import strPricebookId from '@salesforce/label/c.StdPricebookId';
 
 export default class PriceBookDetails extends LightningElement {
     
@@ -27,9 +28,9 @@ export default class PriceBookDetails extends LightningElement {
 
     get disableDeactivate() {
         let flag = false;
-        if(this.currentIsActive == 'false' || this.currentId == '01s7S000002VqAzQAK') {
+        if(this.currentIsActive == 'false' || this.currentId == strPricebookId) {
             flag = true;
-        } else if(this.currentIsActive == 'true' && this.currentId != '01s7S000002VqAzQAK') {
+        } else if(this.currentIsActive == 'true' && this.currentId != strPricebookId) {
             flag = false;
         }
         return flag;

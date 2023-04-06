@@ -273,12 +273,12 @@ export default class PriceBookList extends LightningElement {
 
         svg.append('g')
             .attr('class', 'x axis-grid')
-            .attr("transform", "translate(0, 30)")
+            .attr('transform', 'translate(0, 30)')
             .call(xAxisGrid);
             
         svg.append('g')
             .attr('class', 'y axis-grid')
-            .attr("transform", "translate(144, 0)")
+            .attr('transform', 'translate(144, 0)')
             .call(yAxisGrid);
 
         let xAxis = d3.axisTop()
@@ -286,13 +286,13 @@ export default class PriceBookList extends LightningElement {
             .ticks(d3.timeDay.every(2))
             .tickFormat(d => d3.timeFormat('%d.%m')(d));
 
-        svg.append('g').attr("transform", "translate(0, 30)").style('font-size', '12px').call(xAxis);
+        svg.append('g').attr('transform', 'translate(0, 30)').style('font-size', '12px').call(xAxis);
 
         let yAxis = d3.axisLeft()
             .scale(yScale)
             .ticks(this.chartData.length);
 
-        svg.append('g').attr("transform", "translate(144, 0)").style('font-size', '12px').call(yAxis);
+        svg.append('g').attr('transform', 'translate(144, 0)').style('font-size', '12px').call(yAxis);
 
         const barsGroup = svg.append('g');
         barsGroup.selectAll('rect')
@@ -303,7 +303,7 @@ export default class PriceBookList extends LightningElement {
             .attr('y', d => yScale(d.name))
             .attr('width', d => xScale(d.end) - xScale(d.start))
             .attr('height', yScale.bandwidth() - 40)
-            .attr("transform", "translate(0, 20)")
+            .attr('transform', 'translate(0, 20)')
             .attr('fill', d => {
                 if(d.type === 'Business Premises') {
                     return d3.rgb(73, 230, 133);
@@ -326,11 +326,11 @@ export default class PriceBookList extends LightningElement {
             .attr('transform', 'translate(0, 20)')
             .attr('fill', d3.rgb(145, 148, 146));
 
-        svg.append("circle").attr("cx",144).attr("cy",540).attr("r", 6).style("fill", d3.rgb(73, 230, 133));
-        svg.append("circle").attr("cx",144).attr("cy",570).attr("r", 6).style("fill", d3.rgb(73, 190, 230));
-        svg.append("circle").attr("cx",144).attr("cy",600).attr("r", 6).style("fill", d3.rgb(145, 148, 146));
-        svg.append("text").attr("x", 164).attr("y", 540).text("Business Premises Price Books").style("font-size", "15px").attr("alignment-baseline","middle");
-        svg.append("text").attr("x", 164).attr("y", 570).text("Apartments Price Books").style("font-size", "15px").attr("alignment-baseline","middle");
-        svg.append("text").attr("x", 164).attr("y", 600).text("Standard Price Book").style("font-size", "15px").attr("alignment-baseline","middle");
+        svg.append('circle').attr('cx',144).attr('cy',540).attr('r', 6).style('fill', d3.rgb(73, 230, 133));
+        svg.append('circle').attr('cx',144).attr('cy',570).attr('r', 6).style('fill', d3.rgb(73, 190, 230));
+        svg.append('circle').attr('cx',144).attr('cy',600).attr('r', 6).style('fill', d3.rgb(145, 148, 146));
+        svg.append('text').attr('x', 164).attr('y', 540).text('Business Premises Price Books').style('font-size', '15px').attr('alignment-baseline','middle');
+        svg.append('text').attr('x', 164).attr('y', 570).text('Apartments Price Books').style('font-size', '15px').attr('alignment-baseline','middle');
+        svg.append('text').attr('x', 164).attr('y', 600).text('Standard Price Book').style('font-size', '15px').attr('alignment-baseline','middle');
     }
 }
