@@ -28,13 +28,13 @@ export default class PriceBookManager extends LightningElement {
             })
             .catch(error => {
                 this.error = error;
-                this.dispatchEvent(
-                    new ShowToastEvent({
-                        title: 'Error',
-                        message: this.error,
-                        variant: 'error'
-                    })
-                );
+                // this.dispatchEvent(
+                //     new ShowToastEvent({
+                //         title: 'Error',
+                //         message: this.error,
+                //         variant: 'error'
+                //     })
+                // );
             })
     }
 
@@ -49,13 +49,13 @@ export default class PriceBookManager extends LightningElement {
                 })
                 .catch(error => {
                     this.error = error;
-                    this.dispatchEvent(
-                        new ShowToastEvent({
-                            title: 'Error',
-                            message: this.error,
-                            variant: 'error'
-                        })
-                    );
+                    // this.dispatchEvent(
+                    //     new ShowToastEvent({
+                    //         title: 'Error',
+                    //         message: this.error,
+                    //         variant: 'error'
+                    //     })
+                    // );
                 })
             this.drawChart();      
         }).catch(error => {
@@ -108,13 +108,13 @@ export default class PriceBookManager extends LightningElement {
                 })
                 .catch(error => {
                     this.error = error;
-                    this.dispatchEvent(
-                        new ShowToastEvent({
-                            title: 'Error',
-                            message: this.error,
-                            variant: 'error'
-                        })
-                    );
+                    // this.dispatchEvent(
+                    //     new ShowToastEvent({
+                    //         title: 'Error',
+                    //         message: this.error,
+                    //         variant: 'error'
+                    //     })
+                    // );
                 })
             this.drawChart();      
         }).catch(error => {

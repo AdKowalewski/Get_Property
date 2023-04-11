@@ -49,13 +49,13 @@ export default class PriceBookDetails extends LightningElement {
             })
             .catch(error => {
                 this.error = error;
-                this.dispatchEvent(
-                    new ShowToastEvent({
-                        title: 'Error',
-                        message: this.error,
-                        variant: 'error'
-                    })
-                );
+                // this.dispatchEvent(
+                //     new ShowToastEvent({
+                //         title: 'Error',
+                //         message: this.error,
+                //         variant: 'error'
+                //     })
+                // );
             })
     }
 
@@ -126,13 +126,13 @@ export default class PriceBookDetails extends LightningElement {
                 })
                 .catch(error => {
                     this.error = error;
-                    this.dispatchEvent(
-                        new ShowToastEvent({
-                            title: 'Error',
-                            message: this.error,
-                            variant: 'error'
-                        })
-                    );
+                    // this.dispatchEvent(
+                    //     new ShowToastEvent({
+                    //         title: 'Error',
+                    //         message: this.error,
+                    //         variant: 'error'
+                    //     })
+                    // );
                 })
         } else {
             this.dispatchEvent(
@@ -164,13 +164,13 @@ export default class PriceBookDetails extends LightningElement {
             })
             .catch(error => {
                 this.error = error;
-                this.dispatchEvent(
-                    new ShowToastEvent({
-                        title: 'Error',
-                        message: this.error,
-                        variant: 'error'
-                    })
-                );
+                // this.dispatchEvent(
+                //     new ShowToastEvent({
+                //         title: 'Error',
+                //         message: this.error,
+                //         variant: 'error'
+                //     })
+                // );
             })
     }
 
@@ -203,13 +203,13 @@ export default class PriceBookDetails extends LightningElement {
             })
             .catch(error => {
                 this.error = error;
-                this.dispatchEvent(
-                    new ShowToastEvent({
-                        title: 'Error',
-                        message: this.error,
-                        variant: 'error'
-                    })
-                );
+                // this.dispatchEvent(
+                //     new ShowToastEvent({
+                //         title: 'Error',
+                //         message: this.error,
+                //         variant: 'error'
+                //     })
+                // );
             })
     }
 }

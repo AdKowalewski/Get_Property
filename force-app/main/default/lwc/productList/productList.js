@@ -120,13 +120,13 @@ export default class ProductList extends LightningElement {
             })
             .catch(error => {
                 this.error = error;
-                this.dispatchEvent(
-                    new ShowToastEvent({
-                        title: 'Error',
-                        message: this.error,
-                        variant: 'error'
-                    })
-                );
+                // this.dispatchEvent(
+                //     new ShowToastEvent({
+                //         title: 'Error',
+                //         message: this.error,
+                //         variant: 'error'
+                //     })
+                // );
             })
     }
 
@@ -144,13 +144,13 @@ export default class ProductList extends LightningElement {
             })
             .catch(error => {
                 this.error = error;
-                this.dispatchEvent(
-                    new ShowToastEvent({
-                        title: 'Error',
-                        message: this.error,
-                        variant: 'error'
-                    })
-                );
+                // this.dispatchEvent(
+                //     new ShowToastEvent({
+                //         title: 'Error',
+                //         message: this.error,
+                //         variant: 'error'
+                //     })
+                // );
             })
     }
 
@@ -163,13 +163,13 @@ export default class ProductList extends LightningElement {
                 })
                 .catch(error => {
                     this.error = error;
-                    this.dispatchEvent(
-                        new ShowToastEvent({
-                            title: 'Error',
-                            message: this.error,
-                            variant: 'error'
-                        })
-                    );
+                    // this.dispatchEvent(
+                    //     new ShowToastEvent({
+                    //         title: 'Error',
+                    //         message: this.error,
+                    //         variant: 'error'
+                    //     })
+                    // );
                 })
         } else {
             if(this.currentPricebookType == 'Business Premises') {
@@ -179,13 +179,13 @@ export default class ProductList extends LightningElement {
                     })
                     .catch(error => {
                         this.error = error;
-                        this.dispatchEvent(
-                            new ShowToastEvent({
-                                title: 'Error',
-                                message: this.error,
-                                variant: 'error'
-                            })
-                        );
+                        // this.dispatchEvent(
+                        //     new ShowToastEvent({
+                        //         title: 'Error',
+                        //         message: this.error,
+                        //         variant: 'error'
+                        //     })
+                        // );
                     })
             } else if(this.currentPricebookType == 'Apartments') {
                 apartmentsGet({pricebookId: this.currentPricebookId})
@@ -194,13 +194,13 @@ export default class ProductList extends LightningElement {
                     })
                     .catch(error => {
                         this.error = error;
-                        this.dispatchEvent(
-                            new ShowToastEvent({
-                                title: 'Error',
-                                message: this.error,
-                                variant: 'error'
-                            })
-                        );
+                        // this.dispatchEvent(
+                        //     new ShowToastEvent({
+                        //         title: 'Error',
+                        //         message: this.error,
+                        //         variant: 'error'
+                        //     })
+                        // );
                     })
             }
         }       
@@ -224,13 +224,13 @@ export default class ProductList extends LightningElement {
             })
             .catch(error => {
                 this.error = error;
-                this.dispatchEvent(
-                    new ShowToastEvent({
-                        title: 'Error',
-                        message: this.error,
-                        variant: 'error'
-                    })
-                );
+                // this.dispatchEvent(
+                //     new ShowToastEvent({
+                //         title: 'Error',
+                //         message: this.error,
+                //         variant: 'error'
+                //     })
+                // );
             })
     }
 
@@ -248,13 +248,13 @@ export default class ProductList extends LightningElement {
             })
             .catch(error => {
                 this.error = error;
-                this.dispatchEvent(
-                    new ShowToastEvent({
-                        title: 'Error',
-                        message: this.error,
-                        variant: 'error'
-                    })
-                );
+                // this.dispatchEvent(
+                //     new ShowToastEvent({
+                //         title: 'Error',
+                //         message: this.error,
+                //         variant: 'error'
+                //     })
+                // );
             })
     }
 
@@ -710,13 +710,13 @@ export default class ProductList extends LightningElement {
             })
             .catch(error => {
                 this.error = error;
-                this.dispatchEvent(
-                    new ShowToastEvent({
-                        title: 'Error',
-                        message: this.error,
-                        variant: 'error'
-                    })
-                );
+                // this.dispatchEvent(
+                //     new ShowToastEvent({
+                //         title: 'Error',
+                //         message: this.error,
+                //         variant: 'error'
+                //     })
+                // );
             })
         let box = this.template.querySelector('[data-id="selAll"]');
         const checkboxList = this.template.querySelectorAll('[data-id^="01u"]');
@@ -731,13 +731,13 @@ export default class ProductList extends LightningElement {
                 })
                 .catch(error => {
                     this.error = error;
-                    this.dispatchEvent(
-                        new ShowToastEvent({
-                            title: 'Error',
-                            message: this.error,
-                            variant: 'error'
-                        })
-                    );
+                    // this.dispatchEvent(
+                    //     new ShowToastEvent({
+                    //         title: 'Error',
+                    //         message: this.error,
+                    //         variant: 'error'
+                    //     })
+                    // );
                 })
         } else {
             for(const element of checkboxList) {
