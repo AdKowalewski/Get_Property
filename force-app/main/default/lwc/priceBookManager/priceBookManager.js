@@ -118,13 +118,13 @@ export default class PriceBookManager extends LightningElement {
                 })
             this.drawChart();      
         }).catch(error => {
-            this.dispatchEvent(
-                new ShowToastEvent({
-                    title: 'Error',
-                    message: 'Error loading D3 library',
-                    variant: 'error'
-                })
-            );
+            // this.dispatchEvent(
+            //     new ShowToastEvent({
+            //         title: 'Error',
+            //         message: 'Error loading D3 library',
+            //         variant: 'error'
+            //     })
+            // );
         });
     }
 
@@ -152,6 +152,8 @@ export default class PriceBookManager extends LightningElement {
     }
 
     drawChart() {
+        this.template.querySelector('svg.d3-1').innerHTML = "";
+
         const svg = d3.select(this.template.querySelector('svg.d3-1'))
             .attr('width', this.svgWidth)
             .attr('height', this.svgHeight);
