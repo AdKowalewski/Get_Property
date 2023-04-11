@@ -1,35 +1,55 @@
 <template>
-    <lightning-layout>
-        <lightning-layout-item size="4">
-            <lightning-layout multiple-rows="true">
-                <lightning-layout-item size="12">
-                    <div class="slds-card" style="margin-right: 2%;">
-                        <c-price-book-list onpricebookselect={handlePricebookSelect} onrefreshpricebook={handlePricebookSelect}></c-price-book-list>
-                    </div>
-                </lightning-layout-item>
-            </lightning-layout>
-        </lightning-layout-item>
-        <lightning-layout-item size="8">
-            <lightning-layout multiple-rows="true">
-                <lightning-layout-item size="12">
-                    <div class="slds-card" style="margin-bottom: 1%;">
-                        <c-price-book-details 
-                            current-id={selectedId}
-                            current-name={selectedName}
-                            current-prod-type={selectedProdType}
-                            current-start-date={selectedStartDate}
-                            current-end-date={selectedEndDate}
-                            current-is-active={selectedIsActive}
-                            onpricebookedit={handlePBEdit}
-                            onpricebookedit2={handlePBEdit}></c-price-book-details>
-                    </div>
-                </lightning-layout-item>
-                <lightning-layout-item size="12">
-                    <div class="slds-card">
-                        <c-product-list current-pricebook-id={selectedId} current-pricebook-type={selectedProdType}></c-product-list>
-                    </div>
-                </lightning-layout-item>
-            </lightning-layout>
-        </lightning-layout-item>
-    </lightning-layout>
+    <div class="slds-card">
+        <lightning-tabset>
+            <lightning-tab label="Price Book Manager">
+                <lightning-layout>
+                    <lightning-layout-item size="4">
+                        <lightning-layout multiple-rows="true">
+                            <lightning-layout-item size="12">
+                                <div class="slds-card" style="border: lightgrey solid 1px; margin-top: 2%; margin-right: 2%; margin-left: 2%;">
+                                    <c-price-book-list onpricebookselect={handlePricebookSelect} onrefreshpricebook={handlePricebookSelect}></c-price-book-list>
+                                </div>
+                            </lightning-layout-item>
+                        </lightning-layout>
+                    </lightning-layout-item>
+                    <lightning-layout-item size="8">
+                        <lightning-layout multiple-rows="true">
+                            <lightning-layout-item size="12">
+                                <div class="slds-card" style="border: lightgrey solid 1px; margin-top: 1%; margin-bottom: 1%; margin-right: 1%;">
+                                    <c-price-book-details 
+                                        current-id={selectedId}
+                                        current-name={selectedName}
+                                        current-prod-type={selectedProdType}
+                                        current-start-date={selectedStartDate}
+                                        current-end-date={selectedEndDate}
+                                        current-is-active={selectedIsActive}
+                                        onpricebookedit={handlePBEdit}
+                                        onpricebookedit2={handlePBEdit}></c-price-book-details>
+                                </div>
+                            </lightning-layout-item>
+                            <lightning-layout-item size="12">
+                                <div class="slds-card" style="border: lightgrey solid 1px; margin-right: 1%;">
+                                    <c-product-list current-pricebook-id={selectedId} current-pricebook-type={selectedProdType}></c-product-list>
+                                </div>
+                            </lightning-layout-item>
+                        </lightning-layout>
+                    </lightning-layout-item>
+                </lightning-layout>
+            </lightning-tab>
+            <lightning-tab label="Chart" onactive={initChart}>
+                <lightning-layout>
+                    <lightning-layout-item size="12">
+                        <article class="slds-card">
+                            <div class="slds-card__body slds-card__body_inner slds-align_absolute-center" style="border: lightgrey solid 1px; margin: 1%;">
+                                <svg
+                                    class="d3-1"
+                                    lwc:dom="manual"
+                                ></svg>
+                            </div>
+                        </article>
+                    </lightning-layout-item>
+                </lightning-layout>
+            </lightning-tab>
+        </lightning-tabset>
+    </div>
 </template>
