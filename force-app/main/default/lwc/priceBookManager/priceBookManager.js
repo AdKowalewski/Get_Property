@@ -152,7 +152,6 @@ export default class PriceBookManager extends LightningElement {
     }
 
     drawChart() {
-        console.log('CHECK DRAW FUNCTION ' + this.chartData);
         const svg = d3.select(this.template.querySelector('svg.d3-1'))
             .attr('width', this.svgWidth)
             .attr('height', this.svgHeight);
