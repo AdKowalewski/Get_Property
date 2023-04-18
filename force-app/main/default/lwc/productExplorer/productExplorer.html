@@ -1,60 +1,64 @@
 <template>
     <lightning-layout title="Product Explorer" multiple-rows="true" class="slds-card">
-        <div class="slds-text-title" style="font-size: 18px; font-weight: bold; margin-left: 1%; margin-top: 1%; margin-bottom: 1%; width: 99%;">Product Explorer</div>
+        <lightning-layout-item size="12" style="background-color: #83b0f7;">
+            <div class="slds-text-title" style="font-size: 18px; font-weight: bold; margin-left: 1%; margin-top: 1%; margin-bottom: 1%; width: 99%;">Property Explorer</div>
+        </lightning-layout-item>
         <!-- search -->
-        <lightning-layout-item size="12" style="margin-left: 30%; width: 40%;">            
-            <template if:true={isApartments}>
-                <lightning-layout horizontal-align="middle" multiple-rows="true">
-                    <lightning-layout-item size="12">
-                        <lightning-input type="text" label="Product Name" value={productName} onchange={handleProductNameChange}></lightning-input>
-                    </lightning-layout-item>
-                    <lightning-layout-item size="12">
-                        <lightning-input type="text" label="Product City" value={productCity} onchange={handleProductCityChange}></lightning-input>
-                    </lightning-layout-item>
-                    <lightning-layout-item size="12">
-                        <lightning-combobox
-                            name="apartment_type"
-                            label="Apartment Type"
-                            value={apartmentType}
-                            options={apartmentTypes}
-                            onchange={handleApartmentTypeChange}></lightning-combobox>
-                    </lightning-layout-item>
-                    <lightning-layout-item size="4">
-                        <lightning-input type="checkbox" name="laundry" label="Laundry" value={laundry} onchange={handleLaundryChange}></lightning-input>
-                    </lightning-layout-item>
-                    <lightning-layout-item size="4">
-                        <lightning-input type="checkbox" name="balcony" label="Balcony" value={balcony} onchange={handleBalconyChange}></lightning-input>
-                    </lightning-layout-item>
-                    <lightning-layout-item size="4">
-                        <lightning-input type="checkbox" name="livingRoomKitchen" label="Living Room with the Kitchen" value={livingRoomKitchen} onchange={handleLivingRoomKitchenChange}></lightning-input>
-                    </lightning-layout-item>
-                </lightning-layout> 
-            </template>
-            <template if:false={isApartments}>
-                <lightning-layout horizontal-align="middle" multiple-rows="true">
-                    <lightning-layout-item size="12">
-                        <lightning-input type="text" label="Product Name" value={productName} onchange={handleProductNameChange}></lightning-input>
-                    </lightning-layout-item>
-                    <lightning-layout-item size="12">
-                        <lightning-input type="text" label="Product City" value={productCity} onchange={handleProductCityChange}></lightning-input>
-                    </lightning-layout-item>
-                    <lightning-layout-item size="3">
-                        <lightning-input type="checkbox" name="wifi" label="Wi-Fi" value={wifi} onchange={handleWifiChange}></lightning-input>
-                    </lightning-layout-item>
-                    <lightning-layout-item size="3">
-                        <lightning-input type="checkbox" name="parking" label="Parking" value={parking} onchange={handleParkingChange}></lightning-input>
-                    </lightning-layout-item>
-                    <lightning-layout-item size="3">
-                        <lightning-input type="checkbox" name="elevator" label="Elevator" value={elevator} onchange={handleElevatorChange}></lightning-input>
-                    </lightning-layout-item>
-                    <lightning-layout-item size="3">
-                        <lightning-input type="checkbox" name="kitchen" label="Kitchen" value={kitchen} onchange={handleKitchenChange}></lightning-input>
-                    </lightning-layout-item>
-                </lightning-layout>
-            </template>
-            <div class="slds-var-m-vertical_medium">
-                <lightning-button variant="brand" label="Search" onclick={getProducts} class="search-button"></lightning-button>
-            </div>              
+        <lightning-layout-item size="12" style="background-color: #83b0f7;">
+            <div style="margin-left: 30%; width: 40%;">           
+                <template if:true={isApartments}>
+                    <lightning-layout horizontal-align="middle" multiple-rows="true">
+                        <lightning-layout-item size="12">
+                            <lightning-input type="text" label="Product Name" value={productName} onchange={handleProductNameChange}></lightning-input>
+                        </lightning-layout-item>
+                        <lightning-layout-item size="12">
+                            <lightning-input type="text" label="Product City" value={productCity} onchange={handleProductCityChange}></lightning-input>
+                        </lightning-layout-item>
+                        <lightning-layout-item size="12">
+                            <lightning-combobox
+                                name="apartment_type"
+                                label="Apartment Type"
+                                value={apartmentType}
+                                options={apartmentTypes}
+                                onchange={handleApartmentTypeChange}></lightning-combobox>
+                        </lightning-layout-item>
+                        <lightning-layout-item size="4">
+                            <lightning-input type="checkbox" name="laundry" label="Laundry" value={laundry} onchange={handleLaundryChange}></lightning-input>
+                        </lightning-layout-item>
+                        <lightning-layout-item size="4">
+                            <lightning-input type="checkbox" name="balcony" label="Balcony" value={balcony} onchange={handleBalconyChange}></lightning-input>
+                        </lightning-layout-item>
+                        <lightning-layout-item size="4">
+                            <lightning-input type="checkbox" name="livingRoomKitchen" label="Living Room with the Kitchen" value={livingRoomKitchen} onchange={handleLivingRoomKitchenChange}></lightning-input>
+                        </lightning-layout-item>
+                    </lightning-layout> 
+                </template>
+                <template if:false={isApartments}>
+                    <lightning-layout horizontal-align="middle" multiple-rows="true">
+                        <lightning-layout-item size="12">
+                            <lightning-input type="text" label="Product Name" value={productName} onchange={handleProductNameChange}></lightning-input>
+                        </lightning-layout-item>
+                        <lightning-layout-item size="12">
+                            <lightning-input type="text" label="Product City" value={productCity} onchange={handleProductCityChange}></lightning-input>
+                        </lightning-layout-item>
+                        <lightning-layout-item size="3">
+                            <lightning-input type="checkbox" name="wifi" label="Wi-Fi" value={wifi} onchange={handleWifiChange}></lightning-input>
+                        </lightning-layout-item>
+                        <lightning-layout-item size="3">
+                            <lightning-input type="checkbox" name="parking" label="Parking" value={parking} onchange={handleParkingChange}></lightning-input>
+                        </lightning-layout-item>
+                        <lightning-layout-item size="3">
+                            <lightning-input type="checkbox" name="elevator" label="Elevator" value={elevator} onchange={handleElevatorChange}></lightning-input>
+                        </lightning-layout-item>
+                        <lightning-layout-item size="3">
+                            <lightning-input type="checkbox" name="kitchen" label="Kitchen" value={kitchen} onchange={handleKitchenChange}></lightning-input>
+                        </lightning-layout-item>
+                    </lightning-layout>
+                </template>
+                <div class="slds-var-m-vertical_medium">
+                    <lightning-button variant="brand" label="Search" onclick={getProducts} class="search-button"></lightning-button>
+                </div>
+            </div>               
         </lightning-layout-item>
 
         <!-- spinner -->
