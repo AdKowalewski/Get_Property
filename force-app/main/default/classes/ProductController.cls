@@ -13,8 +13,8 @@ public with sharing class ProductController {
     public static String getProductPremisesList(Integer pageSize, Integer pageNumber, String name, String city, Boolean wifi, Boolean parking, Boolean elevator, Boolean kitchen) {
         String jsonItem = '';
 
-        name = String.isBlank(name) ? 'null' : '%' + name + '%';
-        city = String.isBlank(city) ? 'null' : '%' + city + '%';
+        name = String.isBlank(name) ? '%' : '%' + name + '%';
+        city = String.isBlank(city) ? '%' : '%' + city + '%';
         wifi = (wifi == null) ? false : wifi;
         parking = (parking == null) ? false : parking;
         elevator = (elevator == null) ? false : elevator;
@@ -47,8 +47,8 @@ public with sharing class ProductController {
     @AuraEnabled
     public static String getProductApartmentsList(Integer pageSize, Integer pageNumber, String name, String city, String type, Boolean laundry, Boolean balcony, Boolean lk) {
         String jsonItem = '';
-        name = String.isBlank(name) ? 'null' : '%' + name + '%';
-        city = String.isBlank(city) ? 'null' : '%' + city + '%';
+        name = String.isBlank(name) ? '%' : '%' + name + '%';
+        city = String.isBlank(city) ? '%' : '%' + city + '%';
         type = String.isBlank(type) ? 'null' : ((type == 'All Types') ? '%' : '%' + type + '%');
         laundry = (laundry == null) ? false : laundry;
         balcony = (balcony == null) ? false : balcony;
