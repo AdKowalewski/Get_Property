@@ -30,7 +30,7 @@ export default class PreviewImage extends LightningElement {
             await updateRecord({
                 fields: {
                     [PRODUCT2_ID_FIELD.fieldApiName]: this.recordId,
-                    [DEFAULT_IMAGE_URL.fieldApiName]: '/sfc/servlet.shepherd/version/renditionDownload?rendition=THUMB720BY480&versionId=' + this.file.Id + '&operationContext=CHATTER&contentId=' + this.file.ContentDocumentId
+                    [DEFAULT_IMAGE_URL.fieldApiName]: 'https://britenet-10a-dev-ed.develop.lightning.force.com/sfc/servlet.shepherd/version/renditionDownload?rendition=THUMB720BY480&versionId=' + this.file.Id + '&operationContext=CHATTER&contentId=' + this.file.ContentDocumentId
                 }
             });
             this.dispatchEvent(
@@ -53,7 +53,7 @@ export default class PreviewImage extends LightningElement {
     }
 
     async handleDelete() {
-        let defUrl = '/sfc/servlet.shepherd/version/renditionDownload?rendition=THUMB720BY480&versionId=' + this.file.Id + '&operationContext=CHATTER&contentId=' + this.file.ContentDocumentId;
+        let defUrl = 'https://britenet-10a-dev-ed.develop.lightning.force.com/sfc/servlet.shepherd/version/renditionDownload?rendition=THUMB720BY480&versionId=' + this.file.Id + '&operationContext=CHATTER&contentId=' + this.file.ContentDocumentId;
         await getDisplayUrl({id: this.recordId})
             .then(result => {
                 let data = JSON.parse(result);

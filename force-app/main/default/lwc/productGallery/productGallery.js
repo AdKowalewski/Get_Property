@@ -33,12 +33,12 @@ export default class ProductGallery extends LightningElement {
                     ContentDocument: this.fileList[i].ContentDocument,
                     CreatedDate: this.fileList[i].CreatedDate,
                     thumbnailFileCard:
-                        '/sfc/servlet.shepherd/version/renditionDownload?rendition=THUMB720BY480&versionId=' +
+                        'https://britenet-10a-dev-ed.develop.lightning.force.com/sfc/servlet.shepherd/version/renditionDownload?rendition=THUMB720BY480&versionId=' +
                         this.fileList[i].Id +
                         '&operationContext=CHATTER&contentId=' +
                         this.fileList[i].ContentDocumentId,
                     downloadUrl:
-                        '/sfc/servlet.shepherd/document/download/' +
+                        'https://britenet-10a-dev-ed.develop.lightning.force.com/sfc/servlet.shepherd/document/download/' +
                         this.fileList[i].ContentDocumentId
                 };
                 this.files.push(file);
