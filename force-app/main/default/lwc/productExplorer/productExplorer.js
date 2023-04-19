@@ -21,10 +21,13 @@ export default class ProductExplorer extends LightningElement {
     @track totalRecords = 0;
     @track totalPages = 0;
     @track loading = false;
-    @track pagesize = 2;
+    @track pagesize = 3;
     @track isPrev = true;
     @track isNext = true;
     @track products = [];
+    @track showFilter = false;
+    @track maxPrice = 100000;
+    @track minSize = 20;
 
     productName;
     productCity;
@@ -71,6 +74,47 @@ export default class ProductExplorer extends LightningElement {
                 })
             );
         }
+    }
+
+    connectedCallback() {
+        this.loading = true;
+        getPremises({
+            pageSize: this.pagesize, 
+            pageNumber: this.pageNumber, 
+            name: this.productName, 
+            city: this.productCity, 
+            wifi: this.wifi, 
+            parking: this.parking, 
+            elevator: this.elevator, 
+            kitchen: this.kitchen,
+            price: this.maxPrice,
+            size: this.minSize
+        })
+            .then(result => {
+                this.loading = false;
+                if(result) {
+                    let data = JSON.parse(result);
+                    this.recordEnd = data.recordEnd;
+                    this.totalRecords = data.totalRecords;
+                    this.recordStart = data.recordStart;
+                    this.products = data.products;
+                    this.pageNumber = data.pageNumber;
+                    this.totalPages = Math.ceil(data.totalRecords / this.pagesize);
+                    this.isNext = (this.pageNumber == this.totalPages || this.totalPages == 0);
+                    this.isPrev = (this.pageNumber == 1 || this.totalRecords < this.pagesize);
+                }
+            })
+            .catch(error => {
+                this.loading = false;
+                this.error = error.message;
+                this.dispatchEvent(
+                    new ShowToastEvent({
+                        title: 'Error',
+                        message: this.error,
+                        variant: 'error'
+                    })
+                );
+            });
     }
 
     getProducts() {
@@ -120,7 +164,9 @@ export default class ProductExplorer extends LightningElement {
                 wifi: this.wifi, 
                 parking: this.parking, 
                 elevator: this.elevator, 
-                kitchen: this.kitchen
+                kitchen: this.kitchen,
+                price: this.maxPrice,
+                size: this.minSize
             })
                 .then(result => {
                     this.loading = false;
@@ -148,6 +194,22 @@ export default class ProductExplorer extends LightningElement {
                     );
                 });
         }
+    }
+
+    displayFilter() {
+        this.showFilter = true;
+    }
+
+    hideFilter() {
+        this.showFilter = false;
+    }
+
+    handleMaxPriceChange(event) {
+        this.maxPrice = event.target.value;
+    }
+
+    handleSizeChange(event) {
+        this.minSize = event.target.value;
     }
 
     handleProductNameChange(event) {

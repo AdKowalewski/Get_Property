@@ -1,7 +1,7 @@
 <template>
     <lightning-layout title="Product Explorer" multiple-rows="true" class="slds-card">
         <lightning-layout-item size="12" style="background-color: #83b0f7;">
-            <div class="slds-text-title" style="font-size: 18px; font-weight: bold; margin-left: 1%; margin-top: 1%; margin-bottom: 1%; width: 99%;">Property Explorer</div>
+            <div class="slds-text-title" style="font-size: 25px; font-weight: bold; margin-left: 43%; width: 40%; margin-top: 1%; margin-bottom: 1%;">Property Explorer</div>
         </lightning-layout-item>
         <!-- search -->
         <lightning-layout-item size="12" style="background-color: #83b0f7;">
@@ -41,21 +41,41 @@
                         <lightning-layout-item size="12">
                             <lightning-input type="text" label="Product City" value={productCity} onchange={handleProductCityChange}></lightning-input>
                         </lightning-layout-item>
-                        <lightning-layout-item size="3">
-                            <lightning-input type="checkbox" name="wifi" label="Wi-Fi" value={wifi} onchange={handleWifiChange}></lightning-input>
-                        </lightning-layout-item>
-                        <lightning-layout-item size="3">
-                            <lightning-input type="checkbox" name="parking" label="Parking" value={parking} onchange={handleParkingChange}></lightning-input>
-                        </lightning-layout-item>
-                        <lightning-layout-item size="3">
-                            <lightning-input type="checkbox" name="elevator" label="Elevator" value={elevator} onchange={handleElevatorChange}></lightning-input>
-                        </lightning-layout-item>
-                        <lightning-layout-item size="3">
-                            <lightning-input type="checkbox" name="kitchen" label="Kitchen" value={kitchen} onchange={handleKitchenChange}></lightning-input>
-                        </lightning-layout-item>
+                        <template if:true={showFilter}>
+                            <lightning-layout style="width: 100%;" multiple-rows="true">
+                                <lightning-layout-item size="12">
+                                    <lightning-slider label="Max Price (EUR)" value={maxPrice} step="0.01" min="0" max="200000" onchange={handleMaxPriceChange}></lightning-slider>
+                                </lightning-layout-item>
+                                <lightning-layout-item size="12">
+                                    <lightning-slider label="Min Size (m2)" value={minSize} step="0.01" min="0" max="100" onchange={handleSizeChange}></lightning-slider>
+                                </lightning-layout-item>
+                                <lightning-layout-item size="12">
+                                    <lightning-layout>
+                                        <lightning-layout-item size="3">
+                                            <lightning-input type="checkbox" name="wifi" label="Wi-Fi" value={wifi} onchange={handleWifiChange}></lightning-input>
+                                        </lightning-layout-item>
+                                        <lightning-layout-item size="3">
+                                            <lightning-input type="checkbox" name="parking" label="Parking" value={parking} onchange={handleParkingChange}></lightning-input>
+                                        </lightning-layout-item>
+                                        <lightning-layout-item size="3">
+                                            <lightning-input type="checkbox" name="elevator" label="Elevator" value={elevator} onchange={handleElevatorChange}></lightning-input>
+                                        </lightning-layout-item>
+                                        <lightning-layout-item size="3">
+                                            <lightning-input type="checkbox" name="kitchen" label="Kitchen" value={kitchen} onchange={handleKitchenChange}></lightning-input>
+                                        </lightning-layout-item>
+                                    </lightning-layout>
+                                </lightning-layout-item>
+                            </lightning-layout>
+                        </template>
                     </lightning-layout>
                 </template>
                 <div class="slds-var-m-vertical_medium">
+                    <template if:true={showFilter}>
+                        <lightning-button variant="neutral" label="Hide Filter" onclick={hideFilter} class="search-button" style="margin-right: 5px;"></lightning-button>
+                    </template>
+                    <template if:false={showFilter}>
+                        <lightning-button variant="neutral" label="Filter" onclick={displayFilter} class="search-button" style="margin-right: 5px;"></lightning-button>
+                    </template>
                     <lightning-button variant="brand" label="Search" onclick={getProducts} class="search-button"></lightning-button>
                 </div>
             </div>               
@@ -72,7 +92,7 @@
                 <h2>No products found</h2>
             </template>
             <template if:true={productsDisplayed}>
-                <div class="slds-text-title" style="font-size: 15px; font-weight: bold; margin-top: 1%; margin-bottom: 1%;">Results</div>
+                <!-- <div class="slds-text-title" style="font-size: 15px; font-weight: bold; margin-top: 1%; margin-bottom: 1%;">Results</div> -->
                 <div class="slds-scrollable_y">
                     <lightning-layout horizontal-align="center" multiple-rows>
                         <template for:each={products} for:item="product">

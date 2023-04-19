@@ -1,4 +1,4 @@
-import { LightningElement, api } from 'lwc';
+import { LightningElement, api, track } from 'lwc';
 
 export default class ProductTile extends LightningElement {
 
@@ -8,8 +8,15 @@ export default class ProductTile extends LightningElement {
     @api
     selectedProductId;
 
+    @track
+    productPrice;
+
     get backgroundStyle() {
         return 'background-image:url('+ this.product.DisplayUrl +')';
+    }
+
+    connectedCallback() {
+        this.productPrice = this.product.PricebookEntries.records[0].UnitPrice;
     }
 
     selectProduct() {
