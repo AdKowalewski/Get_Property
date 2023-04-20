@@ -1,7 +1,7 @@
 <template>
     <lightning-layout title="Product Explorer" multiple-rows="true" class="slds-card">
         <lightning-layout-item size="12" style="background-color: #83b0f7;">
-            <div class="slds-text-title" style="font-size: 25px; font-weight: bold; margin-left: 43%; width: 40%; margin-top: 1%; margin-bottom: 1%;">Property Explorer</div>
+            <div class="slds-text-title" style="font-size: 25px; font-weight: bold; margin-left: 45%; width: 40%; margin-top: 1%; margin-bottom: 1%;">Find Property</div>
         </lightning-layout-item>
         <!-- search -->
         <lightning-layout-item size="12" style="background-color: #83b0f7;">
@@ -71,12 +71,12 @@
                 </template>
                 <div class="slds-var-m-vertical_medium">
                     <template if:true={showFilter}>
-                        <lightning-button variant="neutral" label="Hide Filter" onclick={hideFilter} class="search-button" style="margin-right: 5px;"></lightning-button>
+                        <lightning-button icon-name="utility:filterList" icon-position="right" variant="neutral" label="Hide Filter" onclick={hideFilter} class="search-button" style="margin-right: 5px;"></lightning-button>
                     </template>
                     <template if:false={showFilter}>
-                        <lightning-button variant="neutral" label="Filter" onclick={displayFilter} class="search-button" style="margin-right: 5px;"></lightning-button>
+                        <lightning-button icon-name="utility:filterList" icon-position="right" variant="neutral" label="Filter" onclick={displayFilter} class="search-button" style="margin-right: 5px;"></lightning-button>
                     </template>
-                    <lightning-button variant="brand" label="Search" onclick={getProducts} class="search-button"></lightning-button>
+                    <!-- <lightning-button icon-name="utility:search" icon-position="right" variant="brand" label="Search" onclick={getProducts} class="search-button"></lightning-button> -->
                 </div>
             </div>               
         </lightning-layout-item>
@@ -114,7 +114,8 @@
                             <lightning-button label="First" 
                                 icon-name="utility:arrow_left"
                                 onclick={handleFirst}
-                                disabled={isPrev}><a href="#page1"></a></lightning-button>
+                                disabled={isPrev}
+                                style="margin-right: 5px;"><a href="#page1"></a></lightning-button>
                         </lightning-layout-item>
                         <lightning-layout-item>
                             <lightning-button label="Previous" 
@@ -137,7 +138,8 @@
                                 icon-name="utility:arrow_right"
                                 icon-position="right"
                                 onclick={handleLast}
-                                disabled={isNext}><a href="#page1"></a></lightning-button>
+                                disabled={isNext}
+                                style="margin-left: 5px;"><a href="#page1"></a></lightning-button>
                         </lightning-layout-item>
                     </lightning-layout>
                 </template>

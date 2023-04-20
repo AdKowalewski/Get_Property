@@ -13,7 +13,7 @@ export default class ProductExplorer extends LightningElement {
 
     @track error = null;
     @track currentUserRoleName;
-    @track isApartments;
+    @track isApartments = false;
 
     @track recordEnd = 0;
     @track recordStart = 0;
@@ -206,50 +206,62 @@ export default class ProductExplorer extends LightningElement {
 
     handleMaxPriceChange(event) {
         this.maxPrice = event.target.value;
+        this.getProducts();
     }
 
     handleSizeChange(event) {
         this.minSize = event.target.value;
+        this.getProducts();
     }
 
     handleProductNameChange(event) {
         this.productName = event.target.value;
+        this.getProducts();
     }
 
     handleProductCityChange(event) {
         this.productCity = event.target.value;
+        this.getProducts();
     }
 
     handleApartmentTypeChange(event) {
         this.apartmentType = event.target.value;
+        this.getProducts();
     }
 
     handleLaundryChange(event) {
         this.laundry = event.target.checked;
+        this.getProducts();
     }
 
     handleBalconyChange(event) {
         this.balcony = event.target.checked;
+        this.getProducts();
     }
 
     handleLivingRoomKitchenChange(event) {
         this.livingRoomKitchen = event.target.checked;
+        this.getProducts();
     }
 
     handleWifiChange(event) {
         this.wifi = event.target.checked;
+        this.getProducts();
     }
 
     handleParkingChange(event) {
         this.parking = event.target.checked;
+        this.getProducts();
     }
 
     handleElevatorChange(event) {
         this.elevator = event.target.checked;
+        this.getProducts();
     }
 
     handleKitchenChange(event) {
         this.kitchen = event.target.checked;
+        this.getProducts();
     }
 
     handleFirst() {
