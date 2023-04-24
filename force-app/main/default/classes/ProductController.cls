@@ -1,4 +1,4 @@
-public with sharing class ProductController {
+public without sharing class ProductController {
     
     public class ProductWrapper {
         public Integer recordStart { get; set; }
