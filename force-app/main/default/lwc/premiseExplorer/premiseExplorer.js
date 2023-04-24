@@ -34,11 +34,14 @@ export default class PremiseExplorer extends LightningElement {
     @track elevator;
     @track kitchen;
 
+    @track isDetail = false;
+
     label = {
         main_url
     };
 
     connectedCallback() {
+        this.isDetail = false;
         this.loading = true;
         getPremises({
             pageSize: this.pagesize, 
@@ -82,6 +85,7 @@ export default class PremiseExplorer extends LightningElement {
     }
 
     getProducts() {
+        this.isDetail = false;
         this.loading = true;
         getPremises({
             pageSize: this.pagesize, 
@@ -235,6 +239,7 @@ export default class PremiseExplorer extends LightningElement {
 
     selectProduct(event) {
         this.selectedProductId = event.detail.productId;
-        window.open(main_url + this.selectedProductId, '_blank').focus();
+        this.isDetail = true;
+        //window.open(main_url + this.selectedProductId, '_blank').focus();
     }
 }
