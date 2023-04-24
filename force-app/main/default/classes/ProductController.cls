@@ -9,6 +9,49 @@ public with sharing class ProductController {
         public List<Product2> products { get; set; }
     }
 
+    private class LastSeenItemsWrapper {
+        public List<UserProduct__c> uprods { get; set; }
+    }
+
+    private class ProductWrapper2 {
+        public String id { get; set; }
+        public String name { get; set; }
+        public String address { get; set; }
+        public Double price { get; set; }
+        public Double size { get; set; }
+        public String displayUrl { get; set; }
+        public Boolean wifi { get; set; }
+        public Boolean parking { get; set; }
+        public Boolean elevator { get; set; }
+        public Boolean kitchen { get; set; }
+    }
+
+    @AuraEnabled
+    public static String getProductById(String id) {
+        String jsonStr = '';
+        Product2 product = [
+            SELECT Id, Name, Product_Address__City__s, Product_Address__PostalCode__s, Product_Address__Street__s, Price__c, Size__c, DisplayUrl, Wi_Fi__c, Parking__c, Elevator__c, Kitchen__c
+            FROM Product2
+            WHERE Id = :id
+        ];
+        ProductWrapper2 wrapper = new ProductWrapper2();
+        wrapper.id = product.Id;
+        wrapper.name = product.Name;
+        wrapper.address = (String.isBlank(product.Product_Address__City__s) ? '' : product.Product_Address__City__s) + 
+            (String.isBlank(product.Product_Address__Street__s) ? '' : ', ' + product.Product_Address__Street__s) +  
+            (String.isBlank(product.Product_Address__PostalCode__s) ? '' : ', ' + product.Product_Address__PostalCode__s);
+        wrapper.price = product.Price__c;
+        wrapper.size = product.Size__c;
+        wrapper.displayUrl = product.DisplayUrl;
+        wrapper.wifi = product.Wi_Fi__c;
+        wrapper.parking = product.Parking__c;
+        wrapper.elevator = product.Elevator__c;
+        wrapper.kitchen = product.Kitchen__c;
+
+        jsonStr = JSON.serialize(wrapper);
+        return jsonStr;
+    }
+
     @AuraEnabled
     public static String getProductPremisesList(Integer pageSize, Integer pageNumber, String name, String city, Boolean wifi, Boolean parking, Boolean elevator, Boolean kitchen, Double price, Double size) {
 
@@ -96,5 +139,38 @@ public with sharing class ProductController {
         ];     
         jsonItem = JSON.serialize(wrapper);
         return jsonItem;
+    }
+
+    @AuraEnabled
+    public static void addLastSeenItem(String userId, String productId) {
+        UserProduct__c uprod = new UserProduct__c();
+        uprod.UserId__c = userId;
+        uprod.ProductId__c = productId;
+        insert uprod;
+
+        List<UserProduct__c> uprods = [
+            SELECT Id, UserId__c, ProductId__c
+            FROM UserProduct__c
+            WHERE UserId__c = :userId
+        ];
+        if(uprods.size() > 10) {
+            delete uprods.get(uprods.size() - 1);
+        }
+    }
+
+    @AuraEnabled
+    public static String getUserLastSeenItems(String userId) {
+        String jsonStr = '';
+        List<UserProduct__c> uprods = [
+            SELECT Id, UserId__c, ProductId__c
+            FROM UserProduct__c
+            WHERE UserId__c = :userId
+        ];
+        LastSeenItemsWrapper wrapper = new LastSeenItemsWrapper();
+        for(UserProduct__c uprod : uprods) {
+            wrapper.uprods.add(uprod);
+        }
+        jsonStr = JSON.serialize(wrapper);
+        return jsonStr;
     }
 }
