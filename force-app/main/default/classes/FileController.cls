@@ -4,6 +4,19 @@ public with sharing class FileController {
         public String message { get; set; }
     }
 
+    private class ProductWrapper {
+        public String id { get; set; }
+        public String name { get; set; }
+        public String address { get; set; }
+        public Double price { get; set; }
+        public Double size { get; set; }
+        public String displayUrl { get; set; }
+        public Boolean wifi { get; set; }
+        public Boolean parking { get; set; }
+        public Boolean elevator { get; set; }
+        public Boolean kitchen { get; set; }
+    }
+
     @AuraEnabled(cacheable=true)
     public static List<ContentVersion> getVersionFiles(String recordId){
         try {
@@ -49,4 +62,28 @@ public with sharing class FileController {
         ];
         delete contentDocument;
     } 
+
+    @AuraEnabled
+    public static String getProductById(String id) {
+        String jsonStr = '';
+        Product2 product = [
+            SELECT Id, Name, Product_Address__City__s, Product_Address__PostalCode__s, Product_Address__Street__s, Price__c, Size__c, DisplayUrl, Wi_Fi__c, Parking__c, Elevator__c, Kitchen__c
+            FROM Product2
+            WHERE Id = :id
+        ];
+        ProductWrapper wrapper = new ProductWrapper();
+        wrapper.id = product.Id;
+        wrapper.name = product.Name;
+        wrapper.address = product.Product_Address__City__s + ', ' + product.Product_Address__Street__s + ', ' + product.Product_Address__PostalCode__s;
+        wrapper.price = product.Price__c;
+        wrapper.size = product.Size__c;
+        wrapper.displayUrl = product.DisplayUrl;
+        wrapper.wifi = product.Wi_Fi__c;
+        wrapper.parking = product.Parking__c;
+        wrapper.elevator = product.Elevator__c;
+        wrapper.kitchen = product.Kitchen__c;
+
+        jsonStr = JSON.serialize(wrapper);
+        return jsonStr;
+    }
 }

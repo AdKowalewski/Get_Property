@@ -1,0 +1,111 @@
+<template>
+    <template if:true={product}>
+        <lightning-layout title="Product Details" multiple-rows="true">
+            <lightning-layout-item size="12">
+                <div class="main" style={backgroundStyle}>
+                    <lightning-layout class="slds-p-right_xx-large slds-p-bottom_large slds-grid">
+                        <lightning-layout-item class="slds-size_9-of-12"></lightning-layout-item>
+                        <lightning-layout-item class="slds-size_3-of-12">
+                            <div class="slds-box_border box" style="height: 100%;">
+                                <img style="width: 100%; height: 290px; object-fit: cover;" src={product.displayUrl} />
+                                <lightning-layout class="slds-p-around_medium tile slds-grid slds-grid_vertical-align-center slds-wrap">
+                                    <lightning-layout-item class="slds-size_12-of-12">
+                                        <span class="slds-text-heading_small name">{product.name}</span>
+                                    </lightning-layout-item> 
+                                    <lightning-layout-item class="slds-size_12-of-12">
+                                        <div style="border-bottom: 1px solid lightgray; margin: 10px; min-width: 90%;"></div>
+                                    </lightning-layout-item>
+                                    <lightning-layout-item class="slds-size_12-of-12">
+                                        <lightning-layout multiple-rows="true">
+
+                                            <lightning-layout-item size="12">
+                                                <lightning-layout>
+                                                    <lightning-layout-item size="6">
+                                                        <span style="font-size: 14px;">Address</span>
+                                                    </lightning-layout-item>
+                                                    <lightning-layout-item size="6">
+                                                        <span style="font-size: 14px; font-weight: 700;">{product.address}</span>
+                                                    </lightning-layout-item>
+                                                </lightning-layout>
+                                            </lightning-layout-item>
+
+                                            <lightning-layout-item size="12">
+                                                <lightning-layout>
+                                                    <lightning-layout-item size="6">
+                                                        <span style="font-size: 14px;">Price</span>
+                                                    </lightning-layout-item>
+                                                    <lightning-layout-item size="6">
+                                                        <span style="font-size: 14px; font-weight: 700;">{product.price} EUR</span>
+                                                    </lightning-layout-item>
+                                                </lightning-layout>
+                                            </lightning-layout-item>
+
+                                            <lightning-layout-item size="12">
+                                                <lightning-layout>
+                                                    <lightning-layout-item size="6">
+                                                        <span style="font-size: 14px;">Size</span>
+                                                    </lightning-layout-item>
+                                                    <lightning-layout-item size="6">
+                                                        <span style="font-size: 14px; font-weight: 700;">{product.size} m2</span>
+                                                    </lightning-layout-item>
+                                                </lightning-layout>
+                                            </lightning-layout-item>
+
+                                            <lightning-layout-item size="12">
+                                                <lightning-layout>
+                                                    <lightning-layout-item size="6">
+                                                        <span style="font-size: 14px;">Wifi</span>
+                                                    </lightning-layout-item>
+                                                    <lightning-layout-item size="6">
+                                                        <span style="font-size: 14px; font-weight: 700;">{product.wifi}</span>
+                                                    </lightning-layout-item>
+                                                </lightning-layout>
+                                            </lightning-layout-item>
+
+                                            <lightning-layout-item size="12">
+                                                <lightning-layout>
+                                                    <lightning-layout-item size="6">
+                                                        <span style="font-size: 14px;">Parking</span>
+                                                    </lightning-layout-item>
+                                                    <lightning-layout-item size="6">
+                                                        <span style="font-size: 14px; font-weight: 700;">{product.parking}</span>
+                                                    </lightning-layout-item>
+                                                </lightning-layout>
+                                            </lightning-layout-item>
+
+                                            <lightning-layout-item size="12">
+                                                <lightning-layout>
+                                                    <lightning-layout-item size="6">
+                                                        <span style="font-size: 14px;">Elevator</span>
+                                                    </lightning-layout-item>
+                                                    <lightning-layout-item size="6">
+                                                        <span style="font-size: 14px; font-weight: 700;">{product.elevator}</span>
+                                                    </lightning-layout-item>
+                                                </lightning-layout>
+                                            </lightning-layout-item>
+
+                                            <lightning-layout-item size="12">
+                                                <lightning-layout>
+                                                    <lightning-layout-item size="6">
+                                                        <span style="font-size: 14px;">Kitchen</span>
+                                                    </lightning-layout-item>
+                                                    <lightning-layout-item size="6">
+                                                        <span style="font-size: 14px; font-weight: 700;">{product.kitchen}</span>
+                                                    </lightning-layout-item>
+                                                </lightning-layout>
+                                            </lightning-layout-item>
+
+                                        </lightning-layout>
+                                    </lightning-layout-item>
+                                </lightning-layout>
+                            </div>
+                        </lightning-layout-item>
+                    </lightning-layout>
+                </div>
+            </lightning-layout-item>
+            <lightning-layout-item size="12">
+                <c-product-details-gallery record-id={product.id}></c-product-details-gallery>
+            </lightning-layout-item>
+        </lightning-layout>
+    </template>
+</template>
