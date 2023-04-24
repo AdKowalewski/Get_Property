@@ -5,9 +5,10 @@ import getProduct from '@salesforce/apex/FileController.getProductById';
 export default class ProductDetails extends LightningElement {
 
     @track product;
+    @api productId;
 
     connectedCallback() {
-        getProduct({id: '01t7S000000XWtcQAG'})
+        getProduct({id: this.productId})
             .then(result => {
                 this.product = JSON.parse(result);
                 if(this.product.wifi == true) {
