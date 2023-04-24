@@ -24,16 +24,16 @@
                             <lightning-layout-item size="12">
                                 <lightning-layout>
                                     <lightning-layout-item size="3">
-                                        <lightning-input style="-webkit-text-fill-color:white;" type="checkbox" name="wifi" label="Wi-Fi" value={wifi} onchange={handleWifiChange}></lightning-input>
+                                        <lightning-input id="checkbox-wifi" style="-webkit-text-fill-color:white;" type="checkbox" name="wifi" label="Wi-Fi" value={wifi} onchange={handleWifiChange}></lightning-input>
                                     </lightning-layout-item>
                                     <lightning-layout-item size="3">
-                                        <lightning-input style="-webkit-text-fill-color:white;" type="checkbox" name="parking" label="Parking" value={parking} onchange={handleParkingChange}></lightning-input>
+                                        <lightning-input id="checkbox-parking" style="-webkit-text-fill-color:white;" type="checkbox" name="parking" label="Parking" value={parking} onchange={handleParkingChange}></lightning-input>
                                     </lightning-layout-item>
                                     <lightning-layout-item size="3">
-                                        <lightning-input style="-webkit-text-fill-color:white;" type="checkbox" name="elevator" label="Elevator" value={elevator} onchange={handleElevatorChange}></lightning-input>
+                                        <lightning-input id="checkbox-elevator" style="-webkit-text-fill-color:white;" type="checkbox" name="elevator" label="Elevator" value={elevator} onchange={handleElevatorChange}></lightning-input>
                                     </lightning-layout-item>
                                     <lightning-layout-item size="3">
-                                        <lightning-input style="-webkit-text-fill-color:white;" type="checkbox" name="kitchen" label="Kitchen" value={kitchen} onchange={handleKitchenChange}></lightning-input>
+                                        <lightning-input id="checkbox-kitchen" style="-webkit-text-fill-color:white;" type="checkbox" name="kitchen" label="Kitchen" value={kitchen} onchange={handleKitchenChange}></lightning-input>
                                     </lightning-layout-item>
                                 </lightning-layout>
                             </lightning-layout-item>
@@ -47,6 +47,7 @@
                     <template if:false={showFilter}>
                         <lightning-button icon-name="utility:filterList" icon-position="right" variant="neutral" label="Filter" onclick={displayFilter} class="search-button filter-button" style="margin-right: 5px;"></lightning-button>
                     </template>
+                    <lightning-button variant="neutral" label="Clear Filter" onclick={clearFilter} class="search-button filter-button" style="margin-right: 5px;"></lightning-button>
                     <!-- <lightning-button icon-name="utility:search" icon-position="right" variant="brand" label="Search" onclick={getProducts} class="search-button"></lightning-button> -->
                 </div>
             </div>               

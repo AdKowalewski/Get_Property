@@ -27,12 +27,12 @@ export default class PremiseExplorer extends LightningElement {
     @track maxPrice = 100000;
     @track minSize = 20;
 
-    productName;
-    productCity;
-    wifi;
-    parking;
-    elevator;
-    kitchen;
+    @track productName;
+    @track productCity;
+    @track wifi;
+    @track parking;
+    @track elevator;
+    @track kitchen;
 
     label = {
         main_url
@@ -53,7 +53,7 @@ export default class PremiseExplorer extends LightningElement {
             size: this.minSize
         })
             .then(result => {
-                this.loading = false;
+                // this.loading = false;
                 if(result) {
                     let data = JSON.parse(result);
                     this.recordEnd = data.recordEnd;
@@ -65,6 +65,7 @@ export default class PremiseExplorer extends LightningElement {
                     this.isNext = (this.pageNumber == this.totalPages || this.totalPages == 0);
                     this.isPrev = (this.pageNumber == 1 || this.totalRecords < this.pagesize);
                 }
+                this.loading = false;
             })
             .catch(error => {
                 this.loading = false;
@@ -77,6 +78,7 @@ export default class PremiseExplorer extends LightningElement {
                     })
                 );
             });
+        // this.loading = false;
     }
 
     getProducts() {
@@ -94,7 +96,7 @@ export default class PremiseExplorer extends LightningElement {
             size: this.minSize
         })
             .then(result => {
-                this.loading = false;
+                // this.loading = false;
                 if(result) {
                     let data = JSON.parse(result);
                     this.recordEnd = data.recordEnd;
@@ -106,6 +108,7 @@ export default class PremiseExplorer extends LightningElement {
                     this.isNext = (this.pageNumber == this.totalPages || this.totalPages == 0);
                     this.isPrev = (this.pageNumber == 1 || this.totalRecords < this.pagesize);
                 }
+                this.loading = false;
             })
             .catch(error => {
                 this.loading = false;
@@ -118,6 +121,7 @@ export default class PremiseExplorer extends LightningElement {
                     })
                 );
             });
+        // this.loading = false;
     }
 
     displayFilter() {
@@ -126,6 +130,17 @@ export default class PremiseExplorer extends LightningElement {
 
     hideFilter() {
         this.showFilter = false;
+    }
+
+    clearFilter() {
+        this.maxPrice = 100000;
+        this.minSize = 20;
+        this.wifi = false;
+        this.parking = false;
+        this.elevator = false;
+        this.kitchen = false;
+        this.showFilter = false;
+        this.getProducts();
     }
 
     handleMaxPriceChange(event) {
@@ -149,7 +164,7 @@ export default class PremiseExplorer extends LightningElement {
     }
 
     handleWifiChange(event) {
-        this.wifi = event.target.checked;
+        this.wifi = event.target.checked; 
         this.getProducts();
     }
 
