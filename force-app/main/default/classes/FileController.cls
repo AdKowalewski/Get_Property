@@ -74,7 +74,9 @@ public with sharing class FileController {
         ProductWrapper wrapper = new ProductWrapper();
         wrapper.id = product.Id;
         wrapper.name = product.Name;
-        wrapper.address = product.Product_Address__City__s + ', ' + product.Product_Address__Street__s + ', ' + product.Product_Address__PostalCode__s;
+        wrapper.address = (String.isBlank(product.Product_Address__City__s) ? '' : product.Product_Address__City__s) + 
+            (String.isBlank(product.Product_Address__Street__s) ? '' : ', ' + product.Product_Address__Street__s) +  
+            (String.isBlank(product.Product_Address__PostalCode__s) ? '' : ', ' + product.Product_Address__PostalCode__s);
         wrapper.price = product.Price__c;
         wrapper.size = product.Size__c;
         wrapper.displayUrl = product.DisplayUrl;

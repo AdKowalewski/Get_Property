@@ -10,7 +10,26 @@ export default class ProductDetails extends LightningElement {
         getProduct({id: '01t7S000000XWtcQAG'})
             .then(result => {
                 this.product = JSON.parse(result);
-                console.log('product check ' + JSON.stringify(result));
+                if(this.product.wifi == true) {
+                    this.product.wifi = 'yes';
+                } else {
+                    this.product.wifi = 'no';
+                }
+                if(this.product.parking == true) {
+                    this.product.parking = 'yes';
+                } else {
+                    this.product.parking = 'no';
+                }
+                if(this.product.elevator == true) {
+                    this.product.elevator = 'yes';
+                } else {
+                    this.product.elevator = 'no';
+                }
+                if(this.product.kitchen == true) {
+                    this.product.kitchen = 'yes';
+                } else {
+                    this.product.kitchen = 'no';
+                }
             })
             .catch(error => {
                 this.dispatchEvent(

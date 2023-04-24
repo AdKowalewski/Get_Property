@@ -2,16 +2,6 @@
     <lightning-layout multiple-rows="true" horizontal-align="true">
         <lightning-layout-item size="12">
             <lightning-card title="Gallery">
-                <!-- <div style="margin-left: 1%;" class="slds-var-m-vertical_medium">
-                    <lightning-file-upload
-                        name="fileUploader"
-                        accept={acceptedFormats}
-                        record-id={recordId}
-                        onuploadfinished={handleUploadFinished}
-                        multiple
-                    >
-                    </lightning-file-upload>
-                </div> -->
                 <template if:true={isLoading}>
                     <div class="slds-is-relative">
                         <lightning-spinner
@@ -35,11 +25,11 @@
                             <template if:true={loaded}>
                                 <template for:each={files} for:item="file">
                                     <div key={file.Id}>
-                                        <!-- <c-product-details-gallery-tile>                                      
+                                        <c-product-details-gallery-tile
                                             file={file}
                                             record-id={recordId}
                                             thumbnail={file.thumbnailFileCard}
-                                        ></c-product-details-gallery-tile> -->
+                                        ></c-product-details-gallery-tile>
                                     </div>
                                 </template>
                             </template>
