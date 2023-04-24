@@ -1,4 +1,4 @@
-public with sharing class FileController {
+public without sharing class FileController {
 
     private class ResponseWrapper {
         public String message { get; set; }
