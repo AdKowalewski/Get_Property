@@ -180,7 +180,19 @@ public without sharing class ProductController {
             wrapper.name = rv.Name;
             wrappers.add(wrapper);
         }
-        jsonStr = JSON.serialize(wrappers);
+        List<RecentlyViewedWrapper> finalwrappers = new List<RecentlyViewedWrapper>();
+        Integer k = 0;
+        for(Integer i = 0; i < wrappers.size(); i++) {
+            for(Integer j = i + 1; j < wrappers.size(); j++) {
+                if(wrappers[i].equals(wrappers[j])) {
+                    k++;
+                }
+            }
+            if(k == 0) {
+                finalwrappers.add(wrappers[i]);
+            }
+        }
+        jsonStr = JSON.serialize(finalwrappers);
         return jsonStr;
     }
 
