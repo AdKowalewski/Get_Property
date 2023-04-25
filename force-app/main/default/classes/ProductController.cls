@@ -9,8 +9,13 @@ public without sharing class ProductController {
         public List<Product2> products { get; set; }
     }
 
-    private class LastSeenItemsWrapper {
-        public List<UserProduct__c> uprods { get; set; }
+    // private class LastSeenItemsWrapper {
+    //     public List<UserProduct__c> uprods { get; set; }
+    // }
+
+    private class RecentlyViewedWrapper {
+        public String id { get; set; }
+        public String name { get; set; }
     }
 
     private class ProductWrapper2 {
@@ -50,6 +55,17 @@ public without sharing class ProductController {
 
         jsonStr = JSON.serialize(wrapper);
         return jsonStr;
+    }
+
+    @AuraEnabled
+    public static void markProductAsRecentlyViewed(String id) {
+        Product2 product = [
+            SELECT Id, Name
+            FROM Product2
+            WHERE Id = :id
+            FOR VIEW
+        ];
+        update product;
     }
 
     @AuraEnabled
@@ -142,35 +158,62 @@ public without sharing class ProductController {
     }
 
     @AuraEnabled
-    public static void addLastSeenItem(String userId, String productId) {
-        UserProduct__c uprod = new UserProduct__c();
-        uprod.UserId__c = userId;
-        uprod.ProductId__c = productId;
-        insert uprod;
-
-        List<UserProduct__c> uprods = [
-            SELECT Id, UserId__c, ProductId__c
-            FROM UserProduct__c
-            WHERE UserId__c = :userId
-        ];
-        if(uprods.size() > 10) {
-            delete uprods.get(uprods.size() - 1);
-        }
-    }
-
-    @AuraEnabled
-    public static String getUserLastSeenItems(String userId) {
+    public static String getUserRecentlyViewedProducts() {
         String jsonStr = '';
-        List<UserProduct__c> uprods = [
-            SELECT Id, UserId__c, ProductId__c
-            FROM UserProduct__c
-            WHERE UserId__c = :userId
+        List<Product2> premises = [
+            SELECT Id, Name
+            FROM Product2
+            WHERE RecordType.Name = 'Business Premises'
         ];
-        LastSeenItemsWrapper wrapper = new LastSeenItemsWrapper();
-        for(UserProduct__c uprod : uprods) {
-            wrapper.uprods.add(uprod);
+        Integer length = premises.size();
+        List<RecentlyViewed> last = [
+            SELECT Id, Name, LastViewedDate
+            FROM RecentlyViewed
+            WHERE Type IN ('Product2') AND RecordType.Name IN ('Business Premises')
+            ORDER BY LastViewedDate DESC
+            LIMIT :length
+        ];
+        List<RecentlyViewedWrapper> wrappers = new List<RecentlyViewedWrapper>();
+        for(RecentlyViewed rv : last) {
+            RecentlyViewedWrapper wrapper = new RecentlyViewedWrapper();
+            wrapper.id = rv.Id;
+            wrapper.name = rv.Name;
+            wrappers.add(wrapper);
         }
-        jsonStr = JSON.serialize(wrapper);
+        jsonStr = JSON.serialize(wrappers);
         return jsonStr;
     }
+
+    // @AuraEnabled
+    // public static void addLastSeenItem(String userId, String productId) {
+    //     UserProduct__c uprod = new UserProduct__c();
+    //     uprod.UserId__c = userId;
+    //     uprod.ProductId__c = productId;
+    //     insert uprod;
+
+    //     List<UserProduct__c> uprods = [
+    //         SELECT Id, UserId__c, ProductId__c
+    //         FROM UserProduct__c
+    //         WHERE UserId__c = :userId
+    //     ];
+    //     if(uprods.size() > 10) {
+    //         delete uprods.get(uprods.size() - 1);
+    //     }
+    // }
+
+    // @AuraEnabled
+    // public static String getUserLastSeenItems(String userId) {
+    //     String jsonStr = '';
+    //     List<UserProduct__c> uprods = [
+    //         SELECT Id, UserId__c, ProductId__c
+    //         FROM UserProduct__c
+    //         WHERE UserId__c = :userId
+    //     ];
+    //     LastSeenItemsWrapper wrapper = new LastSeenItemsWrapper();
+    //     for(UserProduct__c uprod : uprods) {
+    //         wrapper.uprods.add(uprod);
+    //     }
+    //     jsonStr = JSON.serialize(wrapper);
+    //     return jsonStr;
+    // }
 }

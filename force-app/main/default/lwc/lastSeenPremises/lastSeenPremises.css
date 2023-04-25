@@ -1,0 +1,7 @@
+.container {
+    cursor: pointer;
+}
+
+.container:hover {
+    background-color: #f2f2f2;
+}

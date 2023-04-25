@@ -5,3 +5,11 @@
 lightning-input {
     --slds-c-input-color-background: #000066 !important;
 }
+
+.container {
+    cursor: pointer;
+}
+
+.container:hover {
+    background-color: #f2f2f2;
+}

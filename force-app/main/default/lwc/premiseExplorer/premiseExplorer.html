@@ -49,6 +49,7 @@
                             <lightning-button icon-name="utility:filterList" icon-position="right" variant="neutral" label="Filter" onclick={displayFilter} class="search-button filter-button" style="margin-right: 5px;"></lightning-button>
                         </template>
                         <lightning-button variant="neutral" label="Clear Filter" onclick={clearFilter} class="search-button filter-button" style="margin-right: 5px;"></lightning-button>
+                        <lightning-button variant="neutral" label="Recently Viewed" onclick={showRecentlyViewed} class="search-button filter-button" style="margin-right: 5px;"></lightning-button>
                         <!-- <lightning-button icon-name="utility:search" icon-position="right" variant="brand" label="Search" onclick={getProducts} class="search-button"></lightning-button> -->
                     </div>
                 </div>               
@@ -60,64 +61,88 @@
             </template>
 
             <!-- results -->
-            <lightning-layout-item size="12" style="margin-left: 1%; width: 99%;">
-                <template if:true={noProducts}>
-                    <h2>No products found</h2>
-                </template>
-                <template if:true={productsDisplayed}>
-                    <!-- <div class="slds-text-title" style="font-size: 15px; font-weight: bold; margin-top: 1%; margin-bottom: 1%;">Results</div> -->
-                    <div class="slds-scrollable_y">
-                        <lightning-layout horizontal-align="center" multiple-rows>
-                            <template for:each={products} for:item="product">
-                                <lightning-layout-item key={product.Id} padding="around-small" size="2">
-                                    <c-product-tile product={product} onproductselect={selectProduct} selected-product-id={selectedProductId}></c-product-tile>
-                                </lightning-layout-item>
-                            </template>
-                        </lightning-layout>
-                    </div>
-                </template>
-            </lightning-layout-item>
+            <template if:false={isLastSeen}>
+                <lightning-layout-item size="12" style="margin-left: 1%; width: 99%;">
+                    <template if:true={noProducts}>
+                        <h2>No products found</h2>
+                    </template>
+                    <template if:true={productsDisplayed}>
+                        <!-- <div class="slds-text-title" style="font-size: 15px; font-weight: bold; margin-top: 1%; margin-bottom: 1%;">Results</div> -->
+                        <div class="slds-scrollable_y">
+                            <lightning-layout horizontal-align="center" multiple-rows>
+                                <template for:each={products} for:item="product">
+                                    <lightning-layout-item key={product.Id} padding="around-small" size="2">
+                                        <c-product-tile product={product} onproductselect={selectProduct} selected-product-id={selectedProductId}></c-product-tile>
+                                    </lightning-layout-item>
+                                </template>
+                            </lightning-layout>
+                        </div>
+                    </template>
+                </lightning-layout-item>
+            </template>
+            <template if:true={isLastSeen}>
+                <lightning-layout-item size="12" style="margin: 1%; width: 98%;">
+                    <template if:false={lastproducts}>
+                        <h2>No products found</h2>
+                    </template>
+                    <template if:true={lastproducts}>
+                        <!-- <div class="slds-text-title" style="font-size: 15px; font-weight: bold; margin-top: 1%; margin-bottom: 1%;">Results</div> -->
+                        <div class="slds-scrollable_y">
+                            <lightning-layout multiple-rows="true">
+                                <template for:each={lastproducts} for:item="lastproduct">
+                                    <lightning-layout-item key={lastproduct.id} size="12">
+                                        <div onclick={selectLastProduct} data-product-id={lastproduct.id} class="container" style="border: lightgrey solid 1px; padding: 1%; border-radius: 3px;">{lastproduct.name}</div>
+                                        <!-- <c-product-tile product={product} onproductselect={selectProduct} selected-product-id={selectedProductId}></c-product-tile> -->
+                                    </lightning-layout-item>
+                                </template>
+                            </lightning-layout>
+                        </div>
+                    </template>
+                </lightning-layout-item>
+            </template>
 
             <!-- pagination -->
-            <lightning-layout-item size="12" style="margin-left: 35%; width: 31%;">
-                <div class="slds-var-m-vertical_medium">
-                    <template if:true={productsDisplayed}>
-                        <lightning-layout>
-                            <lightning-layout-item>
-                                <lightning-button label="First" 
-                                    icon-name="utility:arrow_left"
-                                    onclick={handleFirst}
-                                    disabled={isPrev}
-                                    style="margin-right: 5px;"><a href="#page1"></a></lightning-button>
-                            </lightning-layout-item>
-                            <lightning-layout-item>
-                                <lightning-button label="Previous" 
-                                    icon-name="utility:chevronleft"
-                                    onclick={handlePrevious}
-                                    disabled={isPrev}><a href="#page1"></a></lightning-button>
-                            </lightning-layout-item>
-                            <lightning-layout-item flexibility="grow">
-                                <p class="slds-text-align_center">Page {pageNumber} of {totalPages}</p>
-                            </lightning-layout-item>
-                            <lightning-layout-item>
-                                <lightning-button label="Next" 
-                                    icon-name="utility:chevronright"
-                                    icon-position="right"
-                                    onclick={handleNext}
-                                    disabled={isNext}><a href="#page1"></a></lightning-button>
-                            </lightning-layout-item>
-                            <lightning-layout-item>
-                                <lightning-button label="Last" 
-                                    icon-name="utility:arrow_right"
-                                    icon-position="right"
-                                    onclick={handleLast}
-                                    disabled={isNext}
-                                    style="margin-left: 5px;"><a href="#page1"></a></lightning-button>
-                            </lightning-layout-item>
-                        </lightning-layout>
-                    </template>
-                </div>
-            </lightning-layout-item>
+            <template if:false={isLastSeen}>
+                <lightning-layout-item size="12" style="margin-left: 35%; width: 31%;">
+                    <div class="slds-var-m-vertical_medium">
+                        <template if:true={productsDisplayed}>
+                            <lightning-layout>
+                                <lightning-layout-item>
+                                    <lightning-button label="First" 
+                                        icon-name="utility:arrow_left"
+                                        onclick={handleFirst}
+                                        disabled={isPrev}
+                                        style="margin-right: 5px;"><a href="#page1"></a></lightning-button>
+                                </lightning-layout-item>
+                                <lightning-layout-item>
+                                    <lightning-button label="Previous" 
+                                        icon-name="utility:chevronleft"
+                                        onclick={handlePrevious}
+                                        disabled={isPrev}><a href="#page1"></a></lightning-button>
+                                </lightning-layout-item>
+                                <lightning-layout-item flexibility="grow">
+                                    <p class="slds-text-align_center">Page {pageNumber} of {totalPages}</p>
+                                </lightning-layout-item>
+                                <lightning-layout-item>
+                                    <lightning-button label="Next" 
+                                        icon-name="utility:chevronright"
+                                        icon-position="right"
+                                        onclick={handleNext}
+                                        disabled={isNext}><a href="#page1"></a></lightning-button>
+                                </lightning-layout-item>
+                                <lightning-layout-item>
+                                    <lightning-button label="Last" 
+                                        icon-name="utility:arrow_right"
+                                        icon-position="right"
+                                        onclick={handleLast}
+                                        disabled={isNext}
+                                        style="margin-left: 5px;"><a href="#page1"></a></lightning-button>
+                                </lightning-layout-item>
+                            </lightning-layout>
+                        </template>
+                    </div>
+                </lightning-layout-item>
+            </template>
         </lightning-layout>
     </template>
     <template if:true={isDetail}>

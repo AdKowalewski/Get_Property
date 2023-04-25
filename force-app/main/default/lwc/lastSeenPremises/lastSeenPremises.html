@@ -7,10 +7,11 @@
             <template if:true={products}>
                 <!-- <div class="slds-text-title" style="font-size: 15px; font-weight: bold; margin-top: 1%; margin-bottom: 1%;">Results</div> -->
                 <div class="slds-scrollable_y">
-                    <lightning-layout horizontal-align="center" multiple-rows>
+                    <lightning-layout multiple-rows="true">
                         <template for:each={products} for:item="product">
-                            <lightning-layout-item key={product.Id} padding="around-small" size="2">
-                                <c-product-tile product={product} onproductselect={selectProduct} selected-product-id={selectedProductId}></c-product-tile>
+                            <lightning-layout-item key={product.id} size="12">
+                                <div onclick={selectProduct} data-product-id={product.id} class="container" style="border: lightgrey solid 1px; padding: 1%; border-radius: 3px;">{product.name}</div>
+                                <!-- <c-product-tile product={product} onproductselect={selectProduct} selected-product-id={selectedProductId}></c-product-tile> -->
                             </lightning-layout-item>
                         </template>
                     </lightning-layout>

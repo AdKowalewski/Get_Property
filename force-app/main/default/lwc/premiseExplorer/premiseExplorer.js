@@ -5,6 +5,8 @@ import ID from '@salesforce/user/Id';
 import ROLE_NAME_FIELD from '@salesforce/schema/User.UserRole.Name';
 import getPremises from '@salesforce/apex/ProductController.getProductPremisesList';
 import getApartments from '@salesforce/apex/ProductController.getProductApartmentsList';
+import markAsViewed from '@salesforce/apex/ProductController.markProductAsRecentlyViewed';
+import getLastViewed from '@salesforce/apex/ProductController.getUserRecentlyViewedProducts';
 import main_url from '@salesforce/label/c.main_url';
 
 export default class PremiseExplorer extends LightningElement {
@@ -23,6 +25,7 @@ export default class PremiseExplorer extends LightningElement {
     @track isPrev = true;
     @track isNext = true;
     @track products = [];
+    @track lastproducts = [];
     @track showFilter = false;
     @track maxPrice = 100000;
     @track minSize = 20;
@@ -35,6 +38,7 @@ export default class PremiseExplorer extends LightningElement {
     @track kitchen;
 
     @track isDetail = false;
+    @track isLastSeen = false;
 
     label = {
         main_url
@@ -42,6 +46,7 @@ export default class PremiseExplorer extends LightningElement {
 
     connectedCallback() {
         this.isDetail = false;
+        this.isLastSeen = false;
         this.loading = true;
         getPremises({
             pageSize: this.pagesize, 
@@ -86,6 +91,7 @@ export default class PremiseExplorer extends LightningElement {
 
     getProducts() {
         this.isDetail = false;
+        this.isLastSeen = false;
         this.loading = true;
         getPremises({
             pageSize: this.pagesize, 
@@ -126,6 +132,21 @@ export default class PremiseExplorer extends LightningElement {
                 );
             });
         // this.loading = false;
+    }
+
+    showRecentlyViewed() {
+        this.loading = true;
+        getLastViewed()
+            .then(result => {
+                if(result) {
+                    this.lastproducts = JSON.parse(result);
+                }
+                this.loading = false;
+            })
+            .catch(error => {
+                console.log('error with getting last viewed records');
+            });
+        this.isLastSeen = true;
     }
 
     displayFilter() {
@@ -240,6 +261,13 @@ export default class PremiseExplorer extends LightningElement {
     selectProduct(event) {
         this.selectedProductId = event.detail.productId;
         this.isDetail = true;
+        markAsViewed({id: this.selectedProductId});
         //window.open(main_url + this.selectedProductId, '_blank').focus();
+    }
+
+    selectLastProduct(event) {
+        this.selectedProductId = event.target.dataset.productId;
+        this.isDetail = true;
+        markAsViewed({id: this.selectedProductId});
     }
 }
