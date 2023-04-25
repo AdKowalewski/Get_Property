@@ -2,6 +2,7 @@ import { LightningElement, wire, api, track } from 'lwc';
 import { refreshApex } from '@salesforce/apex';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import getFileVersions from '@salesforce/apex/FileController.getVersionFiles';
+import createCD from '@salesforce/apex/FileController.createContentDistributions';
 
 export default class ProductGallery extends LightningElement {
 
@@ -37,7 +38,7 @@ export default class ProductGallery extends LightningElement {
                         this.fileList[i].Id +
                         '&operationContext=CHATTER&contentId=' +
                         this.fileList[i].ContentDocumentId,
-                    downloadUrl:
+                    downloadUrl: 
                         'https://britenet-10a-dev-ed.develop.lightning.force.com/sfc/servlet.shepherd/document/download/' +
                         this.fileList[i].ContentDocumentId
                 };
@@ -59,6 +60,11 @@ export default class ProductGallery extends LightningElement {
     handleUploadFinished(event) {
         this.isLoading = true;
         const uploadedFiles = event.detail.files;
+        createCD({recordId: this.recordId, limitnum: uploadedFiles.length})
+            .then(result => {})
+            .catch(error => {
+                console.log('error creating content distributions');
+            })
         refreshApex(this.wiredActivities);
         this.isLoading = false;
         this.dispatchEvent(

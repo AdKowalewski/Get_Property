@@ -17,6 +17,20 @@ public without sharing class FileController {
         public Boolean kitchen { get; set; }
     }
 
+    private class ContentWrapper {
+        public String id { get; set; }
+        public String title { get; set; }
+        public String contentDocumentId { get; set; }
+        public String fileType { get; set; }
+        public Integer contentSize { get; set; }
+        public String fileExtension { get; set; }
+        public String versionNumber { get; set; }
+        public DateTime createdDate { get; set; }
+        public Blob versionData { get; set; }
+        public String firstPublishLocationId { get; set; }
+        public String downloadUrl { get; set; }
+    }
+    
     @AuraEnabled(cacheable=true)
     public static List<ContentVersion> getVersionFiles(String recordId){
         try {
@@ -26,9 +40,78 @@ public without sharing class FileController {
                 FROM ContentVersion
                 WHERE FirstPublishLocationId =:recordId
                 ORDER BY CreatedDate DESC
-		    ];        
+		    ];
         } catch (Exception e) {
-            throw new AuraHandledException(e.getMessage());
+           throw new AuraHandledException(e.getMessage());
+        }
+    }
+
+    @AuraEnabled(cacheable=true)
+    public static List<ContentWrapper> getVersionFiles2(String recordId){
+        try {
+            List<ContentVersion> versions = [
+                SELECT Id, Title, ContentDocumentId, FileType, ContentSize, FileExtension, 
+                    VersionNumber, CreatedDate, VersionData, FirstPublishLocationId
+                FROM ContentVersion
+                WHERE FirstPublishLocationId =:recordId
+                ORDER BY CreatedDate DESC
+            ];
+            // List<String> ids = new List<String>();
+            // for(ContentVersion cv : versions) {
+            //     ids.add(cv.Id);
+            // }
+            // List<ContentDistribution> cds = [
+            //     SELECT Id, ContentVersionId, ContentDownloadUrl
+            //     FROM ContentDistribution
+            //     WHERE ContentVersionId IN :ids
+            // ];
+
+            List<ContentWrapper> wrappers = new List<ContentWrapper>();
+            for(Integer i = 0; i < versions.size(); i++) {
+                ContentWrapper wrapper = new ContentWrapper();
+                wrapper.id = versions[i].Id;
+                wrapper.title = versions[i].Title;
+                wrapper.contentDocumentId = versions[i].ContentDocumentId;
+                wrapper.fileType = versions[i].FileType;
+                wrapper.contentSize = versions[i].ContentSize;
+                wrapper.fileExtension = versions[i].FileExtension;
+                wrapper.versionNumber = versions[i].VersionNumber;
+                wrapper.createdDate = versions[i].CreatedDate;
+                wrapper.versionData = versions[i].VersionData;
+                wrapper.firstPublishLocationId = versions[i].FirstPublishLocationId;
+                List<ContentDistribution> cd = [
+                    SELECT Id, ContentVersionId, ContentDownloadUrl
+                    FROM ContentDistribution
+                    WHERE ContentVersionId = :versions[i].Id
+                ];
+                wrapper.downloadUrl = cd[0].ContentDownloadUrl;
+                wrappers.add(wrapper);
+            }
+            return wrappers;
+        } catch (Exception e) {
+           throw new AuraHandledException(e.getMessage());
+        }
+    }
+
+    @AuraEnabled
+    public static void createContentDistributions(String recordId, Integer limitnum) {
+        List<ContentVersion> versions = [
+            SELECT Id, ContentDocumentId
+            FROM ContentVersion
+            WHERE FirstPublishLocationId = :recordId
+            ORDER BY CreatedDate DESC
+            LIMIT :limitnum
+        ];
+        for(ContentVersion cv : versions) {
+            ContentDistribution cd = new ContentDistribution();
+            cd.Name = 'test';
+            cd.ContentVersionId = cv.Id;
+            cd.PreferencesAllowViewInBrowser= true;
+            cd.PreferencesLinkLatestVersion=true;
+            cd.PreferencesNotifyOnVisit=false;
+            cd.PreferencesPasswordRequired=false;
+            cd.PreferencesAllowOriginalDownload= true;
+            insert cd;
         }
     }
 

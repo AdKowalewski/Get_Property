@@ -1,6 +1,6 @@
 import { LightningElement, track, api, wire } from 'lwc';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
-import getFileVersions from '@salesforce/apex/FileController.getVersionFiles';
+import getFileVersions from '@salesforce/apex/FileController.getVersionFiles2';
 
 export default class ProductDetailsGallery extends LightningElement {
 
@@ -14,6 +14,7 @@ export default class ProductDetailsGallery extends LightningElement {
     fileResponse(value) {
         this.wiredActivities = value;
         const { data, error } = value;
+        console.log('data ' + data);
         this.fileList = "";
         this.files = [];
         if (data) {
@@ -21,20 +22,18 @@ export default class ProductDetailsGallery extends LightningElement {
             this.isLoading = true;
             for (let i = 0; i < this.fileList.length; i++) {
                 let file = {
-                    Id: this.fileList[i].Id,
-                    Title: this.fileList[i].Title,
-                    Extension: this.fileList[i].FileExtension,
-                    ContentDocumentId: this.fileList[i].ContentDocumentId,
-                    ContentDocument: this.fileList[i].ContentDocument,
-                    CreatedDate: this.fileList[i].CreatedDate,
+                    Id: this.fileList[i].id,
+                    Title: this.fileList[i].title,
+                    Extension: this.fileList[i].fileExtension,
+                    ContentDocumentId: this.fileList[i].contentDocumentId,
+                    ContentDocument: this.fileList[i].contentDocument,
+                    CreatedDate: this.fileList[i].createdDate,
                     thumbnailFileCard:
                         'https://britenet-10a-dev-ed.develop.lightning.force.com/sfc/servlet.shepherd/version/renditionDownload?rendition=THUMB720BY480&versionId=' +
-                        this.fileList[i].Id +
+                        this.fileList[i].id +
                         '&operationContext=CHATTER&contentId=' +
-                        this.fileList[i].ContentDocumentId,
-                    downloadUrl:
-                        'https://britenet-10a-dev-ed.develop.lightning.force.com/sfc/servlet.shepherd/document/download/' +
-                        this.fileList[i].ContentDocumentId
+                        this.fileList[i].contentDocumentId,
+                    downloadUrl: this.fileList[i].downloadUrl
                 };
                 this.files.push(file);
             }
