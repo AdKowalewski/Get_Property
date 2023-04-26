@@ -270,4 +270,8 @@ export default class PremiseExplorer extends LightningElement {
         this.isDetail = true;
         markAsViewed({id: this.selectedProductId});
     }
+
+    handleGoHome() {
+        this.isDetail = false;
+    }
 }

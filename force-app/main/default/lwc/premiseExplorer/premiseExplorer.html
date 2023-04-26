@@ -146,6 +146,6 @@
         </lightning-layout>
     </template>
     <template if:true={isDetail}>
-        <c-product-details product-id={selectedProductId}></c-product-details>
+        <c-product-details product-id={selectedProductId} ongohome={handleGoHome}></c-product-details>
     </template>
 </template>
