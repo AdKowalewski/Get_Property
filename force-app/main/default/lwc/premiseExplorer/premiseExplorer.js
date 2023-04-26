@@ -8,6 +8,7 @@ import getApartments from '@salesforce/apex/ProductController.getProductApartmen
 import markAsViewed from '@salesforce/apex/ProductController.markProductAsRecentlyViewed';
 import getLastViewed from '@salesforce/apex/ProductController.getUserRecentlyViewedProducts';
 import main_url from '@salesforce/label/c.main_url';
+import UserId from '@salesforce/user/Id';
 
 export default class PremiseExplorer extends LightningElement {
 
@@ -40,9 +41,31 @@ export default class PremiseExplorer extends LightningElement {
     @track isDetail = false;
     @track isLastSeen = false;
 
+    @track userId = UserId;
+
     label = {
         main_url
     };
+
+    get isLogged() {
+        let flag = false;
+        if(this.userId != null) {
+            flag = true;
+        } else {
+            flag = false;
+        }
+        return flag;
+    }
+
+    get arelastproducts() {
+        let flag = false;
+        if(this.lastproducts.length > 0) {
+            flag = true;
+        } else if(this.lastproducts.length == 0) {
+            flag = false;
+        }
+        return flag;
+    }
 
     connectedCallback() {
         this.isDetail = false;

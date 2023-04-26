@@ -90,21 +90,26 @@
                             <div class="slds-text-title" style="font-size: 20px; padding: 10px; margin-left: 41%;">Recently Viewed Properties</div>
                         </lightning-layout-item>
                         <lightning-layout-item size="12">
-                            <template if:false={lastproducts}>
-                                <h2>No products found</h2>
+                            <template if:false={isLogged}>
+                                <h2>You should log in to view recently viewed properties</h2>
                             </template>
-                            <template if:true={lastproducts}>
-                                <!-- <div class="slds-text-title" style="font-size: 15px; font-weight: bold; margin-top: 1%; margin-bottom: 1%;">Results</div> -->
-                                <div class="slds-scrollable_y">
-                                    <lightning-layout multiple-rows="true">
-                                        <template for:each={lastproducts} for:item="lastproduct">
-                                            <lightning-layout-item key={lastproduct.id} size="12">
-                                                <div onclick={selectLastProduct} data-product-id={lastproduct.id} class="container" style="border: lightgrey solid 1px; padding: 1%; border-radius: 3px;">{lastproduct.name}</div>
-                                                <!-- <c-product-tile product={product} onproductselect={selectProduct} selected-product-id={selectedProductId}></c-product-tile> -->
-                                            </lightning-layout-item>
-                                        </template>
-                                    </lightning-layout>
-                                </div>
+                            <template if:true={isLogged}>
+                                <template if:false={arelastproducts}>
+                                    <h2>No products found</h2>
+                                </template>
+                                <template if:true={arelastproducts}>
+                                    <!-- <div class="slds-text-title" style="font-size: 15px; font-weight: bold; margin-top: 1%; margin-bottom: 1%;">Results</div> -->
+                                    <div class="slds-scrollable_y">
+                                        <lightning-layout multiple-rows="true">
+                                            <template for:each={lastproducts} for:item="lastproduct">
+                                                <lightning-layout-item key={lastproduct.id} size="12">
+                                                    <div onclick={selectLastProduct} data-product-id={lastproduct.id} class="container" style="border: lightgrey solid 1px; padding: 1%; border-radius: 3px;">{lastproduct.name}</div>
+                                                    <!-- <c-product-tile product={product} onproductselect={selectProduct} selected-product-id={selectedProductId}></c-product-tile> -->
+                                                </lightning-layout-item>
+                                            </template>
+                                        </lightning-layout>
+                                    </div>
+                                </template>
                             </template>
                         </lightning-layout-item>
                     </lightning-layout>
