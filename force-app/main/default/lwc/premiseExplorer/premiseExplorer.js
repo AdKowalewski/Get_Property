@@ -274,4 +274,8 @@ export default class PremiseExplorer extends LightningElement {
     handleGoHome() {
         this.isDetail = false;
     }
+
+    backFromRecentlyViewed() {
+        this.isLastSeen = false;
+    }
 }

@@ -191,6 +191,7 @@ public without sharing class ProductController {
             if(k == 0) {
                 finalwrappers.add(wrappers[i]);
             }
+            k = 0;
         }
         jsonStr = JSON.serialize(finalwrappers);
         return jsonStr;
