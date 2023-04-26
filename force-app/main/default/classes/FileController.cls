@@ -30,6 +30,10 @@ public without sharing class FileController {
         public String firstPublishLocationId { get; set; }
         public String downloadUrl { get; set; }
     }
+
+    private class LinkWrapper {
+        public String link { get; set; }
+    }
     
     @AuraEnabled(cacheable=true)
     public static List<ContentVersion> getVersionFiles(String recordId){
@@ -84,26 +88,44 @@ public without sharing class FileController {
     }
 
     @AuraEnabled
-    public static void createContentDistributions(String recordId, Integer limitnum) {
-        List<ContentVersion> versions = [
-            SELECT Id, ContentDocumentId
-            FROM ContentVersion
-            WHERE FirstPublishLocationId = :recordId
-            ORDER BY CreatedDate DESC
-            LIMIT :limitnum
+    public static String getImages(String recordId) {
+        String jsonStr = '';
+        List<ContentDistribution> dists = [
+            SELECT Name, ContentDownloadUrl
+            FROM ContentDistribution
+            WHERE Name = :recordId
         ];
-        for(ContentVersion cv : versions) {
-            ContentDistribution cd = new ContentDistribution();
-            cd.Name = 'test';
-            cd.ContentVersionId = cv.Id;
-            cd.PreferencesAllowViewInBrowser= true;
-            cd.PreferencesLinkLatestVersion=true;
-            cd.PreferencesNotifyOnVisit=false;
-            cd.PreferencesPasswordRequired=false;
-            cd.PreferencesAllowOriginalDownload= true;
-            insert cd;
+        List<LinkWrapper> links = new List<LinkWrapper>();
+        for(ContentDistribution dist : dists) {
+            LinkWrapper wrapper = new LinkWrapper();
+            wrapper.link = dist.ContentDownloadUrl;
+            links.add(wrapper);
         }
+        jsonStr = JSON.serialize(links);
+        return jsonStr;
     }
+
+    // @AuraEnabled
+    // public static void createContentDistributions(String recordId, Integer limitnum) {
+    //     List<ContentVersion> versions = [
+    //         SELECT Id, ContentDocumentId
+    //         FROM ContentVersion
+    //         WHERE FirstPublishLocationId = :recordId
+    //         ORDER BY CreatedDate DESC
+    //         LIMIT :limitnum
+    //     ];
+    //     for(ContentVersion cv : versions) {
+    //         ContentDistribution cd = new ContentDistribution();
+    //         cd.Name = 'test';
+    //         cd.ContentVersionId = cv.Id;
+    //         cd.PreferencesAllowViewInBrowser= true;
+    //         cd.PreferencesLinkLatestVersion=true;
+    //         cd.PreferencesNotifyOnVisit=false;
+    //         cd.PreferencesPasswordRequired=false;
+    //         cd.PreferencesAllowOriginalDownload= true;
+    //         insert cd;
+    //     }
+    // }
 
     @AuraEnabled
     public static String getProductDisplayUrl(String id) {

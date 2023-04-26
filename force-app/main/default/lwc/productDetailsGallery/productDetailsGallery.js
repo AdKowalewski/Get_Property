@@ -1,6 +1,6 @@
 import { LightningElement, track, api, wire } from 'lwc';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
-import getFileVersions from '@salesforce/apex/FileController.getVersionFiles2';
+import imagesGet from '@salesforce/apex/FileController.getImages';
 
 export default class ProductDetailsGallery extends LightningElement {
 
@@ -11,27 +11,28 @@ export default class ProductDetailsGallery extends LightningElement {
     @track files = [];
 
     connectedCallback() {
-        getFileVersions({recordId: this.recordId})
+        imagesGet({recordId: this.recordId})
             .then(result => {
                 this.fileList = "";
                 this.files = [];
                 if(result) {
                     this.fileList = JSON.parse(result);
+                    console.log('json result ' + JSON.stringify(this.fileList));
                     this.isLoading = true;
                     for (let i = 0; i < this.fileList.length; i++) {
                         let file = {
-                            Id: this.fileList[i].id,
-                            Title: this.fileList[i].title,
-                            Extension: this.fileList[i].fileExtension,
-                            ContentDocumentId: this.fileList[i].contentDocumentId,
-                            ContentDocument: this.fileList[i].contentDocument,
-                            CreatedDate: this.fileList[i].createdDate,
-                            thumbnailFileCard:
-                                'https://britenet-10a-dev-ed.develop.lightning.force.com/sfc/servlet.shepherd/version/renditionDownload?rendition=THUMB720BY480&versionId=' +
-                                this.fileList[i].id +
-                                '&operationContext=CHATTER&contentId=' +
-                                this.fileList[i].contentDocumentId,
-                            downloadUrl: this.fileList[i].downloadUrl
+                            // Id: this.fileList[i].id,
+                            // Title: this.fileList[i].title,
+                            // Extension: this.fileList[i].fileExtension,
+                            // ContentDocumentId: this.fileList[i].contentDocumentId,
+                            // ContentDocument: this.fileList[i].contentDocument,
+                            // CreatedDate: this.fileList[i].createdDate,
+                            // thumbnailFileCard:
+                            //     'https://britenet-10a-dev-ed.develop.lightning.force.com/sfc/servlet.shepherd/version/renditionDownload?rendition=THUMB720BY480&versionId=' +
+                            //     this.fileList[i].id +
+                            //     '&operationContext=CHATTER&contentId=' +
+                            //     this.fileList[i].contentDocumentId,
+                            downloadUrl: this.fileList[i].link
                         };
                         this.files.push(file);
                     }

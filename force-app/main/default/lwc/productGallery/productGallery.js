@@ -2,7 +2,6 @@ import { LightningElement, wire, api, track } from 'lwc';
 import { refreshApex } from '@salesforce/apex';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import getFileVersions from '@salesforce/apex/FileController.getVersionFiles2';
-import createCD from '@salesforce/apex/FileController.createContentDistributions';
 
 export default class ProductGallery extends LightningElement {
 
@@ -100,11 +99,11 @@ export default class ProductGallery extends LightningElement {
     handleUploadFinished(event) {
         this.isLoading = true;
         const uploadedFiles = event.detail.files;
-        createCD({recordId: this.recordId, limitnum: uploadedFiles.length})
-            .then(result => {})
-            .catch(error => {
-                console.log('error creating content distributions');
-            })
+        // createCD({recordId: this.recordId, limitnum: uploadedFiles.length})
+        //     .then(result => {})
+        //     .catch(error => {
+        //         console.log('error creating content distributions');
+        //     })
         refreshApex(this.wiredActivities);
         this.isLoading = false;
         this.dispatchEvent(
