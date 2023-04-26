@@ -273,6 +273,16 @@ export default class PremiseExplorer extends LightningElement {
 
     handleGoHome() {
         this.isDetail = false;
+        getLastViewed()
+            .then(result => {
+                if(result) {
+                    this.lastproducts = JSON.parse(result);
+                }
+                this.loading = false;
+            })
+            .catch(error => {
+                console.log('error with getting last viewed records');
+            });
     }
 
     backFromRecentlyViewed() {
