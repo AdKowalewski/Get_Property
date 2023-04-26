@@ -46,4 +46,10 @@ export default class ProductDetails extends LightningElement {
     get backgroundStyle() {
         return 'background-image:url(' + this.product.displayUrl + ')';
     }
+
+    toHome() {
+        this.dispatchEvent(
+            new CustomEvent('gohome')
+        );
+    }
 } 

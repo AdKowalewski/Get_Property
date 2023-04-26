@@ -47,50 +47,40 @@ public without sharing class FileController {
     }
 
     @AuraEnabled(cacheable=true)
-    public static List<ContentWrapper> getVersionFiles2(String recordId){
-        try {
-            List<ContentVersion> versions = [
-                SELECT Id, Title, ContentDocumentId, FileType, ContentSize, FileExtension, 
-                    VersionNumber, CreatedDate, VersionData, FirstPublishLocationId
-                FROM ContentVersion
-                WHERE FirstPublishLocationId =:recordId
-                ORDER BY CreatedDate DESC
-            ];
-            // List<String> ids = new List<String>();
-            // for(ContentVersion cv : versions) {
-            //     ids.add(cv.Id);
-            // }
-            // List<ContentDistribution> cds = [
-            //     SELECT Id, ContentVersionId, ContentDownloadUrl
-            //     FROM ContentDistribution
-            //     WHERE ContentVersionId IN :ids
-            // ];
+    public static String getVersionFiles2(String recordId){
+        String jsonStr = '';
+        List<ContentVersion> versions = [
+            SELECT Id, Title, ContentDocumentId, FileType, ContentSize, FileExtension, 
+                VersionNumber, CreatedDate, VersionData, FirstPublishLocationId
+            FROM ContentVersion
+            WHERE FirstPublishLocationId =:recordId
+            ORDER BY CreatedDate DESC
+        ];
 
-            List<ContentWrapper> wrappers = new List<ContentWrapper>();
-            for(Integer i = 0; i < versions.size(); i++) {
-                ContentWrapper wrapper = new ContentWrapper();
-                wrapper.id = versions[i].Id;
-                wrapper.title = versions[i].Title;
-                wrapper.contentDocumentId = versions[i].ContentDocumentId;
-                wrapper.fileType = versions[i].FileType;
-                wrapper.contentSize = versions[i].ContentSize;
-                wrapper.fileExtension = versions[i].FileExtension;
-                wrapper.versionNumber = versions[i].VersionNumber;
-                wrapper.createdDate = versions[i].CreatedDate;
-                wrapper.versionData = versions[i].VersionData;
-                wrapper.firstPublishLocationId = versions[i].FirstPublishLocationId;
-                List<ContentDistribution> cd = [
-                    SELECT Id, ContentVersionId, ContentDownloadUrl
-                    FROM ContentDistribution
-                    WHERE ContentVersionId = :versions[i].Id
-                ];
-                wrapper.downloadUrl = cd[0].ContentDownloadUrl;
-                wrappers.add(wrapper);
-            }
-            return wrappers;
-        } catch (Exception e) {
-           throw new AuraHandledException(e.getMessage());
+        List<ContentWrapper> wrappers = new List<ContentWrapper>();
+        for(ContentVersion v : versions) {
+            ContentWrapper wrapper = new ContentWrapper();
+            wrapper.id = v.Id;
+            wrapper.title = v.Title;
+            wrapper.contentDocumentId = v.ContentDocumentId;
+            wrapper.fileType = v.FileType;
+            wrapper.contentSize = v.ContentSize;
+            wrapper.fileExtension = v.FileExtension;
+            wrapper.versionNumber = v.VersionNumber;
+            wrapper.createdDate = v.CreatedDate;
+            wrapper.versionData = v.VersionData;
+            wrapper.firstPublishLocationId = v.FirstPublishLocationId;
+            List<ContentDistribution> dist = [
+                SELECT Id, ContentVersionId, ContentDownloadUrl
+                FROM ContentDistribution
+                WHERE ContentVersionId = :v.Id
+                LIMIT 1
+            ];
+            wrapper.downloadUrl = dist[0].ContentDownloadUrl;
+            wrappers.add(wrapper);
         }
+        jsonStr = JSON.serialize(wrappers);
+        return jsonStr;
     }
 
     @AuraEnabled
