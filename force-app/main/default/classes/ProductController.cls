@@ -197,6 +197,48 @@ public without sharing class ProductController {
         return jsonStr;
     }
 
+    @AuraEnabled
+    public static String getUserRecentlyViewedProducts2(Integer pageSize, Integer pageNumber) {
+        String jsonStr = '';
+        List<Product2> premises = [
+            SELECT Id, Name
+            FROM Product2
+            WHERE RecordType.Name = 'Business Premises'
+        ];
+        Integer length = premises.size();
+        List<RecentlyViewed> last = [
+            SELECT Id, Name, LastViewedDate
+            FROM RecentlyViewed
+            WHERE Type IN ('Product2') AND RecordType.Name IN ('Business Premises')
+            ORDER BY LastViewedDate DESC
+            LIMIT :length
+        ];
+        Set<String> ids = new Set<String>();
+        for(RecentlyViewed rv : last) {
+            ids.add(rv.Id);
+        }
+
+        Integer offset = (pageNumber - 1) * pageSize;
+        Integer totalRecords = ids.size();
+        Integer recordEnd = pageSize * pageNumber;
+
+        ProductWrapper wrapper = new ProductWrapper();      
+        wrapper.pageNumber = pageNumber;
+        wrapper.pageSize = pageSize;
+        wrapper.recordStart = offset + 1;
+        wrapper.recordEnd = totalRecords >= recordEnd ? recordEnd : totalRecords;
+        wrapper.totalRecords = totalRecords;
+        wrapper.products = [
+            SELECT Id, Name, Product_Address__City__s, Default_Image__c, DisplayUrl, (SELECT UnitPrice FROM PricebookEntries WHERE Pricebook2Id = '01s7S000002VqAzQAK'), Size__c
+            FROM Product2
+            WHERE Id IN :ids
+            LIMIT :pageSize
+            OFFSET :offset
+        ];
+        jsonStr = JSON.serialize(wrapper);
+        return jsonStr;
+    }
+
     // @AuraEnabled
     // public static void addLastSeenItem(String userId, String productId) {
     //     UserProduct__c uprod = new UserProduct__c();

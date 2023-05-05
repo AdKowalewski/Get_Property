@@ -104,11 +104,11 @@
                                 <template if:true={arelastproducts}>
                                     <!-- <div class="slds-text-title" style="font-size: 15px; font-weight: bold; margin-top: 1%; margin-bottom: 1%;">Results</div> -->
                                     <div class="slds-scrollable_y">
-                                        <lightning-layout multiple-rows="true">
+                                        <lightning-layout horizontal-align="center" multiple-rows="true">
                                             <template for:each={lastproducts} for:item="lastproduct">
-                                                <lightning-layout-item key={lastproduct.id} size="12">
-                                                    <div onclick={selectLastProduct} data-product-id={lastproduct.id} class="container" style="border: lightgrey solid 1px; padding: 1%; border-radius: 3px;">{lastproduct.name}</div>
-                                                    <!-- <c-product-tile product={product} onproductselect={selectProduct} selected-product-id={selectedProductId}></c-product-tile> -->
+                                                <lightning-layout-item key={lastproduct.Id} padding="around-small" size="2">
+                                                    <!-- <div onclick={selectLastProduct} data-product-id={lastproduct.id} class="container" style="border: lightgrey solid 1px; padding: 1%; border-radius: 3px;">{lastproduct.name}</div> -->
+                                                    <c-product-tile product={lastproduct} onproductselect={selectLastProduct} selected-product-id={selectedProductId}></c-product-tile>
                                                 </lightning-layout-item>
                                             </template>
                                         </lightning-layout>
@@ -155,6 +155,47 @@
                                         icon-position="right"
                                         onclick={handleLast}
                                         disabled={isNext}
+                                        style="margin-left: 5px;"><a href="#page1"></a></lightning-button>
+                                </lightning-layout-item>
+                            </lightning-layout>
+                        </template>
+                    </div>
+                </lightning-layout-item>
+            </template>
+            <template if:true={isLastSeen}>
+                <lightning-layout-item size="12" style="margin-left: 35%; width: 31%;">
+                    <div class="slds-var-m-vertical_medium">
+                        <template if:true={vProductsDisplayed}>
+                            <lightning-layout>
+                                <lightning-layout-item>
+                                    <lightning-button label="First" 
+                                        icon-name="utility:arrow_left"
+                                        onclick={handleFirstV}
+                                        disabled={isPrevV}
+                                        style="margin-right: 5px;"><a href="#page1"></a></lightning-button>
+                                </lightning-layout-item>
+                                <lightning-layout-item>
+                                    <lightning-button label="Previous" 
+                                        icon-name="utility:chevronleft"
+                                        onclick={handlePreviousV}
+                                        disabled={isPrevV}><a href="#page1"></a></lightning-button>
+                                </lightning-layout-item>
+                                <lightning-layout-item flexibility="grow">
+                                    <p class="slds-text-align_center">Page {pageNumber} of {totalPages}</p>
+                                </lightning-layout-item>
+                                <lightning-layout-item>
+                                    <lightning-button label="Next" 
+                                        icon-name="utility:chevronright"
+                                        icon-position="right"
+                                        onclick={handleNextV}
+                                        disabled={isNextV}><a href="#page1"></a></lightning-button>
+                                </lightning-layout-item>
+                                <lightning-layout-item>
+                                    <lightning-button label="Last" 
+                                        icon-name="utility:arrow_right"
+                                        icon-position="right"
+                                        onclick={handleLastV}
+                                        disabled={isNextV}
                                         style="margin-left: 5px;"><a href="#page1"></a></lightning-button>
                                 </lightning-layout-item>
                             </lightning-layout>

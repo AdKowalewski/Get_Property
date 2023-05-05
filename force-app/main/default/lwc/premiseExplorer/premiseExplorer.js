@@ -6,7 +6,7 @@ import ROLE_NAME_FIELD from '@salesforce/schema/User.UserRole.Name';
 import getPremises from '@salesforce/apex/ProductController.getProductPremisesList';
 import getApartments from '@salesforce/apex/ProductController.getProductApartmentsList';
 import markAsViewed from '@salesforce/apex/ProductController.markProductAsRecentlyViewed';
-import getLastViewed from '@salesforce/apex/ProductController.getUserRecentlyViewedProducts';
+import getLastViewed from '@salesforce/apex/ProductController.getUserRecentlyViewedProducts2';
 import main_url from '@salesforce/label/c.main_url';
 import UserId from '@salesforce/user/Id';
 
@@ -25,6 +25,8 @@ export default class PremiseExplorer extends LightningElement {
     @track pagesize = 3;
     @track isPrev = true;
     @track isNext = true;
+    @track isPrevV = true;
+    @track isNextV = true;
     @track products = [];
     @track lastproducts = [];
     @track showFilter = false;
@@ -158,17 +160,9 @@ export default class PremiseExplorer extends LightningElement {
     }
 
     showRecentlyViewed() {
+        this.isDetail = false;
         this.loading = true;
-        getLastViewed()
-            .then(result => {
-                if(result) {
-                    this.lastproducts = JSON.parse(result);
-                }
-                this.loading = false;
-            })
-            .catch(error => {
-                console.log('error with getting last viewed records');
-            });
+        this.getLastViewedPremises();
         this.isLastSeen = true;
     }
 
@@ -257,6 +251,32 @@ export default class PremiseExplorer extends LightningElement {
         this.getProducts();
     }
 
+    handleFirstV() {
+        this.pageNumber = 1;
+        this.getLastViewedPremises();
+    }
+
+    handlePreviousV() {
+        this.pageNumber = this.pageNumber - 1;
+        if(this.pageNumber < 1) {
+            this.pageNumber = 1;
+        }
+        this.getLastViewedPremises();
+    }
+
+    handleNextV() {
+        this.pageNumber = this.pageNumber + 1;
+        if(this.pageNumber > this.totalPages) {
+            this.pageNumber = this.totalPages;
+        }
+        this.getLastViewedPremises();
+    }
+
+    handleLastV() {
+        this.pageNumber = this.totalPages;
+        this.getLastViewedPremises();
+    }
+
     get noProducts() {
         let isDisplay = true;
         if(this.products) {
@@ -280,6 +300,18 @@ export default class PremiseExplorer extends LightningElement {
         }
         return flag;
     }
+    
+    get vProductsDisplayed() {
+        let flag = true;
+        if(this.lastproducts) {
+            if(this.lastproducts.length == 0) {
+                flag = false;
+            } else {
+                flag = true;
+            }
+        }
+        return flag;
+    }
 
     selectProduct(event) {
         this.selectedProductId = event.detail.productId;
@@ -289,22 +321,42 @@ export default class PremiseExplorer extends LightningElement {
     }
 
     selectLastProduct(event) {
-        this.selectedProductId = event.target.dataset.productId;
+        this.selectedProductId = event.detail.productId;
         this.isDetail = true;
         markAsViewed({id: this.selectedProductId});
     }
 
     handleGoHome() {
         this.isDetail = false;
-        getLastViewed()
+        this.getLastViewedPremises();
+    }
+
+    getLastViewedPremises() {
+        getLastViewed({pageSize: this.pagesize, pageNumber: this.pageNumber})
             .then(result => {
                 if(result) {
-                    this.lastproducts = JSON.parse(result);
+                    let data = JSON.parse(result);
+                    this.recordEnd = data.recordEnd;
+                    this.totalRecords = data.totalRecords;
+                    this.recordStart = data.recordStart;
+                    this.lastproducts = data.products;
+                    this.pageNumber = data.pageNumber;
+                    this.totalPages = Math.ceil(data.totalRecords / this.pagesize);
+                    this.isNextV = (this.pageNumber == this.totalPages || this.totalPages == 0);
+                    this.isPrevV = (this.pageNumber == 1 || this.totalRecords < this.pagesize);
                 }
                 this.loading = false;
             })
             .catch(error => {
-                console.log('error with getting last viewed records');
+                this.loading = false;
+                this.error = error.message;
+                this.dispatchEvent(
+                    new ShowToastEvent({
+                        title: 'Error',
+                        message: this.error,
+                        variant: 'error'
+                    })
+                );
             });
     }
 
