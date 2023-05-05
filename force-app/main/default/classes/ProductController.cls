@@ -29,13 +29,14 @@ public without sharing class ProductController {
         public Boolean parking { get; set; }
         public Boolean elevator { get; set; }
         public Boolean kitchen { get; set; }
+        public String agentId { get; set; }
     }
 
     @AuraEnabled
     public static String getProductById(String id) {
         String jsonStr = '';
         Product2 product = [
-            SELECT Id, Name, Product_Address__City__s, Product_Address__PostalCode__s, Product_Address__Street__s, Price__c, Size__c, DisplayUrl, Wi_Fi__c, Parking__c, Elevator__c, Kitchen__c
+            SELECT Id, Name, Product_Address__City__s, Product_Address__PostalCode__s, Product_Address__Street__s, Price__c, Size__c, DisplayUrl, Wi_Fi__c, Parking__c, Elevator__c, Kitchen__c, Agent__c
             FROM Product2
             WHERE Id = :id
         ];
@@ -52,6 +53,7 @@ public without sharing class ProductController {
         wrapper.parking = product.Parking__c;
         wrapper.elevator = product.Elevator__c;
         wrapper.kitchen = product.Kitchen__c;
+        wrapper.agentId = product.Agent__c;
 
         jsonStr = JSON.serialize(wrapper);
         return jsonStr;
@@ -112,7 +114,7 @@ public without sharing class ProductController {
         wrapper.recordEnd = totalRecords >= recordEnd ? recordEnd : totalRecords;
         wrapper.totalRecords = totalRecords;
         wrapper.products = [
-            SELECT Id, Name, Product_Address__City__s, Default_Image__c, DisplayUrl, (SELECT UnitPrice FROM PricebookEntries WHERE Pricebook2Id = '01s7S000002VqAzQAK'), Size__c
+            SELECT Id, Name, Product_Address__City__s, Default_Image__c, DisplayUrl, (SELECT UnitPrice FROM PricebookEntries WHERE Pricebook2Id = '01s7S000002VqAzQAK'), Size__c, Agent__c
             FROM Product2
             WHERE RecordType.Name = 'Business Premises' AND ((Name LIKE :name AND Product_Address__City__s LIKE :city AND Price__c <= :price) OR (Wi_Fi__c = :wifi AND Parking__c = :parking AND Elevator__c = :elevator AND Kitchen__c = :kitchen))
             LIMIT :pageSize
@@ -229,7 +231,7 @@ public without sharing class ProductController {
         wrapper.recordEnd = totalRecords >= recordEnd ? recordEnd : totalRecords;
         wrapper.totalRecords = totalRecords;
         wrapper.products = [
-            SELECT Id, Name, Product_Address__City__s, Default_Image__c, DisplayUrl, (SELECT UnitPrice FROM PricebookEntries WHERE Pricebook2Id = '01s7S000002VqAzQAK'), Size__c
+            SELECT Id, Name, Product_Address__City__s, Default_Image__c, DisplayUrl, (SELECT UnitPrice FROM PricebookEntries WHERE Pricebook2Id = '01s7S000002VqAzQAK'), Size__c, Agent__c
             FROM Product2
             WHERE Id IN :ids
             LIMIT :pageSize
