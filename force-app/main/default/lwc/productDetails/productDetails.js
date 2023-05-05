@@ -1,11 +1,13 @@
 import { LightningElement, track, api, wire } from 'lwc';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import getProduct from '@salesforce/apex/FileController.getProductById';
+import UserId from '@salesforce/user/Id';
 
 export default class ProductDetails extends LightningElement {
 
     @track product;
     @api productId;
+    @track userId = UserId;
 
     connectedCallback() {
         getProduct({id: this.productId})
@@ -51,5 +53,15 @@ export default class ProductDetails extends LightningElement {
         this.dispatchEvent(
             new CustomEvent('gohome')
         );
+    }
+
+    get isLoggedIn() {
+        let flag = false;
+        if(this.userId == null) {
+            flag = false;
+        } else {
+            flag = true;
+        }
+        return flag;
     }
 } 
