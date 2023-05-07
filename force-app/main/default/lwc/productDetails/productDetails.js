@@ -53,7 +53,7 @@ export default class ProductDetails extends LightningElement {
                 } else {
                     this.product.kitchen = 'no';
                 }
-                userEvent({whoId: '0037S00000M5RMOQA3', whatId: this.product.id})
+                userEvent({whoId: this.userId, whatId: this.product.id})
                     .then(result => {
                         this.myEvent = JSON.parse(result);
                     })
