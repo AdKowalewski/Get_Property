@@ -30,6 +30,19 @@ public without sharing class ProductController {
         public Boolean elevator { get; set; }
         public Boolean kitchen { get; set; }
         public String agentId { get; set; }
+        public String agentName { get; set; }
+        public String agentEmail { get; set; }
+    }
+
+    private class EventWrapper {
+        public String id { get; set; }
+        public String agentId { get; set; }
+        public String whatId { get; set; }
+        public String whoId { get; set; }
+        public String subject { get; set; }
+        public Datetime starts { get; set; }
+        public Datetime ends { get; set; }
+        public String hour { get; set; }
     }
 
     @AuraEnabled
@@ -54,9 +67,82 @@ public without sharing class ProductController {
         wrapper.elevator = product.Elevator__c;
         wrapper.kitchen = product.Kitchen__c;
         wrapper.agentId = product.Agent__c;
+        User agent = [SELECT Id, Name, SenderEmail FROM User WHERE Id = :product.Agent__c];
+        wrapper.agentName = agent.Name;
+        wrapper.agentEmail = agent.SenderEmail;
 
         jsonStr = JSON.serialize(wrapper);
         return jsonStr;
+    }
+
+    @AuraEnabled
+    public static String getUserEvents(String whoId, String whatId) {
+        String jsonStr = '';
+        List<Event> events = [
+            SELECT Id, OwnerId, WhatId, WhoId, Subject, StartDateTime, EndDateTime
+            FROM Event
+            WHERE WhoId = :whoId AND WhatId = :whatId
+            LIMIT 1
+        ];
+        List<EventWrapper> wrappers = new List<EventWrapper>();
+        for(Event e : events) {
+            EventWrapper wrapper = new EventWrapper();
+            wrapper.id = e.Id;
+            wrapper.agentId = e.OwnerId;
+            wrapper.whatId = e.WhatId;
+            wrapper.whoId = e.WhoId;
+            wrapper.subject = e.Subject;
+            wrapper.starts = e.StartDateTime;
+            wrapper.ends = e.EndDateTime;
+            wrappers.add(wrapper);
+        }
+        jsonStr = JSON.serialize(wrappers);
+        return jsonStr;
+    }
+
+    @AuraEnabled
+    public static String getProductEventsForGivenDay(String whatId, Datetime start) {
+        String jsonStr = '';
+        Date day = start.date();
+        List<Event> events = [
+            SELECT Id, OwnerId, WhatId, WhoId, Subject, StartDateTime, EndDateTime
+            FROM Event
+            WHERE DAY_ONLY(convertTimezone(StartDateTime)) = :day
+        ];
+        List<EventWrapper> wrappers = new List<EventWrapper>();
+        for(Event e : events) {
+            EventWrapper wrapper = new EventWrapper();
+            wrapper.id = e.Id;
+            wrapper.agentId = e.OwnerId;
+            wrapper.whatId = e.WhatId;
+            wrapper.whoId = e.WhoId;
+            wrapper.subject = e.Subject;
+            wrapper.starts = e.StartDateTime;
+            wrapper.ends = e.EndDateTime;
+            wrapper.hour = String.valueOf(e.StartDateTime.hour());
+            wrappers.add(wrapper);
+        }
+        jsonStr = JSON.serialize(wrappers);
+        return jsonStr;
+    }
+
+    @AuraEnabled
+    public static void createEvent(String agentId, String whoId, String whatId, Datetime start) {
+        Event event = new Event();
+        event.OwnerId = agentId;
+        event.WhoId = whoId;
+        event.WhatId = whatId;
+        event.Subject = 'Business Premise Demonstration';
+        event.StartDateTime = start;
+        event.EndDateTime = start.addMinutes(30);
+        List<Event> agentReservations = [
+            SELECT Id, OwnerId, StartDateTime
+            FROM Event
+            WHERE StartDateTime = :start AND OwnerId = :agentId
+        ];
+        if(agentReservations.size() == 0) {
+            insert event;
+        }
     }
 
     @AuraEnabled
