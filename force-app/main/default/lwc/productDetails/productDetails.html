@@ -291,4 +291,118 @@
             </lightning-layout-item>
         </lightning-layout>
     </template>
+
+    <template if:true={showEventModal}>
+        <section
+            role="dialog"
+            tabindex="-1"
+            aria-labelledby="modal-heading-01"
+            aria-modal="true"
+            aria-describedby="modal-content-id-1"
+            class="slds-modal slds-fade-in-open"
+        >
+            <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    <lightning-button-icon
+                        class="slds-modal__close"
+                        title="Close"
+                        icon-name="utility:close"
+                        icon-class="slds-button_icon-inverse"
+                        onclick={closeEventModal}
+                    ></lightning-button-icon>
+        
+                    <h2 id="id-of-modalheader-h2" class="slds-text-heading_large">
+                        Set a Meeting
+                    </h2>
+                </header>
+                
+                <div class="slds-modal__content" id="modal-content-id-1">
+                    <lightning-layout>
+                        <lightning-layout-item flexibility="auto">
+                            <article class="slds-card">
+                                <div
+                                    class="slds-card__body slds-card__body_inner slds-align_absolute-center"
+                                    style="margin: 0"
+                                >
+                                    <!-- TODO -->
+                                    <lightning-layout class="slds-p-around_medium tile slds-grid slds-grid_vertical-align-center slds-wrap">
+                                        <lightning-layout-item class="slds-size_12-of-12">
+                                            <span class="slds-text-heading_small name">Set a New Meeting</span>
+                                        </lightning-layout-item>
+                                        <lightning-layout-item class="slds-size_12-of-12">
+                                            <div style="border-bottom: 1px solid lightgray; margin: 10px; min-width: 90%;"></div>
+                                        </lightning-layout-item>
+                                        <lightning-layout-item class="slds-size_12-of-12">
+                                            <lightning-layout multiple-rows="true">
+
+                                                <lightning-layout-item size="12">
+                                                    <lightning-layout>
+                                                        <lightning-layout-item size="6">
+                                                            <span style="font-size: 14px;">In</span>
+                                                        </lightning-layout-item>
+                                                        <lightning-layout-item size="6">
+                                                            <span style="font-size: 14px; font-weight: 700;">{myEvent.location}</span>
+                                                        </lightning-layout-item>
+                                                    </lightning-layout>
+                                                </lightning-layout-item>
+
+                                                <lightning-layout-item size="12">
+                                                    <lightning-layout>
+                                                        <lightning-layout-item size="6">
+                                                            <span style="font-size: 14px;">With</span>
+                                                        </lightning-layout-item>
+                                                        <lightning-layout-item size="6">
+                                                            <span style="font-size: 14px; font-weight: 700;">{product.agentName}</span>
+                                                        </lightning-layout-item>
+                                                    </lightning-layout>
+                                                </lightning-layout-item>
+
+                                                <lightning-layout-item size="12">
+                                                    <lightning-layout>
+                                                        <lightning-layout-item size="6">
+                                                            <span style="font-size: 14px;">Email</span>
+                                                        </lightning-layout-item>
+                                                        <lightning-layout-item size="6">
+                                                            <span style="font-size: 14px; font-weight: 700;">{product.agentEmail}</span>
+                                                        </lightning-layout-item>
+                                                    </lightning-layout>
+                                                </lightning-layout-item>
+
+                                            </lightning-layout>
+                                        </lightning-layout-item>
+                                        <lightning-layout-item class="slds-size_12-of-12">
+                                            <form class="slds-form_stacked">
+                                                <lightning-input
+                                                    type="date" 
+                                                    label="Meeting Date"
+                                                    data-recid="Meeting Date"
+                                                    value={meetingDate}
+                                                    required="true"
+                                                    onchange={handleMeetingDateChange}></lightning-input>
+                                                <span class="slds-text-heading_small name">Choose an hour by clicking on it</span>
+                                                <template for:each={hours} for:item="h">
+                                                    <div key={h} class="hourContainer" style="border: lightgrey solid 1px; padding: 1%; border-radius: 3px;">{h}</div>
+                                                </template>
+                                            </form>
+                                        </lightning-layout-item>
+                                    </lightning-layout>
+                                </div>
+                            </article>
+                        </lightning-layout-item>
+                    </lightning-layout>
+                </div>
+
+                <footer class="slds-modal__footer slds-grid slds-grid_align-spread">
+                    <lightning-button
+                        variant="brand-outline"
+                        label="Cancel"
+                        onclick={closeEventModal}
+                        title="Close"
+                        class="slds-var-m-left_x-small"
+                    ></lightning-button>
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
 </template>

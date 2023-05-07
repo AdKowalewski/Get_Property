@@ -17,3 +17,11 @@ body {
 .name {
     font-weight: 700;
 }
+
+.hourContainer {
+    cursor: pointer;
+}
+
+.hourContainer:hover {
+    background-color: #f2f2f2;
+}

@@ -17,6 +17,22 @@ public without sharing class FileController {
         public Boolean kitchen { get; set; }
     }
 
+    private class ProductWrapper2 {
+        public String id { get; set; }
+        public String name { get; set; }
+        public String address { get; set; }
+        public Double price { get; set; }
+        public Double size { get; set; }
+        public String displayUrl { get; set; }
+        public Boolean wifi { get; set; }
+        public Boolean parking { get; set; }
+        public Boolean elevator { get; set; }
+        public Boolean kitchen { get; set; }
+        public String agentId { get; set; }
+        public String agentName { get; set; }
+        public String agentEmail { get; set; }
+    }
+
     private class ContentWrapper {
         public String id { get; set; }
         public String title { get; set; }
@@ -162,11 +178,11 @@ public without sharing class FileController {
     public static String getProductById(String id) {
         String jsonStr = '';
         Product2 product = [
-            SELECT Id, Name, Product_Address__City__s, Product_Address__PostalCode__s, Product_Address__Street__s, Price__c, Size__c, DisplayUrl, Wi_Fi__c, Parking__c, Elevator__c, Kitchen__c
+            SELECT Id, Name, Product_Address__City__s, Product_Address__PostalCode__s, Product_Address__Street__s, Price__c, Size__c, DisplayUrl, Wi_Fi__c, Parking__c, Elevator__c, Kitchen__c, Agent__c
             FROM Product2
             WHERE Id = :id
         ];
-        ProductWrapper wrapper = new ProductWrapper();
+        ProductWrapper2 wrapper = new ProductWrapper2();
         wrapper.id = product.Id;
         wrapper.name = product.Name;
         wrapper.address = (String.isBlank(product.Product_Address__City__s) ? '' : product.Product_Address__City__s) + 
@@ -179,6 +195,10 @@ public without sharing class FileController {
         wrapper.parking = product.Parking__c;
         wrapper.elevator = product.Elevator__c;
         wrapper.kitchen = product.Kitchen__c;
+        wrapper.agentId = product.Agent__c;
+        User agent = [SELECT Id, Name, SenderEmail FROM User WHERE Id = :product.Agent__c];
+        wrapper.agentName = agent.Name;
+        wrapper.agentEmail = agent.SenderEmail;
 
         jsonStr = JSON.serialize(wrapper);
         return jsonStr;

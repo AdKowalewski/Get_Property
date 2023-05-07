@@ -2,6 +2,10 @@ import { LightningElement, track, api, wire } from 'lwc';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import getProduct from '@salesforce/apex/FileController.getProductById';
 import UserId from '@salesforce/user/Id';
+import userEvent from '@salesforce/apex/ProductController.getUserEvents';
+import productEvents from '@salesforce/apex/ProductController.getProductEventsForGivenDay';
+import eventCreate from '@salesforce/apex/ProductController.createEvent';
+import eventDelete from '@salesforce/apex/ProductController.deleteEvent';
 
 export default class ProductDetails extends LightningElement {
 
