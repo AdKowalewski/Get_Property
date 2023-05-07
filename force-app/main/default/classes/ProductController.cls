@@ -145,7 +145,7 @@ public without sharing class ProductController {
         event.Subject = 'Business Premise Demonstration';
         Datetime start = Datetime.newInstance(
             Date.newInstance(year, month, day),
-            Time.newINstance(hour, minute, 0, 0)
+            Time.newInstance(hour, minute, 0, 0)
         );
         event.StartDateTime = start;
         event.EndDateTime = start.addMinutes(30);
