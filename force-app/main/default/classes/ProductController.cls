@@ -150,6 +150,16 @@ public without sharing class ProductController {
     }
 
     @AuraEnabled
+    public static void deleteEvent(String id) {
+        Event event = [
+            SELECT Id
+            FROM Event
+            WHERE Id = :id
+        ];
+        delete event;
+    }
+
+    @AuraEnabled
     public static void markProductAsRecentlyViewed(String id) {
         Product2 product = [
             SELECT Id, Name
