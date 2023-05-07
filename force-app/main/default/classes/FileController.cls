@@ -196,9 +196,9 @@ public without sharing class FileController {
         wrapper.elevator = product.Elevator__c;
         wrapper.kitchen = product.Kitchen__c;
         wrapper.agentId = product.Agent__c;
-        User agent = [SELECT Id, Name, SenderEmail FROM User WHERE Id = :product.Agent__c];
-        wrapper.agentName = agent.Name;
-        wrapper.agentEmail = agent.SenderEmail;
+        User agent = [SELECT Id, FirstName, LastName, Email FROM User WHERE Id = :product.Agent__c];
+        wrapper.agentName = agent.FirstName + ' ' + agent.LastName;
+        wrapper.agentEmail = agent.Email;
 
         jsonStr = JSON.serialize(wrapper);
         return jsonStr;

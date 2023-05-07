@@ -12,7 +12,7 @@ export default class ProductDetails extends LightningElement {
     @track product;
     @api productId;
     @track userId = UserId;
-    @track myEvent;
+    @track myEvent = null;
     @track productEvents = [];
     @track hours = [
         '9:00','9:30',
@@ -24,8 +24,10 @@ export default class ProductDetails extends LightningElement {
         '15:00','15:30',
         '16:00','16:30',
     ];
+    @track availableHours = [];
     @track chosenDate;
     @track chosenHour;
+    @track showEventModal = false;
 
     connectedCallback() {
         getProduct({id: this.productId})
@@ -51,6 +53,19 @@ export default class ProductDetails extends LightningElement {
                 } else {
                     this.product.kitchen = 'no';
                 }
+                userEvent({whoId: this.userId, whatId: this.product.id})
+                    .then(result => {
+                        
+                    })
+                    .catch(error => {
+                        this.dispatchEvent(
+                            new ShowToastEvent({
+                                title: 'Error',
+                                message: error,
+                                variant: 'error'
+                            })
+                        );
+                    })
             })
             .catch(error => {
                 this.dispatchEvent(
@@ -81,5 +96,23 @@ export default class ProductDetails extends LightningElement {
             flag = true;
         }
         return flag;
+    }
+
+    get hasMeeting() {
+        let flag = false;
+        if(this.myEvent == null) {
+            flag = false;
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    closeEventModal() {
+        this.showEventModal = false;
+    }
+
+    displayEventModal() {
+        this.showEventModal = true;
     }
 } 
