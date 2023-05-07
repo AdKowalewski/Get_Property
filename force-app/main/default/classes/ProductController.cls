@@ -138,7 +138,8 @@ public without sharing class ProductController {
     public static void createEvent(String agentId, String whoId, String whatId, Datetime start, String location) {
         Event event = new Event();
         event.OwnerId = agentId;
-        event.WhoId = whoId;
+        Contact contact = [SELECT Id, ContactId FROM User WHERE Id = :whoId];
+        event.WhoId = contact.ContactId;
         event.WhatId = whatId;
         event.Subject = 'Business Premise Demonstration';
         event.StartDateTime = start;
