@@ -97,9 +97,9 @@ public without sharing class ProductController {
             wrapper.subject = e.Subject;
             wrapper.starts = e.StartDateTime;
             wrapper.ends = e.EndDateTime;
-            String stringStart = String.valueOf(e.StartDateTime);
+            String stringStart = String.valueOfGmt(e.StartDateTime);
             wrapper.startsStr = stringStart.substring(0, 10) + ' ' + stringStart.substring(11, 16);
-            String stringEnd = String.valueOf(e.EndDateTime);
+            String stringEnd = String.valueOfGmt(e.EndDateTime);
             wrapper.endsStr = stringEnd.substring(0, 10) + ' ' + stringEnd.substring(11, 16);
             wrapper.location = e.Location;
             jsonStr = JSON.serialize(wrapper);
