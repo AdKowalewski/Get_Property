@@ -42,6 +42,8 @@ public without sharing class ProductController {
         public String subject { get; set; }
         public Datetime starts { get; set; }
         public Datetime ends { get; set; }
+        public String startsStr { get; set; }
+        public String endsStr { get; set; }
         public String hour { get; set; }
         public String location { get; set; }
     }
@@ -95,6 +97,10 @@ public without sharing class ProductController {
             wrapper.subject = e.Subject;
             wrapper.starts = e.StartDateTime;
             wrapper.ends = e.EndDateTime;
+            String stringStart = String.valueOf(e.StartDateTime);
+            wrapper.startsStr = stringStart.substring(0, 10) + ' ' + stringStart.substring(11, 16);
+            String stringEnd = String.valueOf(e.EndDateTime);
+            wrapper.endsStr = stringEnd.substring(0, 10) + ' ' + stringEnd.substring(11, 16);
             wrapper.location = e.Location;
             jsonStr = JSON.serialize(wrapper);
         }
