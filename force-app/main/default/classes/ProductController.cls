@@ -85,8 +85,8 @@ public without sharing class ProductController {
             WHERE WhoId = :whoId AND WhatId = :whatId
             LIMIT 1
         ];
-        List<EventWrapper> wrappers = new List<EventWrapper>();
-        for(Event e : events) {
+        if(events.size() > 0) {
+            Event e = events.get(0);
             EventWrapper wrapper = new EventWrapper();
             wrapper.id = e.Id;
             wrapper.agentId = e.OwnerId;
@@ -96,9 +96,8 @@ public without sharing class ProductController {
             wrapper.starts = e.StartDateTime;
             wrapper.ends = e.EndDateTime;
             wrapper.location = e.Location;
-            wrappers.add(wrapper);
+            jsonStr = JSON.serialize(wrapper);
         }
-        jsonStr = JSON.serialize(wrappers);
         return jsonStr;
     }
 
