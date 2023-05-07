@@ -337,7 +337,7 @@
 
                                                 <lightning-layout-item size="12">
                                                     <lightning-layout>
-                                                        <lightning-layout-item size="6">
+                                                        <lightning-layout-item size="6" style="align-items: left;">
                                                             <span style="font-size: 14px;">In</span>
                                                         </lightning-layout-item>
                                                         <lightning-layout-item size="6">
@@ -348,7 +348,7 @@
 
                                                 <lightning-layout-item size="12">
                                                     <lightning-layout>
-                                                        <lightning-layout-item size="6">
+                                                        <lightning-layout-item size="6" style="align-items: left;">
                                                             <span style="font-size: 14px;">With</span>
                                                         </lightning-layout-item>
                                                         <lightning-layout-item size="6">
@@ -359,7 +359,7 @@
 
                                                 <lightning-layout-item size="12">
                                                     <lightning-layout>
-                                                        <lightning-layout-item size="6">
+                                                        <lightning-layout-item size="6" style="align-items: left;">
                                                             <span style="font-size: 14px;">Email</span>
                                                         </lightning-layout-item>
                                                         <lightning-layout-item size="6">
@@ -378,10 +378,11 @@
                                                     data-recid="Meeting Date"
                                                     value={meetingDate}
                                                     required="true"
-                                                    onchange={handleMeetingDateChange}></lightning-input>
-                                                <span class="slds-text-heading_small name">Choose an hour by clicking on it</span>
-                                                <template for:each={hours} for:item="h">
-                                                    <div key={h} class="hourContainer" style="border: lightgrey solid 1px; padding: 1%; border-radius: 3px;">{h}</div>
+                                                    onchange={handleMeetingDateChange}
+                                                    style="width: 50%; margin-left: 25%;"></lightning-input>
+                                                <span class="slds-text-heading_small name" style="margin-left: 30%; margin-bottom: 3%;">Choose an hour by clicking on it</span>
+                                                <template for:each={availableHours} for:item="h">
+                                                    <div key={h} onclick={handleCreateEvent} data-hour={h} class="hourContainer" style="border: lightgrey solid 1px; padding: 1%; border-radius: 3px; text-align: center; width: 50%; margin-left: 25%;">{h}</div>
                                                 </template>
                                             </form>
                                         </lightning-layout-item>
