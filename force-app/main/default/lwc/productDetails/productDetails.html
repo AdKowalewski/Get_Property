@@ -15,7 +15,6 @@
                             <div class="slds-box_border box">
                                 <template if:true={isLoggedIn}>
                                     <template if:true={hasMeeting}>
-                                        <!-- TODO -->
                                         <img style="width: 100%; height: 260px; object-fit: cover;" src={product.displayUrl} />
                                         <lightning-layout class="slds-p-around_medium tile slds-grid slds-grid_vertical-align-center slds-wrap">
                                             <lightning-layout-item class="slds-size_12-of-12">
@@ -24,29 +23,69 @@
                                             <lightning-layout-item class="slds-size_12-of-12">
                                                 <div style="border-bottom: 1px solid lightgray; margin: 10px; min-width: 90%;"></div>
                                             </lightning-layout-item>
+                                            <lightning-layout-item class="slds-size_12-of-12">
+                                                <lightning-layout multiple-rows="true">
 
-                                            <lightning-layout-item size="12">
-                                                <lightning-layout>
-                                                    <lightning-layout-item size="6">
-                                                        <span style="font-size: 14px;">Starts</span>
+                                                    <lightning-layout-item size="12">
+                                                        <lightning-layout>
+                                                            <lightning-layout-item size="6">
+                                                                <span style="font-size: 14px;">Starts</span>
+                                                            </lightning-layout-item>
+                                                            <lightning-layout-item size="6">
+                                                                <span style="font-size: 14px; font-weight: 700;">{myEvent.starts}</span>
+                                                            </lightning-layout-item>
+                                                        </lightning-layout>
                                                     </lightning-layout-item>
-                                                    <lightning-layout-item size="6">
-                                                        <span style="font-size: 14px; font-weight: 700;">{myEvent.starts}</span>
+
+                                                    <lightning-layout-item size="12">
+                                                        <lightning-layout>
+                                                            <lightning-layout-item size="6">
+                                                                <span style="font-size: 14px;">Ends</span>
+                                                            </lightning-layout-item>
+                                                            <lightning-layout-item size="6">
+                                                                <span style="font-size: 14px; font-weight: 700;">{myEvent.ends}</span>
+                                                            </lightning-layout-item>
+                                                        </lightning-layout>
                                                     </lightning-layout-item>
+
+                                                    <lightning-layout-item size="12">
+                                                        <lightning-layout>
+                                                            <lightning-layout-item size="6">
+                                                                <span style="font-size: 14px;">In</span>
+                                                            </lightning-layout-item>
+                                                            <lightning-layout-item size="6">
+                                                                <span style="font-size: 14px; font-weight: 700;">{myEvent.location}</span>
+                                                            </lightning-layout-item>
+                                                        </lightning-layout>
+                                                    </lightning-layout-item>
+
+                                                    <lightning-layout-item size="12">
+                                                        <lightning-layout>
+                                                            <lightning-layout-item size="6">
+                                                                <span style="font-size: 14px;">With</span>
+                                                            </lightning-layout-item>
+                                                            <lightning-layout-item size="6">
+                                                                <span style="font-size: 14px; font-weight: 700;">{product.agentName}</span>
+                                                            </lightning-layout-item>
+                                                        </lightning-layout>
+                                                    </lightning-layout-item>
+
+                                                    <lightning-layout-item size="12">
+                                                        <lightning-layout>
+                                                            <lightning-layout-item size="6">
+                                                                <span style="font-size: 14px;">Email</span>
+                                                            </lightning-layout-item>
+                                                            <lightning-layout-item size="6">
+                                                                <span style="font-size: 14px; font-weight: 700;">{product.agentEmail}</span>
+                                                            </lightning-layout-item>
+                                                        </lightning-layout>
+                                                    </lightning-layout-item>
+
                                                 </lightning-layout>
                                             </lightning-layout-item>
-
-                                            <lightning-layout-item size="12">
-                                                <lightning-layout>
-                                                    <lightning-layout-item size="6">
-                                                        <span style="font-size: 14px;">Ends</span>
-                                                    </lightning-layout-item>
-                                                    <lightning-layout-item size="6">
-                                                        <span style="font-size: 14px; font-weight: 700;">{myEvent.ends}</span>
-                                                    </lightning-layout-item>
-                                                </lightning-layout>
+                                            <lightning-layout-item class="slds-size_12-of-12" style="margin-top: 20px; margin-bottom: 20px; align-items: center;">
+                                                <lightning-button variant="neutral" label="Cancel meeting" onclick={handleCancelMeeting}></lightning-button>
                                             </lightning-layout-item>
-
                                         </lightning-layout>
                                     </template>
                                     <template if:false={hasMeeting}>
