@@ -136,13 +136,17 @@ public without sharing class ProductController {
     }
 
     @AuraEnabled
-    public static void createEvent(String agentId, String whoId, String whatId, Datetime start, String location) {
+    public static void createEvent(String agentId, String whoId, String whatId, String location, Integer year, Integer month, Integer day, Integer hour, Integer minute) {
         Event event = new Event();
         event.OwnerId = agentId;
         User contact = [SELECT Id, ContactId FROM User WHERE Id = :whoId];
         event.WhoId = contact.ContactId;
         event.WhatId = whatId;
         event.Subject = 'Business Premise Demonstration';
+        Datetime start = Datetime.newInstance(
+            Date.newInstance(year, month, day),
+            Time.newINstance(hour, minute, 0, 0)
+        );
         event.StartDateTime = start;
         event.EndDateTime = start.addMinutes(30);
         event.Location = location;
