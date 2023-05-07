@@ -81,10 +81,11 @@ public without sharing class ProductController {
     @AuraEnabled
     public static String getUserEvents(String whoId, String whatId) {
         String jsonStr = '';
+        User contact = [SELECT Id, ContactId FROM User WHERE Id = :whoId];
         List<Event> events = [
             SELECT Id, OwnerId, WhatId, WhoId, Subject, StartDateTime, EndDateTime, Location
             FROM Event
-            WHERE WhoId = :whoId AND WhatId = :whatId
+            WHERE WhoId = :contact.ContactId AND WhatId = :whatId
             LIMIT 1
         ];
         if(events.size() > 0) {
@@ -138,7 +139,7 @@ public without sharing class ProductController {
     public static void createEvent(String agentId, String whoId, String whatId, Datetime start, String location) {
         Event event = new Event();
         event.OwnerId = agentId;
-        Contact contact = [SELECT Id, ContactId FROM User WHERE Id = :whoId];
+        User contact = [SELECT Id, ContactId FROM User WHERE Id = :whoId];
         event.WhoId = contact.ContactId;
         event.WhatId = whatId;
         event.Subject = 'Business Premise Demonstration';
