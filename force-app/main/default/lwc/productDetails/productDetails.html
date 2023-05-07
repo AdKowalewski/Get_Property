@@ -381,7 +381,7 @@
                                                     onchange={handleMeetingDateChange}
                                                     style="width: 50%; margin-left: 25%;"></lightning-input>
                                                 <span class="slds-text-heading_small name" style="margin-left: 30%; margin-bottom: 3%;">Choose an hour by clicking on it</span>
-                                                <template for:each={availableHours} for:item="h">
+                                                <template for:each={hours} for:item="h">
                                                     <div key={h} onclick={handleCreateEvent} data-hour={h} class="hourContainer" style="border: lightgrey solid 1px; padding: 1%; border-radius: 3px; text-align: center; width: 50%; margin-left: 25%;">{h}</div>
                                                 </template>
                                             </form>

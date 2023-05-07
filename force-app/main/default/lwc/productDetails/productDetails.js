@@ -201,9 +201,17 @@ export default class ProductDetails extends LightningElement {
 
     handleCreateEvent(event) {
         let chosenHour = event.target.dataset.hour.split(':');
-        this.meetingStart = this.meetingDate;
-        this.meetingStart.setHours(parseInt(chosenHour[0]), ((chosenHour[1] == '30' ? 30 : 0)), 0, 0);
-        eventCreate({agentId: this.product.agentId, whoId: this.userId, whatId: this.product.id, start: this.meetingStart, location: this.product.address})
+        let meetData = this.meetingDate.split('-');
+        eventCreate({
+            agentId: this.product.agentId, 
+            whoId: this.userId, 
+            whatId: this.product.id, 
+            location: this.product.address,
+            year: parseInt(meetData[0]),
+            month: parseInt(meetData[1]),
+            day: parseInt(meetData[2]),
+            hour: parseInt(chosenHour[0]),
+            minute: chosenHour[1] == '30' ? 30 : 0})
             .then(result => {
                 userEvent({whoId: this.userId, whatId: this.product.id})
                     .then(result => {
@@ -239,6 +247,7 @@ export default class ProductDetails extends LightningElement {
                     //         })
                     //     );
                     // })
+                this.showEventModal = false;
                 this.dispatchEvent(
                     new ShowToastEvent({
                         title: 'Success',
