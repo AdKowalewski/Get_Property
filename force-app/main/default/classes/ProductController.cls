@@ -43,6 +43,7 @@ public without sharing class ProductController {
         public Datetime starts { get; set; }
         public Datetime ends { get; set; }
         public String hour { get; set; }
+        public String location { get; set; }
     }
 
     @AuraEnabled
@@ -79,7 +80,7 @@ public without sharing class ProductController {
     public static String getUserEvents(String whoId, String whatId) {
         String jsonStr = '';
         List<Event> events = [
-            SELECT Id, OwnerId, WhatId, WhoId, Subject, StartDateTime, EndDateTime
+            SELECT Id, OwnerId, WhatId, WhoId, Subject, StartDateTime, EndDateTime, Location
             FROM Event
             WHERE WhoId = :whoId AND WhatId = :whatId
             LIMIT 1
@@ -94,6 +95,7 @@ public without sharing class ProductController {
             wrapper.subject = e.Subject;
             wrapper.starts = e.StartDateTime;
             wrapper.ends = e.EndDateTime;
+            wrapper.location = e.Location;
             wrappers.add(wrapper);
         }
         jsonStr = JSON.serialize(wrappers);
@@ -105,7 +107,7 @@ public without sharing class ProductController {
         String jsonStr = '';
         Date day = start.date();
         List<Event> events = [
-            SELECT Id, OwnerId, WhatId, WhoId, Subject, StartDateTime, EndDateTime
+            SELECT Id, OwnerId, WhatId, WhoId, Subject, StartDateTime, EndDateTime, Location
             FROM Event
             WHERE DAY_ONLY(convertTimezone(StartDateTime)) = :day
         ];
@@ -120,6 +122,7 @@ public without sharing class ProductController {
             wrapper.starts = e.StartDateTime;
             wrapper.ends = e.EndDateTime;
             wrapper.hour = String.valueOf(e.StartDateTime.hour());
+            wrapper.location = e.Location;
             wrappers.add(wrapper);
         }
         jsonStr = JSON.serialize(wrappers);
@@ -127,7 +130,7 @@ public without sharing class ProductController {
     }
 
     @AuraEnabled
-    public static void createEvent(String agentId, String whoId, String whatId, Datetime start) {
+    public static void createEvent(String agentId, String whoId, String whatId, Datetime start, String location) {
         Event event = new Event();
         event.OwnerId = agentId;
         event.WhoId = whoId;
@@ -135,6 +138,7 @@ public without sharing class ProductController {
         event.Subject = 'Business Premise Demonstration';
         event.StartDateTime = start;
         event.EndDateTime = start.addMinutes(30);
+        event.Location = location;
         List<Event> agentReservations = [
             SELECT Id, OwnerId, StartDateTime
             FROM Event
