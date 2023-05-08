@@ -131,6 +131,9 @@ export default class ProductDetails extends LightningElement {
                             this.availableHours = data.hours;
                             console.log('meetings: ' + JSON.stringify(this.productEvents));
                             console.log('available hours: ' + JSON.stringify(this.availableHours));
+                            for(let j = 0; j < this.hours.length; j++) {
+                                this.hours[j].class = 'hourContainer2';
+                            }
                             for(let i = 0; i < this.availableHours.length; i++) {
                                 for(let j = 0; j < this.hours.length; j++) {
                                     if(this.hours[j].h == this.availableHours[i]) {
@@ -239,6 +242,9 @@ export default class ProductDetails extends LightningElement {
                     this.availableHours = data.hours;
                     console.log('meetings: ' + JSON.stringify(this.productEvents));
                     console.log('available hours: ' + JSON.stringify(this.availableHours));
+                    for(let j = 0; j < this.hours.length; j++) {
+                        this.hours[j].class = 'hourContainer2';
+                    }
                     for(let i = 0; i < this.availableHours.length; i++) {
                         for(let j = 0; j < this.hours.length; j++) {
                             if(this.hours[j].h == this.availableHours[i]) {
@@ -305,6 +311,9 @@ export default class ProductDetails extends LightningElement {
                                 this.availableHours = data.hours;
                                 console.log('meetings: ' + JSON.stringify(this.productEvents));
                                 console.log('available hours: ' + JSON.stringify(this.availableHours));
+                                for(let j = 0; j < this.hours.length; j++) {
+                                    this.hours[j].class = 'hourContainer2';
+                                }
                                 for(let i = 0; i < this.availableHours.length; i++) {
                                     for(let j = 0; j < this.hours.length; j++) {
                                         if(this.hours[j].h == this.availableHours[i]) {
@@ -361,6 +370,9 @@ export default class ProductDetails extends LightningElement {
                                 this.availableHours = data.hours;
                                 console.log('meetings: ' + JSON.stringify(this.productEvents));
                                 console.log('available hours: ' + JSON.stringify(this.availableHours));
+                                for(let j = 0; j < this.hours.length; j++) {
+                                    this.hours[j].class = 'hourContainer2';
+                                }
                                 for(let i = 0; i < this.availableHours.length; i++) {
                                     for(let j = 0; j < this.hours.length; j++) {
                                         if(this.hours[j].h == this.availableHours[i]) {
