@@ -48,6 +48,11 @@ public without sharing class ProductController {
         public String location { get; set; }
     }
 
+    private class EventsWrapper {
+        public List<EventWrapper> events { get; set; }
+        public List<String> hours { get; set; }
+    }
+
     @AuraEnabled
     public static String getProductById(String id) {
         String jsonStr = '';
@@ -112,6 +117,16 @@ public without sharing class ProductController {
     public static String getProductEventsForGivenDay(String whatId, Datetime start) {
         String jsonStr = '';
         Date day = start.date();
+        List<String> initialHours = new List<String>{
+            '9:00','9:30',
+            '10:00','10:30',
+            '11:00','11:30',
+            '12:00','12:30',
+            '13:00','13:30',
+            '14:00','14:30',
+            '15:00','15:30',
+            '16:00','16:30'
+        };
         List<Event> events = [
             SELECT Id, OwnerId, WhatId, WhoId, Subject, StartDateTime, EndDateTime, Location
             FROM Event
@@ -131,7 +146,28 @@ public without sharing class ProductController {
             wrapper.location = e.Location;
             wrappers.add(wrapper);
         }
-        jsonStr = JSON.serialize(wrappers);
+        List<String> existingHours = new List<String>();
+        for(EventWrapper wrapper : wrappers) {
+            existingHours.add(wrapper.hour);
+        }
+        List<String> availableHours = new List<String>();
+        Boolean k = false;
+        for(String str1 : initialHours) {
+            for(String str2 : existingHours) {
+                if(str1.equals(str2)) {
+                    k = true;
+                    continue;
+                }
+            }
+            if(k == false) {
+                availableHours.add(str1);
+            }
+            k = false;
+        }
+        EventsWrapper ewr = new EventsWrapper();
+        ewr.events = wrappers;
+        ewr.hours = availableHours;
+        jsonStr = JSON.serialize(ewr);
         return jsonStr;
     }
 
