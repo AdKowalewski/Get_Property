@@ -127,7 +127,7 @@ public without sharing class ProductController {
             wrapper.subject = e.Subject;
             wrapper.starts = e.StartDateTime;
             wrapper.ends = e.EndDateTime;
-            wrapper.hour = String.valueOf(e.StartDateTime.hour() + 7) + ':' + (String.valueOf(e.StartDateTime.minute()).equals('0') ? '00' : '30');
+            wrapper.hour = String.valueOf(e.StartDateTime.hour() - 2) + ':' + (String.valueOf(e.StartDateTime.minute()).equals('0') ? '00' : '30');
             wrapper.location = e.Location;
             wrappers.add(wrapper);
         }
