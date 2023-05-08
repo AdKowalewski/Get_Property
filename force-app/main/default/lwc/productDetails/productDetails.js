@@ -75,6 +75,7 @@ export default class ProductDetails extends LightningElement {
                             for(let i = 0; i < this.productEvents.length; i++) {
                                 existingHours.push(this.productEvents[i].hour);
                             }
+                            console.log('existing hours: ' + JSON.stringify(existingHours));
                             let k = false;
                             for(let i = 0; i < this.hours.length; i++) {
                                 for(let j = 0; j < existingHours.length; j++) {
@@ -88,6 +89,7 @@ export default class ProductDetails extends LightningElement {
                                 }
                                 k = false;
                             }
+                            console.log('available hours: ' + JSON.stringify(this.availableHours));
                         }            
                     })
                     // .catch(error => {
@@ -152,6 +154,7 @@ export default class ProductDetails extends LightningElement {
                     for(let i = 0; i < this.productEvents.length; i++) {
                         existingHours.push(this.productEvents[i].hour);
                     }
+                    console.log('existing hours: ' + JSON.stringify(existingHours));
                     let k = false;
                     for(let i = 0; i < this.hours.length; i++) {
                         for(let j = 0; j < existingHours.length; j++) {
@@ -165,6 +168,7 @@ export default class ProductDetails extends LightningElement {
                         }
                         k = false;
                     }
+                    console.log('available hours: ' + JSON.stringify(this.availableHours));
                 }            
             })
             // .catch(error => {
@@ -222,6 +226,7 @@ export default class ProductDetails extends LightningElement {
                                 for(let i = 0; i < this.productEvents.length; i++) {
                                     existingHours.push(this.productEvents[i].hour);
                                 }
+                                console.log('existing hours: ' + JSON.stringify(existingHours));
                                 let k = false;
                                 for(let i = 0; i < this.hours.length; i++) {
                                     for(let j = 0; j < existingHours.length; j++) {
@@ -235,6 +240,7 @@ export default class ProductDetails extends LightningElement {
                                     }
                                     k = false;
                                 }
+                                console.log('available hours: ' + JSON.stringify(this.availableHours));
                             }            
                         })
                         // .catch(error => {
@@ -283,6 +289,7 @@ export default class ProductDetails extends LightningElement {
                                 for(let i = 0; i < this.productEvents.length; i++) {
                                     existingHours.push(this.productEvents[i].hour);
                                 }
+                                console.log('existing hours: ' + JSON.stringify(existingHours));
                                 let k = false;
                                 for(let i = 0; i < this.hours.length; i++) {
                                     for(let j = 0; j < existingHours.length; j++) {
@@ -296,6 +303,7 @@ export default class ProductDetails extends LightningElement {
                                     }
                                     k = false;
                                 }
+                                console.log('available hours: ' + JSON.stringify(this.availableHours));
                             }            
                         })
                         // .catch(error => {
