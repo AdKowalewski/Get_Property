@@ -15,19 +15,76 @@ export default class ProductDetails extends LightningElement {
     @track myEvent = null;
     @track productEvents = [];
     @track hours = [
-        '9:00','9:30',
-        '10:00','10:30',
-        '11:00','11:30',
-        '12:00','12:30',
-        '13:00','13:30',
-        '14:00','14:30',
-        '15:00','15:30',
-        '16:00','16:30',
+        {
+            h: '9:00',
+            class: 'hourContainer2'
+        },
+        {
+            h: '9:30',
+            class: 'hourContainer2'
+        },
+        {
+            h: '10:00',
+            class: 'hourContainer2'
+        },
+        {
+            h: '10:30',
+            class: 'hourContainer2'
+        },
+        {
+            h: '11:00',
+            class: 'hourContainer2'
+        },
+        {
+            h: '11:30',
+            class: 'hourContainer2'
+        },
+        {
+            h: '12:00',
+            class: 'hourContainer2'
+        },
+        {
+            h: '12:30',
+            class: 'hourContainer2'
+        },
+        {
+            h: '13:00',
+            class: 'hourContainer2'
+        },
+        {
+            h: '13:30',
+            class: 'hourContainer2'
+        },
+        {
+            h: '14:00',
+            class: 'hourContainer2'
+        },
+        {
+            h: '14:30',
+            class: 'hourContainer2'
+        },
+        {
+            h: '15:00',
+            class: 'hourContainer2'
+        },
+        {
+            h: '15:30',
+            class: 'hourContainer2'
+        },
+        {
+            h: '16:00',
+            class: 'hourContainer2'
+        },
+        {
+            h: '16:30',
+            class: 'hourContainer2'
+        }
     ];
     @track availableHours = [];
     @track meetingDate = new Date().toISOString();
     @track meetingStart = new Date().toISOString();
     @track showEventModal = false;
+    @track hourContainer = 'hourContainer2';
 
     connectedCallback() {
         getProduct({id: this.productId})
@@ -74,6 +131,14 @@ export default class ProductDetails extends LightningElement {
                             this.availableHours = data.hours;
                             console.log('meetings: ' + JSON.stringify(this.productEvents));
                             console.log('available hours: ' + JSON.stringify(this.availableHours));
+                            for(let i = 0; i < this.availableHours.length; i++) {
+                                for(let j = 0; j < this.hours.length; j++) {
+                                    if(this.hours[j].h == this.availableHours[i]) {
+                                        this.hours[j].class = 'hourContainer1';
+                                        continue;
+                                    }
+                                }
+                            }
                             // this.productEvents = JSON.parse(result);
                             // console.log('meetings: ' + JSON.stringify(this.productEvents));
                             // let existingHours = [];
@@ -174,6 +239,14 @@ export default class ProductDetails extends LightningElement {
                     this.availableHours = data.hours;
                     console.log('meetings: ' + JSON.stringify(this.productEvents));
                     console.log('available hours: ' + JSON.stringify(this.availableHours));
+                    for(let i = 0; i < this.availableHours.length; i++) {
+                        for(let j = 0; j < this.hours.length; j++) {
+                            if(this.hours[j].h == this.availableHours[i]) {
+                                this.hours[j].class = 'hourContainer1';
+                                continue;
+                            }
+                        }
+                    }
                 }            
             })
             // .catch(error => {
@@ -196,7 +269,9 @@ export default class ProductDetails extends LightningElement {
     }
 
     handleCreateEvent(event) {
-        let chosenHour = event.target.dataset.hour.split(':');
+        let hclass = event.target.dataset.class;
+        if(hclass == 'hourContainer1') {
+            let chosenHour = event.target.dataset.hour.split(':');
         let meetData = this.meetingDate.split('-');
         eventCreate({
             agentId: this.product.agentId, 
@@ -206,7 +281,7 @@ export default class ProductDetails extends LightningElement {
             year: parseInt(meetData[0]),
             month: parseInt(meetData[1]),
             day: parseInt(meetData[2]),
-            hour: parseInt(chosenHour[0]) - 7,
+            hour: parseInt(chosenHour[0]) + 2,
             minute: chosenHour[1] == '30' ? 30 : 0})
             .then(result => {
                 userEvent({whoId: this.userId, whatId: this.product.id})
@@ -230,6 +305,14 @@ export default class ProductDetails extends LightningElement {
                                 this.availableHours = data.hours;
                                 console.log('meetings: ' + JSON.stringify(this.productEvents));
                                 console.log('available hours: ' + JSON.stringify(this.availableHours));
+                                for(let i = 0; i < this.availableHours.length; i++) {
+                                    for(let j = 0; j < this.hours.length; j++) {
+                                        if(this.hours[j].h == this.availableHours[i]) {
+                                            this.hours[j].class = 'hourContainer1';
+                                            continue;
+                                        }
+                                    }
+                                }
                             }            
                         })
                         // .catch(error => {
@@ -250,6 +333,7 @@ export default class ProductDetails extends LightningElement {
                     })
                 );
             })
+        }
     }
 
     handleCancelMeeting() {
@@ -277,6 +361,14 @@ export default class ProductDetails extends LightningElement {
                                 this.availableHours = data.hours;
                                 console.log('meetings: ' + JSON.stringify(this.productEvents));
                                 console.log('available hours: ' + JSON.stringify(this.availableHours));
+                                for(let i = 0; i < this.availableHours.length; i++) {
+                                    for(let j = 0; j < this.hours.length; j++) {
+                                        if(this.hours[j].h == this.availableHours[i]) {
+                                            this.hours[j].class = 'hourContainer1';
+                                            continue;
+                                        }
+                                    }
+                                }
                             }            
                         })
                         // .catch(error => {

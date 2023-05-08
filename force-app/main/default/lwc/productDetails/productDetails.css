@@ -18,10 +18,26 @@ body {
     font-weight: 700;
 }
 
-.hourContainer {
+.hourContainer1 {
     cursor: pointer;
+    border: lightgrey solid 1px;
+    padding: 1%;
+    border-radius: 3px;
+    text-align: center;
+    width: 50%;
+    margin-left: 25%;
 }
 
-.hourContainer:hover {
+.hourContainer1:hover {
+    background-color: #f2f2f2;
+}
+
+.hourContainer2 {
+    border: lightgrey solid 1px;
+    padding: 1%;
+    border-radius: 3px;
+    text-align: center;
+    width: 50%;
+    margin-left: 25%;
     background-color: #f2f2f2;
 }
