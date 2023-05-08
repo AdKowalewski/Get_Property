@@ -143,6 +143,22 @@ export default class ProductDetails extends LightningElement {
         return flag;
     }
 
+    addToList(list1, list2, list3) {
+        let k = false;
+        for(let i = 0; i < list1.length; i++) {
+            for(let j = 0; j < list2.length; j++) {
+                if(list1[i] == list2[j]) {
+                    k = true;
+                    continue;
+                }
+            }
+            if(k == false) {
+                list3.push(list1[i]);
+            }
+            k = false;
+        }
+    }
+
     handleMeetingDateChange(event) {
         this.meetingDate = event.target.value;
         productEvents({whatId: this.product.id, start: this.meetingDate})
@@ -281,7 +297,7 @@ export default class ProductDetails extends LightningElement {
                     //     );
                     // })
                     productEvents({whatId: this.product.id, start: this.meetingDate})
-                        .then(result => {
+                        .then(async result => {
                             if(result) {
                                 this.productEvents = JSON.parse(result);
                                 console.log('meetings: ' + JSON.stringify(this.productEvents));
@@ -303,6 +319,7 @@ export default class ProductDetails extends LightningElement {
                                     }
                                     k = false;
                                 }
+                                // await this.addToList(this.hours, existingHours, this.availableHours);
                                 console.log('available hours: ' + JSON.stringify(this.availableHours));
                             }            
                         })
