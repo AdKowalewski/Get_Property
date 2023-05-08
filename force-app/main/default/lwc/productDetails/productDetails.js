@@ -66,25 +66,11 @@ export default class ProductDetails extends LightningElement {
                     //         })
                     //     );
                     // })
-
-                                                // let existingHours = ['9:30', '11:30'];
-                                                // let k = false;
-                                                // for(let i = 0; i < this.hours.length; i++) {
-                                                //     for(let j = 0; j < existingHours.length; j++) {
-                                                //         if(this.hours[i] == existingHours[j]) {
-                                                //             k = true;
-                                                //             continue;
-                                                //         }
-                                                //     }
-                                                //     if(k == false) {
-                                                //         this.availableHours.push(this.hours[i]);
-                                                //     }
-                                                //     k = false;
-                                                // }
-                productEvents({whatId: this.product.id, start: this.chosenDate})
+                productEvents({whatId: this.product.id, start: this.meetingDate})
                     .then(result => {
                         if(result) {
                             this.productEvents = JSON.parse(result);
+                            console.log('meetings: ' + JSON.stringify(this.productEvents));
                             let existingHours = [];
                             for(let i = 0; i < this.productEvents.length; i++) {
                                 existingHours.push(this.productEvents[i].hour);
@@ -157,10 +143,11 @@ export default class ProductDetails extends LightningElement {
 
     handleMeetingDateChange(event) {
         this.meetingDate = event.target.value;
-        productEvents({whatId: this.product.id, start: this.chosenDate})
+        productEvents({whatId: this.product.id, start: this.meetingDate})
             .then(result => {
                 if(result) {
                     this.productEvents = JSON.parse(result);
+                    console.log('meetings: ' + JSON.stringify(this.productEvents));
                     let existingHours = [];
                     for(let i = 0; i < this.productEvents.length; i++) {
                         existingHours.push(this.productEvents[i].hour);
@@ -210,7 +197,7 @@ export default class ProductDetails extends LightningElement {
             year: parseInt(meetData[0]),
             month: parseInt(meetData[1]),
             day: parseInt(meetData[2]),
-            hour: parseInt(chosenHour[0]),
+            hour: parseInt(chosenHour[0]) - 7,
             minute: chosenHour[1] == '30' ? 30 : 0})
             .then(result => {
                 userEvent({whoId: this.userId, whatId: this.product.id})
@@ -226,27 +213,39 @@ export default class ProductDetails extends LightningElement {
                     //         })
                     //     );
                     // })
-                productEvents({whatId: this.product.id, start: this.chosenDate})
-                    .then(result => {
-                        this.productEvents = JSON.parse(result);
-                        let existingHours = [];
-                        for(let i = 0; i < this.productEvents.length; i++) {
-                            existingHours.push(this.productEvents[i].hour);
-                        }
-                        console.log('existing hours: ' + JSON.stringify(existingHours));
-                        this.availableHours.filter(h => {
-                            !existingHours.includes(h);
+                    productEvents({whatId: this.product.id, start: this.meetingDate})
+                        .then(result => {
+                            if(result) {
+                                this.productEvents = JSON.parse(result);
+                                console.log('meetings: ' + JSON.stringify(this.productEvents));
+                                let existingHours = [];
+                                for(let i = 0; i < this.productEvents.length; i++) {
+                                    existingHours.push(this.productEvents[i].hour);
+                                }
+                                let k = false;
+                                for(let i = 0; i < this.hours.length; i++) {
+                                    for(let j = 0; j < existingHours.length; j++) {
+                                        if(this.hours[i] == existingHours[j]) {
+                                            k = true;
+                                            continue;
+                                        }
+                                    }
+                                    if(k == false) {
+                                        this.availableHours.push(this.hours[i]);
+                                    }
+                                    k = false;
+                                }
+                            }            
                         })
-                    })
-                    // .catch(error => {
-                    //     this.dispatchEvent(
-                    //         new ShowToastEvent({
-                    //             title: 'Error',
-                    //             message: error,
-                    //             variant: 'error'
-                    //         })
-                    //     );
-                    // })
+                        // .catch(error => {
+                        //     this.dispatchEvent(
+                        //         new ShowToastEvent({
+                        //             title: 'Error',
+                        //             message: error,
+                        //             variant: 'error'
+                        //         })
+                        //     );
+                        // })
                 this.showEventModal = false;
                 this.dispatchEvent(
                     new ShowToastEvent({
@@ -261,6 +260,7 @@ export default class ProductDetails extends LightningElement {
     handleCancelMeeting() {
         eventDelete({id: this.myEvent.id})
             .then(result => {
+                this.myEvent = null;
                 userEvent({whoId: this.userId, whatId: this.product.id})
                     .then(result => {
                         this.myEvent = JSON.parse(result);
@@ -274,27 +274,39 @@ export default class ProductDetails extends LightningElement {
                     //         })
                     //     );
                     // })
-                productEvents({whatId: this.product.id, start: this.chosenDate})
-                    .then(result => {
-                        this.productEvents = JSON.parse(result);
-                        let existingHours = [];
-                        for(let i = 0; i < this.productEvents.length; i++) {
-                            existingHours.push(this.productEvents[i].hour);
-                        }
-                        console.log('existing hours: ' + JSON.stringify(existingHours));
-                        this.availableHours.filter(h => {
-                            !existingHours.includes(h);
+                    productEvents({whatId: this.product.id, start: this.meetingDate})
+                        .then(result => {
+                            if(result) {
+                                this.productEvents = JSON.parse(result);
+                                console.log('meetings: ' + JSON.stringify(this.productEvents));
+                                let existingHours = [];
+                                for(let i = 0; i < this.productEvents.length; i++) {
+                                    existingHours.push(this.productEvents[i].hour);
+                                }
+                                let k = false;
+                                for(let i = 0; i < this.hours.length; i++) {
+                                    for(let j = 0; j < existingHours.length; j++) {
+                                        if(this.hours[i] == existingHours[j]) {
+                                            k = true;
+                                            continue;
+                                        }
+                                    }
+                                    if(k == false) {
+                                        this.availableHours.push(this.hours[i]);
+                                    }
+                                    k = false;
+                                }
+                            }            
                         })
-                    })
-                    // .catch(error => {
-                    //     this.dispatchEvent(
-                    //         new ShowToastEvent({
-                    //             title: 'Error',
-                    //             message: error,
-                    //             variant: 'error'
-                    //         })
-                    //     );
-                    // })
+                        // .catch(error => {
+                        //     this.dispatchEvent(
+                        //         new ShowToastEvent({
+                        //             title: 'Error',
+                        //             message: error,
+                        //             variant: 'error'
+                        //         })
+                        //     );
+                        // })
                 this.dispatchEvent(
                     new ShowToastEvent({
                         title: 'Success',

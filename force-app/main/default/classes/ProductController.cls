@@ -127,7 +127,7 @@ public without sharing class ProductController {
             wrapper.subject = e.Subject;
             wrapper.starts = e.StartDateTime;
             wrapper.ends = e.EndDateTime;
-            wrapper.hour = String.valueOf(e.StartDateTime.hour());
+            wrapper.hour = String.valueOf(e.StartDateTime.hour() - 2) + ':' + (String.valueOf(e.StartDateTime.minute()).equals('0') ? '00' : '30');
             wrapper.location = e.Location;
             wrappers.add(wrapper);
         }
@@ -147,6 +147,7 @@ public without sharing class ProductController {
             Date.newInstance(year, month, day),
             Time.newInstance(hour, minute, 0, 0)
         );
+        // start = start.addHours(-7);
         event.StartDateTime = start;
         event.EndDateTime = start.addMinutes(30);
         event.Location = location;
@@ -158,6 +159,7 @@ public without sharing class ProductController {
         if(agentReservations.size() == 0) {
             insert event;
         }
+        System.debug(event);
     }
 
     @AuraEnabled
