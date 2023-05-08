@@ -81,7 +81,7 @@ export default class ProductDetails extends LightningElement {
         }
     ];
     @track availableHours = [];
-    @track meetingDate = new Date().toISOString();
+    @track meetingDate = new Date(new Date().getTime() + (1*24*60*60*1000)).toISOString();
     @track meetingStart = new Date().toISOString();
     @track showEventModal = false;
     @track hourContainer = 'hourContainer2';
@@ -234,7 +234,9 @@ export default class ProductDetails extends LightningElement {
 
     handleMeetingDateChange(event) {
         this.meetingDate = event.target.value;
-        productEvents({whatId: this.product.id, start: this.meetingDate})
+        let dd = new Date(new Date().getTime()).toISOString();
+        if(this.meetingDate >= dd) {
+            productEvents({whatId: this.product.id, start: this.meetingDate})
             .then(result => {
                 if(result) {
                     let data = JSON.parse(result);
@@ -264,6 +266,16 @@ export default class ProductDetails extends LightningElement {
             //         })
             //     );
             // })
+        } else if(this.meetingDate < dd) {
+            this.meetingDate = new Date(new Date().getTime() + (1*24*60*60*1000)).toISOString();
+            this.dispatchEvent(
+                new ShowToastEvent({
+                    title: 'Error',
+                    message: 'Date cannot be earlier than tomorrow date',
+                    variant: 'error'
+                })
+            );
+        }
     }
 
     closeEventModal() {
@@ -275,73 +287,85 @@ export default class ProductDetails extends LightningElement {
     }
 
     handleCreateEvent(event) {
-        let hclass = event.target.dataset.class;
-        if(hclass == 'hourContainer1') {
-            let chosenHour = event.target.dataset.hour.split(':');
-        let meetData = this.meetingDate.split('-');
-        eventCreate({
-            agentId: this.product.agentId, 
-            whoId: this.userId, 
-            whatId: this.product.id, 
-            location: this.product.address,
-            year: parseInt(meetData[0]),
-            month: parseInt(meetData[1]),
-            day: parseInt(meetData[2]),
-            hour: parseInt(chosenHour[0]) + 2,
-            minute: chosenHour[1] == '30' ? 30 : 0})
-            .then(result => {
-                userEvent({whoId: this.userId, whatId: this.product.id})
+        let dd = new Date(new Date().getTime()).toISOString();
+        if(this.meetingDate >= dd) {
+            let hclass = event.target.dataset.class;
+            if(hclass == 'hourContainer1') {
+                let chosenHour = event.target.dataset.hour.split(':');
+                let meetData = this.meetingDate.split('-');
+                eventCreate({
+                    agentId: this.product.agentId, 
+                    whoId: this.userId, 
+                    whatId: this.product.id, 
+                    location: this.product.address,
+                    year: parseInt(meetData[0]),
+                    month: parseInt(meetData[1]),
+                    day: parseInt(meetData[2]),
+                    hour: parseInt(chosenHour[0]) + 2,
+                    minute: chosenHour[1] == '30' ? 30 : 0})
                     .then(result => {
-                        this.myEvent = JSON.parse(result);
-                    })
-                    // .catch(error => {
-                    //     this.dispatchEvent(
-                    //         new ShowToastEvent({
-                    //             title: 'Error',
-                    //             message: error,
-                    //             variant: 'error'
-                    //         })
-                    //     );
-                    // })
-                    productEvents({whatId: this.product.id, start: this.meetingDate})
-                        .then(result => {
-                            if(result) {
-                                let data = JSON.parse(result);
-                                this.productEvents = data.events;
-                                this.availableHours = data.hours;
-                                console.log('meetings: ' + JSON.stringify(this.productEvents));
-                                console.log('available hours: ' + JSON.stringify(this.availableHours));
-                                for(let j = 0; j < this.hours.length; j++) {
-                                    this.hours[j].class = 'hourContainer2';
-                                }
-                                for(let i = 0; i < this.availableHours.length; i++) {
-                                    for(let j = 0; j < this.hours.length; j++) {
-                                        if(this.hours[j].h == this.availableHours[i]) {
-                                            this.hours[j].class = 'hourContainer1';
-                                            continue;
+                        userEvent({whoId: this.userId, whatId: this.product.id})
+                            .then(result => {
+                                this.myEvent = JSON.parse(result);
+                            })
+                            // .catch(error => {
+                            //     this.dispatchEvent(
+                            //         new ShowToastEvent({
+                            //             title: 'Error',
+                            //             message: error,
+                            //             variant: 'error'
+                            //         })
+                            //     );
+                            // })
+                            productEvents({whatId: this.product.id, start: this.meetingDate})
+                                .then(result => {
+                                    if(result) {
+                                        let data = JSON.parse(result);
+                                        this.productEvents = data.events;
+                                        this.availableHours = data.hours;
+                                        console.log('meetings: ' + JSON.stringify(this.productEvents));
+                                        console.log('available hours: ' + JSON.stringify(this.availableHours));
+                                        for(let j = 0; j < this.hours.length; j++) {
+                                            this.hours[j].class = 'hourContainer2';
                                         }
-                                    }
-                                }
-                            }            
-                        })
-                        // .catch(error => {
-                        //     this.dispatchEvent(
-                        //         new ShowToastEvent({
-                        //             title: 'Error',
-                        //             message: error,
-                        //             variant: 'error'
-                        //         })
-                        //     );
-                        // })
-                this.showEventModal = false;
-                this.dispatchEvent(
-                    new ShowToastEvent({
-                        title: 'Success',
-                        message: 'Meeting scheduled successfully',
-                        variant: 'success'
+                                        for(let i = 0; i < this.availableHours.length; i++) {
+                                            for(let j = 0; j < this.hours.length; j++) {
+                                                if(this.hours[j].h == this.availableHours[i]) {
+                                                    this.hours[j].class = 'hourContainer1';
+                                                    continue;
+                                                }
+                                            }
+                                        }
+                                    }            
+                                })
+                                // .catch(error => {
+                                //     this.dispatchEvent(
+                                //         new ShowToastEvent({
+                                //             title: 'Error',
+                                //             message: error,
+                                //             variant: 'error'
+                                //         })
+                                //     );
+                                // })
+                        this.showEventModal = false;
+                        this.dispatchEvent(
+                            new ShowToastEvent({
+                                title: 'Success',
+                                message: 'Meeting scheduled successfully',
+                                variant: 'success'
+                            })
+                        );
                     })
-                );
-            })
+        }
+        } else if(this.meetingDate < dd) {
+            this.meetingDate = new Date(new Date().getTime() + (1*24*60*60*1000)).toISOString();
+            this.dispatchEvent(
+                new ShowToastEvent({
+                    title: 'Error',
+                    message: 'Date cannot be earlier than tomorrow date',
+                    variant: 'error'
+                })
+            );
         }
     }
 
