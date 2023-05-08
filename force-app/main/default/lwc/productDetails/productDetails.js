@@ -69,27 +69,32 @@ export default class ProductDetails extends LightningElement {
                 productEvents({whatId: this.product.id, start: this.meetingDate})
                     .then(result => {
                         if(result) {
-                            this.productEvents = JSON.parse(result);
+                            let data = JSON.parse(result);
+                            this.productEvents = data.events;
+                            this.availableHours = data.hours;
                             console.log('meetings: ' + JSON.stringify(this.productEvents));
-                            let existingHours = [];
-                            for(let i = 0; i < this.productEvents.length; i++) {
-                                existingHours.push(this.productEvents[i].hour);
-                            }
-                            console.log('existing hours: ' + JSON.stringify(existingHours));
-                            let k = false;
-                            for(let i = 0; i < this.hours.length; i++) {
-                                for(let j = 0; j < existingHours.length; j++) {
-                                    if(this.hours[i] == existingHours[j]) {
-                                        k = true;
-                                        continue;
-                                    }
-                                }
-                                if(k == false) {
-                                    this.availableHours.push(this.hours[i]);
-                                }
-                                k = false;
-                            }
                             console.log('available hours: ' + JSON.stringify(this.availableHours));
+                            // this.productEvents = JSON.parse(result);
+                            // console.log('meetings: ' + JSON.stringify(this.productEvents));
+                            // let existingHours = [];
+                            // for(let i = 0; i < this.productEvents.length; i++) {
+                            //     existingHours.push(this.productEvents[i].hour);
+                            // }
+                            // console.log('existing hours: ' + JSON.stringify(existingHours));
+                            // let k = false;
+                            // for(let i = 0; i < this.hours.length; i++) {
+                            //     for(let j = 0; j < existingHours.length; j++) {
+                            //         if(this.hours[i] == existingHours[j]) {
+                            //             k = true;
+                            //             continue;
+                            //         }
+                            //     }
+                            //     if(k == false) {
+                            //         this.availableHours.push(this.hours[i]);
+                            //     }
+                            //     k = false;
+                            // }
+                            // console.log('available hours: ' + JSON.stringify(this.availableHours));
                         }            
                     })
                     // .catch(error => {
@@ -164,26 +169,10 @@ export default class ProductDetails extends LightningElement {
         productEvents({whatId: this.product.id, start: this.meetingDate})
             .then(result => {
                 if(result) {
-                    this.productEvents = JSON.parse(result);
+                    let data = JSON.parse(result);
+                    this.productEvents = data.events;
+                    this.availableHours = data.hours;
                     console.log('meetings: ' + JSON.stringify(this.productEvents));
-                    let existingHours = [];
-                    for(let i = 0; i < this.productEvents.length; i++) {
-                        existingHours.push(this.productEvents[i].hour);
-                    }
-                    console.log('existing hours: ' + JSON.stringify(existingHours));
-                    let k = false;
-                    for(let i = 0; i < this.hours.length; i++) {
-                        for(let j = 0; j < existingHours.length; j++) {
-                            if(this.hours[i] == existingHours[j]) {
-                                k = true;
-                                continue;
-                            }
-                        }
-                        if(k == false) {
-                            this.availableHours.push(this.hours[i]);
-                        }
-                        k = false;
-                    }
                     console.log('available hours: ' + JSON.stringify(this.availableHours));
                 }            
             })
@@ -236,26 +225,10 @@ export default class ProductDetails extends LightningElement {
                     productEvents({whatId: this.product.id, start: this.meetingDate})
                         .then(result => {
                             if(result) {
-                                this.productEvents = JSON.parse(result);
+                                let data = JSON.parse(result);
+                                this.productEvents = data.events;
+                                this.availableHours = data.hours;
                                 console.log('meetings: ' + JSON.stringify(this.productEvents));
-                                let existingHours = [];
-                                for(let i = 0; i < this.productEvents.length; i++) {
-                                    existingHours.push(this.productEvents[i].hour);
-                                }
-                                console.log('existing hours: ' + JSON.stringify(existingHours));
-                                let k = false;
-                                for(let i = 0; i < this.hours.length; i++) {
-                                    for(let j = 0; j < existingHours.length; j++) {
-                                        if(this.hours[i] == existingHours[j]) {
-                                            k = true;
-                                            continue;
-                                        }
-                                    }
-                                    if(k == false) {
-                                        this.availableHours.push(this.hours[i]);
-                                    }
-                                    k = false;
-                                }
                                 console.log('available hours: ' + JSON.stringify(this.availableHours));
                             }            
                         })
@@ -299,27 +272,10 @@ export default class ProductDetails extends LightningElement {
                     productEvents({whatId: this.product.id, start: this.meetingDate})
                         .then(async result => {
                             if(result) {
-                                this.productEvents = JSON.parse(result);
+                                let data = JSON.parse(result);
+                                this.productEvents = data.events;
+                                this.availableHours = data.hours;
                                 console.log('meetings: ' + JSON.stringify(this.productEvents));
-                                let existingHours = [];
-                                for(let i = 0; i < this.productEvents.length; i++) {
-                                    existingHours.push(this.productEvents[i].hour);
-                                }
-                                console.log('existing hours: ' + JSON.stringify(existingHours));
-                                let k = false;
-                                for(let i = 0; i < this.hours.length; i++) {
-                                    for(let j = 0; j < existingHours.length; j++) {
-                                        if(this.hours[i] == existingHours[j]) {
-                                            k = true;
-                                            continue;
-                                        }
-                                    }
-                                    if(k == false) {
-                                        this.availableHours.push(this.hours[i]);
-                                    }
-                                    k = false;
-                                }
-                                // await this.addToList(this.hours, existingHours, this.availableHours);
                                 console.log('available hours: ' + JSON.stringify(this.availableHours));
                             }            
                         })
