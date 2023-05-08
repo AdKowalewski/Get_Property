@@ -127,10 +127,11 @@ public without sharing class ProductController {
             '15:00','15:30',
             '16:00','16:30'
         };
+        Datetime currentDatetime = System.now();
         List<Event> events = [
             SELECT Id, OwnerId, WhatId, WhoId, Subject, StartDateTime, EndDateTime, Location
             FROM Event
-            WHERE DAY_ONLY(convertTimezone(StartDateTime)) = :day
+            WHERE DAY_ONLY(convertTimezone(StartDateTime)) = :day AND StartDateTime >= :currentDatetime
         ];
         List<EventWrapper> wrappers = new List<EventWrapper>();
         for(Event e : events) {
