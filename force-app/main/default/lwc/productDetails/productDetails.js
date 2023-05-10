@@ -85,6 +85,7 @@ export default class ProductDetails extends LightningElement {
     @track meetingStart = new Date().toISOString();
     @track showEventModal = false;
     @track hourContainer = 'hourContainer2';
+    @track tomorrow = new Date(new Date().getTime() + (1*24*60*60*1000)).toISOString();
 
     connectedCallback() {
         getProduct({id: this.productId})
@@ -114,15 +115,6 @@ export default class ProductDetails extends LightningElement {
                     .then(result => {
                         this.myEvent = JSON.parse(result);
                     })
-                    // .catch(error => {
-                    //     this.dispatchEvent(
-                    //         new ShowToastEvent({
-                    //             title: 'Error',
-                    //             message: error,
-                    //             variant: 'error'
-                    //         })
-                    //     );
-                    // })
                 productEvents({whatId: this.product.id, start: this.meetingDate})
                     .then(result => {
                         if(result) {
@@ -142,48 +134,9 @@ export default class ProductDetails extends LightningElement {
                                     }
                                 }
                             }
-                            // this.productEvents = JSON.parse(result);
-                            // console.log('meetings: ' + JSON.stringify(this.productEvents));
-                            // let existingHours = [];
-                            // for(let i = 0; i < this.productEvents.length; i++) {
-                            //     existingHours.push(this.productEvents[i].hour);
-                            // }
-                            // console.log('existing hours: ' + JSON.stringify(existingHours));
-                            // let k = false;
-                            // for(let i = 0; i < this.hours.length; i++) {
-                            //     for(let j = 0; j < existingHours.length; j++) {
-                            //         if(this.hours[i] == existingHours[j]) {
-                            //             k = true;
-                            //             continue;
-                            //         }
-                            //     }
-                            //     if(k == false) {
-                            //         this.availableHours.push(this.hours[i]);
-                            //     }
-                            //     k = false;
-                            // }
-                            // console.log('available hours: ' + JSON.stringify(this.availableHours));
                         }            
                     })
-                    // .catch(error => {
-                    //     this.dispatchEvent(
-                    //         new ShowToastEvent({
-                    //             title: 'Error',
-                    //             message: error,
-                    //             variant: 'error'
-                    //         })
-                    //     );
-                    // })
             })
-            // .catch(error => {
-            //     this.dispatchEvent(
-            //         new ShowToastEvent({
-            //             title: 'Error',
-            //             message: error,
-            //             variant: 'error'
-            //         })
-            //     );
-            // })
     }
 
     get backgroundStyle() {
@@ -257,15 +210,6 @@ export default class ProductDetails extends LightningElement {
                     }
                 }            
             })
-            // .catch(error => {
-            //     this.dispatchEvent(
-            //         new ShowToastEvent({
-            //             title: 'Error',
-            //             message: error,
-            //             variant: 'error'
-            //         })
-            //     );
-            // })
         } else if(this.meetingDate < dd) {
             this.meetingDate = new Date(new Date().getTime() + (1*24*60*60*1000)).toISOString();
             this.dispatchEvent(
@@ -284,6 +228,27 @@ export default class ProductDetails extends LightningElement {
 
     displayEventModal() {
         this.showEventModal = true;
+        productEvents({whatId: this.product.id, start: this.meetingDate})
+            .then(result => {
+                if(result) {
+                    let data = JSON.parse(result);
+                    this.productEvents = data.events;
+                    this.availableHours = data.hours;
+                    console.log('meetings: ' + JSON.stringify(this.productEvents));
+                    console.log('available hours: ' + JSON.stringify(this.availableHours));
+                    for(let j = 0; j < this.hours.length; j++) {
+                        this.hours[j].class = 'hourContainer2';
+                    }
+                    for(let i = 0; i < this.availableHours.length; i++) {
+                        for(let j = 0; j < this.hours.length; j++) {
+                            if(this.hours[j].h == this.availableHours[i]) {
+                                this.hours[j].class = 'hourContainer1';
+                                continue;
+                            }
+                        }
+                    }
+                }            
+            })
     }
 
     handleCreateEvent(event) {
@@ -308,15 +273,6 @@ export default class ProductDetails extends LightningElement {
                             .then(result => {
                                 this.myEvent = JSON.parse(result);
                             })
-                            // .catch(error => {
-                            //     this.dispatchEvent(
-                            //         new ShowToastEvent({
-                            //             title: 'Error',
-                            //             message: error,
-                            //             variant: 'error'
-                            //         })
-                            //     );
-                            // })
                             productEvents({whatId: this.product.id, start: this.meetingDate})
                                 .then(result => {
                                     if(result) {
@@ -338,15 +294,6 @@ export default class ProductDetails extends LightningElement {
                                         }
                                     }            
                                 })
-                                // .catch(error => {
-                                //     this.dispatchEvent(
-                                //         new ShowToastEvent({
-                                //             title: 'Error',
-                                //             message: error,
-                                //             variant: 'error'
-                                //         })
-                                //     );
-                                // })
                         this.showEventModal = false;
                         this.dispatchEvent(
                             new ShowToastEvent({
@@ -356,7 +303,7 @@ export default class ProductDetails extends LightningElement {
                             })
                         );
                     })
-        }
+            }
         } else if(this.meetingDate < dd) {
             this.meetingDate = new Date(new Date().getTime() + (1*24*60*60*1000)).toISOString();
             this.dispatchEvent(
@@ -377,15 +324,6 @@ export default class ProductDetails extends LightningElement {
                     .then(result => {
                         this.myEvent = JSON.parse(result);
                     })
-                    // .catch(error => {
-                    //     this.dispatchEvent(
-                    //         new ShowToastEvent({
-                    //             title: 'Error',
-                    //             message: error,
-                    //             variant: 'error'
-                    //         })
-                    //     );
-                    // })
                     productEvents({whatId: this.product.id, start: this.meetingDate})
                         .then(async result => {
                             if(result) {
@@ -407,15 +345,6 @@ export default class ProductDetails extends LightningElement {
                                 }
                             }            
                         })
-                        // .catch(error => {
-                        //     this.dispatchEvent(
-                        //         new ShowToastEvent({
-                        //             title: 'Error',
-                        //             message: error,
-                        //             variant: 'error'
-                        //         })
-                        //     );
-                        // })
                 this.dispatchEvent(
                     new ShowToastEvent({
                         title: 'Success',
