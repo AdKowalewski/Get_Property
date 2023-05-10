@@ -5,59 +5,75 @@
                 <div class="slds-text-title" style="font-size: 25px; font-weight: bold; margin-left: 45%; width: 40%; margin-top: 1%; margin-bottom: 1%; color: white;">Find Property</div>
             </lightning-layout-item>
             <!-- search -->
-            <lightning-layout-item size="12" style="background-color: #000066;">
-                <div style="margin-left: 30%; width: 40%;">           
-                    <lightning-layout horizontal-align="middle" multiple-rows="true">
-                        <lightning-layout-item size="12">
-                            <lightning-input style="-webkit-text-fill-color:white;" type="text" label="Product Name" value={productName} onchange={handleProductNameChange}></lightning-input>
-                        </lightning-layout-item>
-                        <lightning-layout-item size="12">
-                            <lightning-input style="-webkit-text-fill-color:white;" type="text" label="Product City" value={productCity} onchange={handleProductCityChange}></lightning-input>
-                        </lightning-layout-item>
-                        <template if:true={showFilter}>
-                            <lightning-layout style="width: 100%;" multiple-rows="true">
-                                <lightning-layout-item size="12">
-                                    <lightning-slider style="-webkit-text-fill-color:white;" label="Max Price (EUR)" value={maxPrice} step="0.01" min="0" max="200000" onchange={handleMaxPriceChange}></lightning-slider>
-                                </lightning-layout-item>
-                                <lightning-layout-item size="12">
-                                    <lightning-slider style="-webkit-text-fill-color:white;" label="Min Size (m2)" value={minSize} step="0.01" min="0" max="100" onchange={handleSizeChange}></lightning-slider>
-                                </lightning-layout-item>
-                                <lightning-layout-item size="12">
-                                    <lightning-layout>
-                                        <lightning-layout-item size="3">
-                                            <lightning-input id="checkbox-wifi" style="-webkit-text-fill-color:white;" type="checkbox" name="wifi" label="Wi-Fi" value={wifi} onchange={handleWifiChange}></lightning-input>
-                                        </lightning-layout-item>
-                                        <lightning-layout-item size="3">
-                                            <lightning-input id="checkbox-parking" style="-webkit-text-fill-color:white;" type="checkbox" name="parking" label="Parking" value={parking} onchange={handleParkingChange}></lightning-input>
-                                        </lightning-layout-item>
-                                        <lightning-layout-item size="3">
-                                            <lightning-input id="checkbox-elevator" style="-webkit-text-fill-color:white;" type="checkbox" name="elevator" label="Elevator" value={elevator} onchange={handleElevatorChange}></lightning-input>
-                                        </lightning-layout-item>
-                                        <lightning-layout-item size="3">
-                                            <lightning-input id="checkbox-kitchen" style="-webkit-text-fill-color:white;" type="checkbox" name="kitchen" label="Kitchen" value={kitchen} onchange={handleKitchenChange}></lightning-input>
-                                        </lightning-layout-item>
-                                    </lightning-layout>
-                                </lightning-layout-item>
-                            </lightning-layout>
-                        </template>
-                    </lightning-layout>
-                    <div class="slds-var-m-vertical_medium">
-                        <template if:true={showFilter}>
-                            <lightning-button icon-name="utility:filterList" icon-position="right" variant="neutral" label="Hide Filter" onclick={hideFilter} class="search-button filter-button" style="margin-right: 5px;"></lightning-button>
-                        </template>
-                        <template if:false={showFilter}>
-                            <lightning-button icon-name="utility:filterList" icon-position="right" variant="neutral" label="Filter" onclick={displayFilter} class="search-button filter-button" style="margin-right: 5px;"></lightning-button>
-                        </template>
-                        <template if:true={showFilter}>
-                            <lightning-button variant="neutral" label="Clear Filter" onclick={clearFilter} class="search-button filter-button" style="margin-right: 5px;"></lightning-button>
-                        </template>
-                        <template if:true={isLogged}>
-                            <lightning-button variant="neutral" label="Recently Viewed" onclick={showRecentlyViewed} class="search-button filter-button" style="margin-right: 5px;"></lightning-button>
-                        </template>
-                        <!-- <lightning-button icon-name="utility:search" icon-position="right" variant="brand" label="Search" onclick={getProducts} class="search-button"></lightning-button> -->
-                    </div>
-                </div>               
-            </lightning-layout-item>
+            <template if:false={isLastSeen}>
+                <lightning-layout-item size="12" style="background-color: #000066;">
+                    <div style="margin-left: 30%; width: 40%;">           
+                        <lightning-layout horizontal-align="middle" multiple-rows="true">
+                            <lightning-layout-item size="12">
+                                <lightning-input style="-webkit-text-fill-color:white;" type="text" label="Product Name" value={productName} onchange={handleProductNameChange}></lightning-input>
+                            </lightning-layout-item>
+                            <lightning-layout-item size="12">
+                                <lightning-input style="-webkit-text-fill-color:white;" type="text" label="Product City" value={productCity} onchange={handleProductCityChange}></lightning-input>
+                            </lightning-layout-item>
+                            <template if:true={showFilter}>
+                                <lightning-layout style="width: 100%;" multiple-rows="true">
+                                    <lightning-layout-item size="12">
+                                        <lightning-slider style="-webkit-text-fill-color:white;" label="Max Price (EUR)" value={maxPrice} step="0.01" min="0" max="200000" onchange={handleMaxPriceChange}></lightning-slider>
+                                    </lightning-layout-item>
+                                    <lightning-layout-item size="12">
+                                        <lightning-slider style="-webkit-text-fill-color:white;" label="Min Size (m2)" value={minSize} step="0.01" min="0" max="100" onchange={handleSizeChange}></lightning-slider>
+                                    </lightning-layout-item>
+                                    <lightning-layout-item size="12">
+                                        <lightning-layout>
+                                            <lightning-layout-item size="3">
+                                                <lightning-input id="checkbox-wifi" style="-webkit-text-fill-color:white;" type="checkbox" name="wifi" label="Wi-Fi" value={wifi} onchange={handleWifiChange}></lightning-input>
+                                            </lightning-layout-item>
+                                            <lightning-layout-item size="3">
+                                                <lightning-input id="checkbox-parking" style="-webkit-text-fill-color:white;" type="checkbox" name="parking" label="Parking" value={parking} onchange={handleParkingChange}></lightning-input>
+                                            </lightning-layout-item>
+                                            <lightning-layout-item size="3">
+                                                <lightning-input id="checkbox-elevator" style="-webkit-text-fill-color:white;" type="checkbox" name="elevator" label="Elevator" value={elevator} onchange={handleElevatorChange}></lightning-input>
+                                            </lightning-layout-item>
+                                            <lightning-layout-item size="3">
+                                                <lightning-input id="checkbox-kitchen" style="-webkit-text-fill-color:white;" type="checkbox" name="kitchen" label="Kitchen" value={kitchen} onchange={handleKitchenChange}></lightning-input>
+                                            </lightning-layout-item>
+                                        </lightning-layout>
+                                    </lightning-layout-item>
+                                </lightning-layout>
+                            </template>
+                        </lightning-layout>
+                        <div class="slds-var-m-vertical_medium">
+                            <template if:true={showFilter}>
+                                <lightning-button icon-name="utility:filterList" icon-position="right" variant="neutral" label="Hide Filter" onclick={hideFilter} class="search-button filter-button" style="margin-right: 5px;"></lightning-button>
+                            </template>
+                            <template if:false={showFilter}>
+                                <lightning-button icon-name="utility:filterList" icon-position="right" variant="neutral" label="Filter" onclick={displayFilter} class="search-button filter-button" style="margin-right: 5px;"></lightning-button>
+                            </template>
+                            <template if:true={showFilter}>
+                                <lightning-button variant="neutral" label="Clear Filter" onclick={clearFilter} class="search-button filter-button" style="margin-right: 5px;"></lightning-button>
+                            </template>
+                            <template if:true={isLogged}>
+                                <lightning-button variant="neutral" label="Recently Viewed" onclick={showRecentlyViewed} class="search-button filter-button" style="margin-right: 5px;"></lightning-button>
+                            </template>
+                            <!-- <lightning-button icon-name="utility:search" icon-position="right" variant="brand" label="Search" onclick={getProducts} class="search-button"></lightning-button> -->
+                        </div>
+                    </div>               
+                </lightning-layout-item>
+            </template>
+            <template if:true={isLastSeen}>
+                <lightning-layout-item size="12" style="background-color: #000066;">
+                    <div style="margin-left: 30%; width: 40%;">           
+                        <lightning-layout horizontal-align="middle" multiple-rows="true">
+                            <lightning-layout-item size="12">
+                                <lightning-input style="-webkit-text-fill-color:white;" type="text" label="Product Name" value={seenProductName} onchange={handleSeenName}></lightning-input>
+                            </lightning-layout-item>
+                            <lightning-layout-item size="12">
+                                <lightning-input style="-webkit-text-fill-color:white;" type="text" label="Product City" value={seenProductCity} onchange={handleSeenCity}></lightning-input>
+                            </lightning-layout-item>
+                        </lightning-layout>
+                    </div>               
+                </lightning-layout-item>
+            </template>
 
             <!-- spinner -->
             <template if:true={loading}>

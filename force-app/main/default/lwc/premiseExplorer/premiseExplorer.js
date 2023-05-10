@@ -45,6 +45,9 @@ export default class PremiseExplorer extends LightningElement {
 
     @track userId = UserId;
 
+    @track seenProductName;
+    @track seenProductCity;
+
     label = {
         main_url
     };
@@ -332,7 +335,7 @@ export default class PremiseExplorer extends LightningElement {
     }
 
     getLastViewedPremises() {
-        getLastViewed({pageSize: this.pagesize, pageNumber: this.pageNumber})
+        getLastViewed({pageSize: this.pagesize, pageNumber: this.pageNumber, name: this.seenProductName, city: this.seenProductCity})
             .then(result => {
                 if(result) {
                     let data = JSON.parse(result);
@@ -362,5 +365,15 @@ export default class PremiseExplorer extends LightningElement {
 
     backFromRecentlyViewed() {
         this.isLastSeen = false;
+    }
+
+    handleSeenName(event) {
+        this.seenProductName = event.target.value;
+        this.getLastViewedPremises();
+    }
+
+    handleSeenCity(event) {
+        this.seenProductCity = event.target.value;
+        this.getLastViewedPremises();
     }
 }

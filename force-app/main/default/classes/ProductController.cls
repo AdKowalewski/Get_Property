@@ -348,8 +348,10 @@ public without sharing class ProductController {
     }
 
     @AuraEnabled
-    public static String getUserRecentlyViewedProducts2(Integer pageSize, Integer pageNumber) {
+    public static String getUserRecentlyViewedProducts2(Integer pageSize, Integer pageNumber, String name, String city) {
         String jsonStr = '';
+        name = String.isBlank(name) ? '%' : '%' + name + '%';
+        city = String.isBlank(city) ? '%' : '%' + city + '%';
         List<Product2> premises = [
             SELECT Id, Name
             FROM Product2
@@ -381,7 +383,7 @@ public without sharing class ProductController {
         wrapper.products = [
             SELECT Id, Name, Product_Address__City__s, Default_Image__c, DisplayUrl, (SELECT UnitPrice FROM PricebookEntries WHERE Pricebook2Id = '01s7S000002VqAzQAK'), Size__c, Agent__c
             FROM Product2
-            WHERE Id IN :ids
+            WHERE Id IN :ids AND (Name LIKE :name OR Product_Address__City__s LIKE :city)
             LIMIT :pageSize
             OFFSET :offset
         ];
