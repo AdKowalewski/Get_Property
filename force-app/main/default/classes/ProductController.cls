@@ -383,7 +383,7 @@ public without sharing class ProductController {
         wrapper.products = [
             SELECT Id, Name, Product_Address__City__s, Default_Image__c, DisplayUrl, (SELECT UnitPrice FROM PricebookEntries WHERE Pricebook2Id = '01s7S000002VqAzQAK'), Size__c, Agent__c
             FROM Product2
-            WHERE Id IN :ids AND (Name LIKE :name OR Product_Address__City__s LIKE :city)
+            WHERE Id IN :ids AND (Name LIKE :name AND Product_Address__City__s LIKE :city)
             LIMIT :pageSize
             OFFSET :offset
         ];
