@@ -11,14 +11,24 @@
                 <table class="slds-table slds-table_cell-buffer slds-table_bordered" style="margin-left: 1%; margin-right: 1%; width: 98%; margin-bottom: 1%;">
                     <thead>
                         <tr>
-                            <th><b>Image</b></th>
-                            <th><b>Name</b></th>
-                            <th><b>Price</b></th>
-                            <th><b>Discount</b></th>
-                            <th><b>Discount Type</b></th>
+                            <th><b>Premise</b></th>
+                            <th><b>Address</b></th>
+                            <th><b>From</b></th>
+                            <th><b>To</b></th>
+                            <th><b>With</b></th>
                             <th><b>Actions</b></th>
                         </tr>
                     </thead>
+                    <tbody>
+                        <template for:each={userEvents} for:item="e">
+                            <tr key={e.id} data-delete-id={e.id}>
+                                <td>{e.whatName}</td>
+                                <td>{e.location}</td>
+                                <td>{e.startsStr}</td>
+                                <td>{e.endsStr}</td>
+                            </tr>
+                        </template>
+                    </tbody>
                 </table>
             </template>
         </lightning-layout-item>
