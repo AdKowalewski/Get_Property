@@ -37,6 +37,8 @@ public without sharing class ProductController {
     private class EventWrapper {
         public String id { get; set; }
         public String agentId { get; set; }
+        public String agentName { get; set; }
+        public String agentEmail { get; set; }
         public String whatId { get; set; }
         public String whatName { get; set; }
         public String whoId { get; set; }
@@ -128,6 +130,9 @@ public without sharing class ProductController {
             EventWrapper wrapper = new EventWrapper();
             wrapper.id = e.Id;
             wrapper.agentId = e.OwnerId;
+            User agent = [SELECT FirstName, LastName, Email FROM User WHERE Id = :e.OwnerId];
+            wrapper.agentName = agent.FirstName + ' ' + agent.LastName;
+            wrapper.agentEmail = agent.Email;
             wrapper.whatId = e.WhatId;
             Product2 prod = [SELECT Id, Name FROM Product2 WHERE Id = :e.WhatId];
             wrapper.whatName = prod.Name;
