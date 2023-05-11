@@ -121,8 +121,6 @@ export default class ProductDetails extends LightningElement {
                             let data = JSON.parse(result);
                             this.productEvents = data.events;
                             this.availableHours = data.hours;
-                            console.log('meetings: ' + JSON.stringify(this.productEvents));
-                            console.log('available hours: ' + JSON.stringify(this.availableHours));
                             for(let j = 0; j < this.hours.length; j++) {
                                 this.hours[j].class = 'hourContainer2';
                             }
@@ -195,8 +193,6 @@ export default class ProductDetails extends LightningElement {
                     let data = JSON.parse(result);
                     this.productEvents = data.events;
                     this.availableHours = data.hours;
-                    console.log('meetings: ' + JSON.stringify(this.productEvents));
-                    console.log('available hours: ' + JSON.stringify(this.availableHours));
                     for(let j = 0; j < this.hours.length; j++) {
                         this.hours[j].class = 'hourContainer2';
                     }
@@ -234,8 +230,6 @@ export default class ProductDetails extends LightningElement {
                     let data = JSON.parse(result);
                     this.productEvents = data.events;
                     this.availableHours = data.hours;
-                    console.log('meetings: ' + JSON.stringify(this.productEvents));
-                    console.log('available hours: ' + JSON.stringify(this.availableHours));
                     for(let j = 0; j < this.hours.length; j++) {
                         this.hours[j].class = 'hourContainer2';
                     }
@@ -279,8 +273,6 @@ export default class ProductDetails extends LightningElement {
                                         let data = JSON.parse(result);
                                         this.productEvents = data.events;
                                         this.availableHours = data.hours;
-                                        console.log('meetings: ' + JSON.stringify(this.productEvents));
-                                        console.log('available hours: ' + JSON.stringify(this.availableHours));
                                         for(let j = 0; j < this.hours.length; j++) {
                                             this.hours[j].class = 'hourContainer2';
                                         }
@@ -330,8 +322,6 @@ export default class ProductDetails extends LightningElement {
                                 let data = JSON.parse(result);
                                 this.productEvents = data.events;
                                 this.availableHours = data.hours;
-                                console.log('meetings: ' + JSON.stringify(this.productEvents));
-                                console.log('available hours: ' + JSON.stringify(this.availableHours));
                                 for(let j = 0; j < this.hours.length; j++) {
                                     this.hours[j].class = 'hourContainer2';
                                 }
