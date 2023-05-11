@@ -42,6 +42,7 @@ export default class PremiseExplorer extends LightningElement {
 
     @track isDetail = false;
     @track isLastSeen = false;
+    @track isMyMeetings = false;
 
     @track userId = UserId;
 
@@ -331,6 +332,7 @@ export default class PremiseExplorer extends LightningElement {
 
     handleGoHome() {
         this.isDetail = false;
+        this.isMyMeetings = false;
         this.getLastViewedPremises();
     }
 
@@ -365,6 +367,7 @@ export default class PremiseExplorer extends LightningElement {
 
     backFromRecentlyViewed() {
         this.isLastSeen = false;
+        this.isMyMeetings = false;
     }
 
     handleSeenName(event) {
@@ -375,5 +378,11 @@ export default class PremiseExplorer extends LightningElement {
     handleSeenCity(event) {
         this.seenProductCity = event.target.value;
         this.getLastViewedPremises();
+    }
+
+    viewMyMeetings() {
+        this.isMyMeetings = true;
+        this.isDetail = false;
+        this.isLastSeen = false;
     }
 }
