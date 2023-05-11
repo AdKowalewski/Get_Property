@@ -114,6 +114,36 @@ public without sharing class ProductController {
     }
 
     @AuraEnabled
+    public static String getAllUserEvents(String whoId) {
+        String jsonStr = '';
+        User contact = [SELECT Id, ContactId FROM User WHERE Id = :whoId];
+        List<Event> events = [
+            SELECT Id, OwnerId, WhatId, WhoId, Subject, StartDateTime, EndDateTime, Location
+            FROM Event
+            WHERE WhoId = :contact.ContactId
+        ];
+        List<EventWrapper> wrappers = new List<EventWrapper>();
+        for(Event e : events) {
+            Wrapper wrapper = new EventWrapper();
+            wrapper.id = e.Id;
+            wrapper.agentId = e.OwnerId;
+            wrapper.whatId = e.WhatId;
+            wrapper.whoId = e.WhoId;
+            wrapper.subject = e.Subject;
+            wrapper.starts = e.StartDateTime;
+            wrapper.ends = e.EndDateTime;
+            String stringStart = String.valueOfGmt(e.StartDateTime);
+            wrapper.startsStr = stringStart.substring(0, 10) + ' ' + stringStart.substring(11, 16);
+            String stringEnd = String.valueOfGmt(e.EndDateTime);
+            wrapper.endsStr = stringEnd.substring(0, 10) + ' ' + stringEnd.substring(11, 16);
+            wrapper.location = e.Location;
+            wrappers.add(wrapper);
+        }      
+        jsonStr = JSON.serialize(wrappers);
+        return jsonStr;
+    }
+
+    @AuraEnabled
     public static String getProductEventsForGivenDay(String whatId, Datetime start) {
         String jsonStr = '';
         Date day = start.date();
