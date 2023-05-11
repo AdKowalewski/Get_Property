@@ -38,6 +38,7 @@ public without sharing class ProductController {
         public String id { get; set; }
         public String agentId { get; set; }
         public String whatId { get; set; }
+        public String whatName { get; set; }
         public String whoId { get; set; }
         public String subject { get; set; }
         public Datetime starts { get; set; }
@@ -124,10 +125,12 @@ public without sharing class ProductController {
         ];
         List<EventWrapper> wrappers = new List<EventWrapper>();
         for(Event e : events) {
-            Wrapper wrapper = new EventWrapper();
+            EventWrapper wrapper = new EventWrapper();
             wrapper.id = e.Id;
             wrapper.agentId = e.OwnerId;
             wrapper.whatId = e.WhatId;
+            Product2 prod = [SELECT Id, Name FROM Product2 WHERE Id = :e.WhatId];
+            wrapper.whatName = prod.Name;
             wrapper.whoId = e.WhoId;
             wrapper.subject = e.Subject;
             wrapper.starts = e.StartDateTime;
