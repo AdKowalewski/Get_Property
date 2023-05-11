@@ -16,6 +16,7 @@
                             <th><b>From</b></th>
                             <th><b>To</b></th>
                             <th><b>With</b></th>
+                            <th><b>Email</b></th>
                             <th><b>Actions</b></th>
                         </tr>
                     </thead>
@@ -26,6 +27,23 @@
                                 <td>{e.location}</td>
                                 <td>{e.startsStr}</td>
                                 <td>{e.endsStr}</td>
+                                <td>{e.agentName}</td>
+                                <td>{e.agentEmail}</td>
+                                <td data-delete-id={e.id}>
+                                    <lightning-button-menu
+                                        alternative-text="Show Menu"
+                                        variant="border-filled"
+                                        icon-size="xx-medium"
+                                        data-delete-id={e.id}
+                                        onselect={handleSelect}
+                                    >
+                                        <lightning-menu-item
+                                            value="Delete"
+                                            label="Delete"
+                                            data-delete-id={e.id}
+                                        ></lightning-menu-item>
+                                    </lightning-button-menu>
+                                </td>
                             </tr>
                         </template>
                     </tbody>
@@ -33,4 +51,30 @@
             </template>
         </lightning-layout-item>
     </lightning-layout>
+
+    <template if:true={displayModal}>
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    <lightning-button-icon icon-name="utility:close"
+                        onclick={hideModal}
+                        variant="bare-inverse"
+                        class="slds-modal__close"></lightning-button-icon>
+                    <h2 id="modal-heading-04" class="slds-text-heading_medium slds-hyphenate">Cancel Meeting</h2>
+                </header>
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-4">
+                    <h2>Are you sure you want to cancel this meeting?</h2>
+                </div>
+                <footer class="slds-modal__footer">
+                    <lightning-button variant="brand"
+                        label="Delete"
+                        onclick={handleDelete}></lightning-button>
+                    <lightning-button variant="neutral"
+                        label="Cancel"
+                        onclick={hideModal}></lightning-button>
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
 </template>

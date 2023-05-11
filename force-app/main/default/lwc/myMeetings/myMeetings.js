@@ -54,4 +54,12 @@ export default class MyMeetings extends LightningElement {
                 );
             })
     }
+
+    handleSelect(event) {
+        let selectedVal = event.detail.value;
+        if(selectedVal === 'Delete') {
+            this.displayModal = true;
+            this.idToDelete = event.target.dataset.productId;
+        }
+    }
 }
