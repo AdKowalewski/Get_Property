@@ -1,0 +1,26 @@
+<template>
+    <lightning-layout multiple-rows="true">
+        <lightning-layout-item size="12">
+            <div class="slds-text-title" style="font-size: 20px; padding: 10px; margin-left: 41%;">My Meetings</div>
+        </lightning-layout-item>
+        <lightning-layout-item size="12">
+            <template if:false={areMeetings}>
+                <h2 style="margin-left: 1%; margin-bottom: 1%;">You have no any meetings yet</h2>
+            </template>
+            <template if:true={areMeetings}>
+                <table class="slds-table slds-table_cell-buffer slds-table_bordered" style="margin-left: 1%; margin-right: 1%; width: 98%; margin-bottom: 1%;">
+                    <thead>
+                        <tr>
+                            <th><b>Image</b></th>
+                            <th><b>Name</b></th>
+                            <th><b>Price</b></th>
+                            <th><b>Discount</b></th>
+                            <th><b>Discount Type</b></th>
+                            <th><b>Actions</b></th>
+                        </tr>
+                    </thead>
+                </table>
+            </template>
+        </lightning-layout-item>
+    </lightning-layout>
+</template>
