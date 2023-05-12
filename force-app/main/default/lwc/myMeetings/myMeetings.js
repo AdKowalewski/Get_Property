@@ -24,7 +24,7 @@ export default class MyMeetings extends LightningElement {
     connectedCallback() {
         userEvents({whoId: this.userId})
             .then(result => {
-                this.myEvent = JSON.parse(result);
+                this.userEvents = JSON.parse(result);
             })
     }
 
@@ -43,7 +43,7 @@ export default class MyMeetings extends LightningElement {
                 this.displayModal = false;
                 userEvents({whoId: this.userId})
                     .then(result => {
-                        this.myEvent = JSON.parse(result);
+                        this.userEvents = JSON.parse(result);
                     })
                 this.dispatchEvent(
                     new ShowToastEvent({
