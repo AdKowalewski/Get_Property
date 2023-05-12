@@ -7,50 +7,55 @@
             <div class="slds-text-title" style="font-size: 20px; padding: 10px; margin-left: 45%;">My Meetings</div>
         </lightning-layout-item>
         <lightning-layout-item size="12">
-            <template if:false={areMeetings}>
-                <h2 style="margin-left: 1%; margin-bottom: 1%;">You have no any meetings yet</h2>
+            <template if:false={isLoggedIn}>
+                <h2 style="margin-left: 1%; margin-bottom: 1%;">You must log in to manage your meetings</h2>
             </template>
-            <template if:true={areMeetings}>
-                <table class="slds-table slds-table_cell-buffer slds-table_bordered" style="margin-left: 1%; margin-right: 1%; width: 98%; margin-bottom: 1%;">
-                    <thead>
-                        <tr>
-                            <th><b>Premise</b></th>
-                            <th><b>Address</b></th>
-                            <th><b>From</b></th>
-                            <th><b>To</b></th>
-                            <th><b>With</b></th>
-                            <th><b>Email</b></th>
-                            <th><b>Actions</b></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <template for:each={userEvents} for:item="e">
-                            <tr key={e.id} data-delete-id={e.id}>
-                                <td>{e.whatName}</td>
-                                <td>{e.location}</td>
-                                <td>{e.startsStr}</td>
-                                <td>{e.endsStr}</td>
-                                <td>{e.agentName}</td>
-                                <td>{e.agentEmail}</td>
-                                <td data-delete-id={e.id}>
-                                    <lightning-button-menu
-                                        alternative-text="Show Menu"
-                                        variant="border-filled"
-                                        icon-size="xx-medium"
-                                        data-delete-id={e.id}
-                                        onselect={handleSelect}
-                                    >
-                                        <lightning-menu-item
-                                            value="Delete"
-                                            label="Delete"
-                                            data-delete-id={e.id}
-                                        ></lightning-menu-item>
-                                    </lightning-button-menu>
-                                </td>
+            <template if:true={isLoggedIn}>
+                <template if:false={areMeetings}>
+                    <h2 style="margin-left: 1%; margin-bottom: 1%;">You have no any meetings yet</h2>
+                </template>
+                <template if:true={areMeetings}>
+                    <table class="slds-table slds-table_cell-buffer slds-table_bordered" style="margin-left: 1%; margin-right: 1%; width: 98%; margin-bottom: 1%;">
+                        <thead>
+                            <tr>
+                                <th><b>Premise</b></th>
+                                <th><b>Address</b></th>
+                                <th><b>From</b></th>
+                                <th><b>To</b></th>
+                                <th><b>With</b></th>
+                                <th><b>Email</b></th>
+                                <th><b>Actions</b></th>
                             </tr>
-                        </template>
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            <template for:each={userEvents} for:item="e">
+                                <tr key={e.id} data-delete-id={e.id}>
+                                    <td>{e.whatName}</td>
+                                    <td>{e.location}</td>
+                                    <td>{e.startsStr}</td>
+                                    <td>{e.endsStr}</td>
+                                    <td>{e.agentName}</td>
+                                    <td>{e.agentEmail}</td>
+                                    <td data-delete-id={e.id}>
+                                        <lightning-button-menu
+                                            alternative-text="Show Menu"
+                                            variant="border-filled"
+                                            icon-size="xx-medium"
+                                            data-delete-id={e.id}
+                                            onselect={handleSelect}
+                                        >
+                                            <lightning-menu-item
+                                                value="Delete"
+                                                label="Delete"
+                                                data-delete-id={e.id}
+                                            ></lightning-menu-item>
+                                        </lightning-button-menu>
+                                    </td>
+                                </tr>
+                            </template>
+                        </tbody>
+                    </table>
+                </template>
             </template>
         </lightning-layout-item>
     </lightning-layout>

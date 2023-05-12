@@ -21,6 +21,16 @@ export default class MyMeetings extends LightningElement {
         return flag;
     }
 
+    get isLoggedIn() {
+        let flag = false;
+        if(this.userId != null) {
+            flag = true;
+        } else {
+            flag = false;
+        }
+        return flag;
+    }
+
     connectedCallback() {
         userEvents({whoId: this.userId})
             .then(result => {
@@ -37,8 +47,7 @@ export default class MyMeetings extends LightningElement {
         this.displayModal = true;
     }
 
-    handleDelete(event) {
-        this.idToDelete = event.target.dataset.deleteId;
+    handleDelete() {
         eventDelete({id: this.idToDelete})
             .then(result => {
                 this.displayModal = false;
