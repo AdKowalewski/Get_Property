@@ -62,4 +62,10 @@ export default class MyMeetings extends LightningElement {
             this.idToDelete = event.target.dataset.productId;
         }
     }
+
+    backFromMyMeetings() {
+        this.dispatchEvent(
+            new CustomEvent('goback')
+        );
+    }
 }
