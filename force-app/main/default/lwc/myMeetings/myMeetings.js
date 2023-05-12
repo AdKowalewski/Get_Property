@@ -38,7 +38,7 @@ export default class MyMeetings extends LightningElement {
     }
 
     handleDelete(event) {
-        this.idToDelete = event.target.dataset.productId;
+        this.idToDelete = event.target.dataset.deleteId;
         eventDelete({id: this.idToDelete})
             .then(result => {
                 this.displayModal = false;
@@ -60,7 +60,8 @@ export default class MyMeetings extends LightningElement {
         let selectedVal = event.detail.value;
         if(selectedVal === 'Delete') {
             this.displayModal = true;
-            this.idToDelete = event.target.dataset.productId;
+            this.idToDelete = event.target.dataset.deleteId;
+            console.log('id to delete: ' + this.idToDelete);
         }
     }
 
