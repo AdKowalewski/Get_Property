@@ -38,6 +38,7 @@ export default class MyMeetings extends LightningElement {
     }
 
     handleDelete(event) {
+        this.idToDelete = event.target.dataset.productId;
         eventDelete({id: this.idToDelete})
             .then(result => {
                 this.displayModal = false;
