@@ -32,6 +32,7 @@ public without sharing class ProductController {
         public String agentId { get; set; }
         public String agentName { get; set; }
         public String agentEmail { get; set; }
+        public String isReserved { get; set; }
     }
 
     private class EventWrapper {
@@ -60,7 +61,7 @@ public without sharing class ProductController {
     public static String getProductById(String id) {
         String jsonStr = '';
         Product2 product = [
-            SELECT Id, Name, Product_Address__City__s, Product_Address__PostalCode__s, Product_Address__Street__s, Price__c, Size__c, DisplayUrl, Wi_Fi__c, Parking__c, Elevator__c, Kitchen__c, Agent__c
+            SELECT Id, Name, Product_Address__City__s, Product_Address__PostalCode__s, Product_Address__Street__s, Price__c, Size__c, DisplayUrl, Wi_Fi__c, Parking__c, Elevator__c, Kitchen__c, Agent__c, IsReserved__c
             FROM Product2
             WHERE Id = :id
         ];
@@ -81,6 +82,12 @@ public without sharing class ProductController {
         User agent = [SELECT Id, Name, SenderEmail FROM User WHERE Id = :product.Agent__c];
         wrapper.agentName = agent.Name;
         wrapper.agentEmail = agent.SenderEmail;
+        List<Reservation__c> res = [SELECT Id FROM Reservation__c WHERE WhatId__c = :id LIMIT 1];
+        if(res.size() != 0) {
+            wrapper.isReserved = 'Premise is reserved';
+        } else if(res.size() == 0) {
+            wrapper.isReserved = 'false';
+        }
 
         jsonStr = JSON.serialize(wrapper);
         return jsonStr;
@@ -300,7 +307,7 @@ public without sharing class ProductController {
         wrapper.recordEnd = totalRecords >= recordEnd ? recordEnd : totalRecords;
         wrapper.totalRecords = totalRecords;
         wrapper.products = [
-            SELECT Id, Name, Product_Address__City__s, Default_Image__c, DisplayUrl, (SELECT UnitPrice FROM PricebookEntries WHERE Pricebook2Id = '01s7S000002VqAzQAK'), Size__c, Agent__c
+            SELECT Id, Name, Product_Address__City__s, Default_Image__c, DisplayUrl, (SELECT UnitPrice FROM PricebookEntries WHERE Pricebook2Id = '01s7S000002VqAzQAK'), Size__c, Agent__c, IsReserved__c
             FROM Product2
             WHERE RecordType.Name = 'Business Premises' AND ((Name LIKE :name AND Product_Address__City__s LIKE :city AND Price__c <= :price) OR (Wi_Fi__c = :wifi AND Parking__c = :parking AND Elevator__c = :elevator AND Kitchen__c = :kitchen))
             LIMIT :pageSize
@@ -419,7 +426,7 @@ public without sharing class ProductController {
         wrapper.recordEnd = totalRecords >= recordEnd ? recordEnd : totalRecords;
         wrapper.totalRecords = totalRecords;
         wrapper.products = [
-            SELECT Id, Name, Product_Address__City__s, Default_Image__c, DisplayUrl, (SELECT UnitPrice FROM PricebookEntries WHERE Pricebook2Id = '01s7S000002VqAzQAK'), Size__c, Agent__c
+            SELECT Id, Name, Product_Address__City__s, Default_Image__c, DisplayUrl, (SELECT UnitPrice FROM PricebookEntries WHERE Pricebook2Id = '01s7S000002VqAzQAK'), Size__c, Agent__c, IsReserved__c
             FROM Product2
             WHERE Id IN :ids AND (Name LIKE :name AND Product_Address__City__s LIKE :city)
             LIMIT :pageSize
