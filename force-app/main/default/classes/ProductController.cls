@@ -35,6 +35,7 @@ public without sharing class ProductController {
         public String isReserved { get; set; }
         public Decimal reservationDays { get; set; }
         public Double reservationPrice { get; set; }
+        public String reservationUser { get; set; }
     }
 
     private class EventWrapper {
@@ -84,11 +85,12 @@ public without sharing class ProductController {
         User agent = [SELECT Id, Name, SenderEmail FROM User WHERE Id = :product.Agent__c];
         wrapper.agentName = agent.Name;
         wrapper.agentEmail = agent.SenderEmail;
-        List<Reservation__c> res = [SELECT Id, No_Days__c, Price__c FROM Reservation__c WHERE WhatId__c = :id LIMIT 1];
+        List<Reservation__c> res = [SELECT Id, No_Days__c, Price__c, WhoId__c FROM Reservation__c WHERE WhatId__c = :id LIMIT 1];
         if(res.size() != 0) {
             wrapper.isReserved = 'Premise is reserved';
             wrapper.reservationDays = res[0].No_Days__c;
             wrapper.reservationPrice = res[0].Price__c;
+            wrapper.reservationUser = res[0].WhoId__c;
         } else if(res.size() == 0) {
             wrapper.isReserved = 'false';
         }
