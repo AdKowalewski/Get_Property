@@ -440,6 +440,58 @@ public without sharing class ProductController {
         return jsonStr;
     }
 
+    @AuraEnabled
+    public static void createReservation(String whatId, String whoId, String agentId, Decimal noDays, Double price) {
+        Integer nDays = (Integer) noDays;
+        Product2 prod = [SELECT Id, Name FROM Product2 WHERE Id = :whatId];
+        prod.IsReserved__c = 'Premise is reserved';
+        update prod;
+
+        Reservation__c res = new Reservation__c();
+        res.WhatId__c = whatId;
+        res.WhoId__c = whoId;
+        res.AgentId__c = agentId;
+        res.No_Days__c = noDays;
+        res.Price__c = price;
+        insert res;
+
+        Opportunity opp = new Opportunity();
+        opp.Name = whatId;
+        opp.RecordTypeId = '0127S000000xEZoQAM';
+        date dt = date.today();
+        opp.CloseDate = dt.addDays(nDays);
+        opp.StageName = 'Qualified';
+        insert opp;
+    }
+
+    @AuraEnabled
+    public static void winOpportunity(String whatId, String whoId) {
+        Opportunity opp = [
+            SELECT Id, Name, StageName
+            FROM Opportunity
+            WHERE Name = :whatId
+            ORDER BY CreatedDate DESC
+            LIMIT 1
+        ];
+        opp.StageName = 'Closed Won';
+        update opp;
+
+        Account acc = new Account();
+        User user = [SELECT Id, ContactId FROM User WHERE Id = :whoId];
+        Contact con = [SELECT Id, Name FROM Contact WHERE Id = :user.ContactId];
+        acc.Name = con.Name;
+        insert acc;
+
+        Contract ctr = new Contract();
+        ctr.AccountId = acc.Id;
+        ctr.Status = 'Activated';
+        ctr.StartDate = System.today();
+        ctr.ContractTerm = 24;
+        Product2 prod = [SELECT Id, Name FROM Product2 WHERE Id = :whatId];
+        ctr.Description = 'Premise: ' + whatId + ' ' + prod.Name;
+        insert ctr;
+    }
+
     // @AuraEnabled
     // public static void addLastSeenItem(String userId, String productId) {
     //     UserProduct__c uprod = new UserProduct__c();
