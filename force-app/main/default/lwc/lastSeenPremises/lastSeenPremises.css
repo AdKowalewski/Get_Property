@@ -5,3 +5,7 @@
 .container:hover {
     background-color: #f2f2f2;
 }
+
+lightning-input {
+    --slds-c-input-color-background: #000066 !important;
+}
