@@ -101,8 +101,10 @@ public without sharing class ProductController {
         //     wrapper.isReserved = false;
         // }
         wrapper.isReserved = product.IsReservation__c;
+        System.debug(product.IsReservation__c);
 
         jsonStr = JSON.serialize(wrapper);
+        System.debug(jsonStr);
         return jsonStr;
     }
 
