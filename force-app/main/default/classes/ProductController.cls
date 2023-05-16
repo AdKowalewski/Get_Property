@@ -89,17 +89,18 @@ public without sharing class ProductController {
         User agent = [SELECT Id, Name, SenderEmail FROM User WHERE Id = :product.Agent__c];
         wrapper.agentName = agent.Name;
         wrapper.agentEmail = agent.SenderEmail;
-        date dt = date.today();
-        List<Reservation__c> res = [
-            SELECT Id, No_Days__c, Price__c, WhoId__c, Start_Date__c, End_Date__c 
-            FROM Reservation__c 
-            WHERE WhatId__c = :id AND Start_Date__c <= :dt AND End_Date__c >= :dt
-        ];
-        if(res.size() != 0) {
-            wrapper.isReserved = true;
-        } else {
-            wrapper.isReserved = false;
-        }
+        // date dt = date.today();
+        // List<Reservation__c> res = [
+        //     SELECT Id, No_Days__c, Price__c, WhoId__c, Start_Date__c, End_Date__c 
+        //     FROM Reservation__c 
+        //     WHERE WhatId__c = :id AND Start_Date__c <= :dt AND End_Date__c >= :dt
+        // ];
+        // if(res.size() != 0) {
+        //     wrapper.isReserved = true;
+        // } else {
+        //     wrapper.isReserved = false;
+        // }
+        wrapper.isReserved = product.IsReservation__c;
 
         jsonStr = JSON.serialize(wrapper);
         return jsonStr;
