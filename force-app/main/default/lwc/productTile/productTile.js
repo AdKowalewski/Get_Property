@@ -15,6 +15,16 @@ export default class ProductTile extends LightningElement {
         return 'background-image:url('+ this.product.DisplayUrl +')';
     }
 
+    get isRes() {
+        let flag = false;
+        if(this.product.IsReservation__c == true) {
+            flag = true
+        } else {
+            flag = false;
+        }
+        return flag;
+    }
+
     connectedCallback() {
         this.productPrice = this.product.PricebookEntries.records[0].UnitPrice;
     }
