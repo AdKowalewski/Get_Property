@@ -509,31 +509,39 @@ public without sharing class ProductController {
     }
 
     @AuraEnabled
-    public static void winOpportunity(String whatId, String whoId) {
-        Opportunity opp = [
-            SELECT Id, Name, StageName
-            FROM Opportunity
-            WHERE Name = :whatId
-            ORDER BY CreatedDate DESC
-            LIMIT 1
-        ];
-        opp.StageName = 'Closed Won';
-        update opp;
+    public static String winOpportunity(String whatId, String whoId) {
+        String jsonStr = '';
+        try {
+            Opportunity opp = [
+                SELECT Id, Name, StageName
+                FROM Opportunity
+                WHERE Name = :whatId
+                ORDER BY CreatedDate DESC
+                LIMIT 1
+            ];
+            opp.StageName = 'Closed Won';
+            update opp;
 
-        Account acc = new Account();
-        User user = [SELECT Id, ContactId FROM User WHERE Id = :whoId];
-        Contact con = [SELECT Id, Name FROM Contact WHERE Id = :user.ContactId];
-        acc.Name = con.Name;
-        insert acc;
+            Account acc = new Account();
+            User user = [SELECT Id, ContactId FROM User WHERE Id = :whoId];
+            Contact con = [SELECT Id, Name FROM Contact WHERE Id = :user.ContactId];
+            acc.Name = con.Name;
+            insert acc;
 
-        Contract ctr = new Contract();
-        ctr.AccountId = acc.Id;
-        ctr.Status = 'Activated';
-        ctr.StartDate = System.today();
-        ctr.ContractTerm = 24;
-        Product2 prod = [SELECT Id, Name FROM Product2 WHERE Id = :whatId];
-        ctr.Description = 'Premise: ' + whatId + ' ' + prod.Name;
-        insert ctr;
+            Contract ctr = new Contract();
+            ctr.AccountId = acc.Id;
+            ctr.Status = 'Activated';
+            ctr.StartDate = System.today();
+            ctr.ContractTerm = 24;
+            Product2 prod = [SELECT Id, Name FROM Product2 WHERE Id = :whatId];
+            ctr.Description = 'Premise: ' + whatId + ' ' + prod.Name;
+            insert ctr;
+
+            return jsonStr;
+        } catch(Exception e) {
+            jsonStr = e.getMessage();
+            return jsonStr;
+        }
     }
 
     // @AuraEnabled
