@@ -31,6 +31,7 @@ public without sharing class FileController {
         public String agentId { get; set; }
         public String agentName { get; set; }
         public String agentEmail { get; set; }
+        public Boolean isReserved { get; set; }
     }
 
     private class ContentWrapper {
@@ -178,7 +179,7 @@ public without sharing class FileController {
     public static String getProductById(String id) {
         String jsonStr = '';
         Product2 product = [
-            SELECT Id, Name, Product_Address__City__s, Product_Address__PostalCode__s, Product_Address__Street__s, Price__c, Size__c, DisplayUrl, Wi_Fi__c, Parking__c, Elevator__c, Kitchen__c, Agent__c
+            SELECT Id, Name, Product_Address__City__s, Product_Address__PostalCode__s, Product_Address__Street__s, Price__c, Size__c, DisplayUrl, Wi_Fi__c, Parking__c, Elevator__c, Kitchen__c, Agent__c, IsReservation__c
             FROM Product2
             WHERE Id = :id
         ];
@@ -199,6 +200,7 @@ public without sharing class FileController {
         User agent = [SELECT Id, FirstName, LastName, Email FROM User WHERE Id = :product.Agent__c];
         wrapper.agentName = agent.FirstName + ' ' + agent.LastName;
         wrapper.agentEmail = agent.Email;
+        wrapper.isReserved = product.IsReservation__c;
 
         jsonStr = JSON.serialize(wrapper);
         return jsonStr;

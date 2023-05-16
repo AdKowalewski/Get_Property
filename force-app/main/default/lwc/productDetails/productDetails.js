@@ -99,8 +99,7 @@ export default class ProductDetails extends LightningElement {
         getProduct({id: this.productId})
             .then(result => {
                 this.product = JSON.parse(result);
-                console.log('is reserved: ' + this.product.isReserved);
-                console.log('is reserved: ' + this.product.kitchen);
+                console.log('result: ' + JSON.stringify(JSON.parse(result)));
                 if(this.product.wifi == true) {
                     this.product.wifi = 'yes';
                 } else {
@@ -128,6 +127,7 @@ export default class ProductDetails extends LightningElement {
                 userReservation({whoId: this.userId, whatId: this.product.id})
                     .then(result => {
                         this.myRes = JSON.parse(result);
+                        this.newprice = this.product.price - this.myRes.price;
                     })
                 productEvents({whatId: this.product.id, start: this.meetingDate})
                     .then(result => {
@@ -435,6 +435,7 @@ export default class ProductDetails extends LightningElement {
                         userReservation({whoId: this.userId, whatId: this.product.id})
                             .then(result => {
                                 this.myRes = JSON.parse(result);
+                                this.newprice = this.product.price - this.myRes.price;
                             })
                         productEvents({whatId: this.product.id, start: this.meetingDate})
                             .then(result => {
@@ -456,6 +457,7 @@ export default class ProductDetails extends LightningElement {
                                 }            
                             })
                     })
+                this.showResModal = false;
                 this.dispatchEvent(
                     new ShowToastEvent({
                         title: 'Success',
