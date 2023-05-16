@@ -471,6 +471,7 @@ export default class ProductDetails extends LightningElement {
     winOpp() {
         opportunityWin({whatId: this.product.id, whoId: this.userId})
             .then(result => {
+                console.log('win result: ' + JSON.stringify(result));
                 this.dispatchEvent(
                     new ShowToastEvent({
                         title: 'Success',
