@@ -530,7 +530,7 @@ public without sharing class ProductController {
 
             Contract ctr = new Contract();
             ctr.AccountId = acc.Id;
-            ctr.Status = 'Activated';
+            ctr.Status = 'Draft';
             ctr.StartDate = System.today();
             ctr.ContractTerm = 24;
             Product2 prod = [SELECT Id, Name FROM Product2 WHERE Id = :whatId];
