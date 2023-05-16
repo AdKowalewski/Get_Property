@@ -99,6 +99,7 @@ export default class ProductDetails extends LightningElement {
         getProduct({id: this.productId})
             .then(result => {
                 this.product = JSON.parse(result);
+                console.log('is reserved: ' + this.product.isReserved);
                 if(this.product.wifi == true) {
                     this.product.wifi = 'yes';
                 } else {
