@@ -9,10 +9,6 @@ public without sharing class ProductController {
         public List<Product2> products { get; set; }
     }
 
-    // private class LastSeenItemsWrapper {
-    //     public List<UserProduct__c> uprods { get; set; }
-    // }
-
     private class RecentlyViewedWrapper {
         public String id { get; set; }
         public String name { get; set; }
@@ -32,10 +28,7 @@ public without sharing class ProductController {
         public String agentId { get; set; }
         public String agentName { get; set; }
         public String agentEmail { get; set; }
-        public String isReserved { get; set; }
-        public Decimal reservationDays { get; set; }
-        public Double reservationPrice { get; set; }
-        public String reservationUser { get; set; }
+        public Boolean isReserved { get; set; }
     }
 
     private class EventWrapper {
@@ -60,11 +53,22 @@ public without sharing class ProductController {
         public List<String> hours { get; set; }
     }
 
+    private class ReservationWrapper {
+        public String id { get; set; }
+        public Date startDate { get; set; }
+        public Date endDate { get; set; }
+        public Decimal noDays { get; set; }
+        public Double price { get; set; }
+        public String whoId { get; set; }
+        public String whatId { get; set; }
+        public String agentId { get; set; }
+    }
+
     @AuraEnabled
     public static String getProductById(String id) {
         String jsonStr = '';
         Product2 product = [
-            SELECT Id, Name, Product_Address__City__s, Product_Address__PostalCode__s, Product_Address__Street__s, Price__c, Size__c, DisplayUrl, Wi_Fi__c, Parking__c, Elevator__c, Kitchen__c, Agent__c, IsReserved__c
+            SELECT Id, Name, Product_Address__City__s, Product_Address__PostalCode__s, Product_Address__Street__s, Price__c, Size__c, DisplayUrl, Wi_Fi__c, Parking__c, Elevator__c, Kitchen__c, Agent__c, IsReservation__c
             FROM Product2
             WHERE Id = :id
         ];
@@ -85,17 +89,45 @@ public without sharing class ProductController {
         User agent = [SELECT Id, Name, SenderEmail FROM User WHERE Id = :product.Agent__c];
         wrapper.agentName = agent.Name;
         wrapper.agentEmail = agent.SenderEmail;
-        List<Reservation__c> res = [SELECT Id, No_Days__c, Price__c, WhoId__c FROM Reservation__c WHERE WhatId__c = :id LIMIT 1];
+        date dt = date.today();
+        List<Reservation__c> res = [
+            SELECT Id, No_Days__c, Price__c, WhoId__c, Start_Date__c, End_Date__c 
+            FROM Reservation__c 
+            WHERE WhatId__c = :id AND Start_Date__c <= :dt AND End_Date__c >= :dt
+        ];
         if(res.size() != 0) {
-            wrapper.isReserved = 'Premise is reserved';
-            wrapper.reservationDays = res[0].No_Days__c;
-            wrapper.reservationPrice = res[0].Price__c;
-            wrapper.reservationUser = res[0].WhoId__c;
-        } else if(res.size() == 0) {
-            wrapper.isReserved = 'false';
+            wrapper.isReserved = true;
+        } else {
+            wrapper.isReserved = false;
         }
 
         jsonStr = JSON.serialize(wrapper);
+        return jsonStr;
+    }
+
+    @AuraEnabled
+    public static String getUserReservations(String whoId, String whatId) {
+        String jsonStr = '';
+        User contact = [SELECT Id, ContactId FROM User WHERE Id = :whoId];
+        List<Reservation__c> res = [
+            SELECT Id, Start_Date__c, End_Date__c, No_Days__c, WhatId__c, WhoId__c, AgentId__c, Price__c
+            FROM Reservation__c
+            WHERE WhoId__c = :contact.ContactId AND WhatId__c = :whatId
+            LIMIT 1
+        ];
+        if(res.size() > 0) {
+            Reservation__c r = res.get(0);
+            ReservationWrapper wrapper = new ReservationWrapper();
+            wrapper.id = r.Id;
+            wrapper.startDate = r.Start_Date__c;
+            wrapper.endDate = r.End_Date__c;
+            wrapper.noDays = r.No_Days__c;
+            wrapper.price = r.Price__c;
+            wrapper.whatId = r.WhatId__c;
+            wrapper.whoId = r.WhoId__c;
+            wrapper.agentId = r.AgentId__c;
+            jsonStr = JSON.serialize(wrapper);
+        }
         return jsonStr;
     }
 
@@ -313,7 +345,7 @@ public without sharing class ProductController {
         wrapper.recordEnd = totalRecords >= recordEnd ? recordEnd : totalRecords;
         wrapper.totalRecords = totalRecords;
         wrapper.products = [
-            SELECT Id, Name, Product_Address__City__s, Default_Image__c, DisplayUrl, (SELECT UnitPrice FROM PricebookEntries WHERE Pricebook2Id = '01s7S000002VqAzQAK'), Size__c, Agent__c, IsReserved__c
+            SELECT Id, Name, Product_Address__City__s, Default_Image__c, DisplayUrl, (SELECT UnitPrice FROM PricebookEntries WHERE Pricebook2Id = '01s7S000002VqAzQAK'), Size__c, Agent__c, IsReservation__c
             FROM Product2
             WHERE RecordType.Name = 'Business Premises' AND ((Name LIKE :name AND Product_Address__City__s LIKE :city AND Price__c <= :price) OR (Wi_Fi__c = :wifi AND Parking__c = :parking AND Elevator__c = :elevator AND Kitchen__c = :kitchen))
             LIMIT :pageSize
@@ -432,7 +464,7 @@ public without sharing class ProductController {
         wrapper.recordEnd = totalRecords >= recordEnd ? recordEnd : totalRecords;
         wrapper.totalRecords = totalRecords;
         wrapper.products = [
-            SELECT Id, Name, Product_Address__City__s, Default_Image__c, DisplayUrl, (SELECT UnitPrice FROM PricebookEntries WHERE Pricebook2Id = '01s7S000002VqAzQAK'), Size__c, Agent__c, IsReserved__c
+            SELECT Id, Name, Product_Address__City__s, Default_Image__c, DisplayUrl, (SELECT UnitPrice FROM PricebookEntries WHERE Pricebook2Id = '01s7S000002VqAzQAK'), Size__c, Agent__c, IsReservation__c
             FROM Product2
             WHERE Id IN :ids AND (Name LIKE :name AND Product_Address__City__s LIKE :city)
             LIMIT :pageSize
@@ -443,27 +475,34 @@ public without sharing class ProductController {
     }
 
     @AuraEnabled
-    public static void createReservation(String whatId, String whoId, String agentId, Decimal noDays, Double price) {
+    public static void createReservation(String whatId, String whoId, String agentId, Decimal noDays) {
         Integer nDays = (Integer) noDays;
-        Product2 prod = [SELECT Id, Name FROM Product2 WHERE Id = :whatId];
-        prod.IsReserved__c = 'Premise is reserved';
-        update prod;
-
-        Reservation__c res = new Reservation__c();
-        res.WhatId__c = whatId;
-        res.WhoId__c = whoId;
-        res.AgentId__c = agentId;
-        res.No_Days__c = noDays;
-        res.Price__c = price;
-        insert res;
-
-        Opportunity opp = new Opportunity();
-        opp.Name = whatId;
-        opp.RecordTypeId = '0127S000000xEZoQAM';
         date dt = date.today();
-        opp.CloseDate = dt.addDays(nDays);
-        opp.StageName = 'Qualified';
-        insert opp;
+        date dt2 = dt.addDays(nDays);
+        Product2 prod = [SELECT Id, Name FROM Product2 WHERE Id = :whatId];
+        List<Event> events = [SELECT Id FROM Event WHERE WhatId = :whatId];
+        if(events.size() == 0) {
+            prod.IsReservation__c = true;
+            update prod;
+
+            Reservation__c res = new Reservation__c();
+            res.WhatId__c = whatId;
+            User contact = [SELECT Id, ContactId FROM USER Where Id = :whoId];
+            res.WhoId__c = contact.ContactId;
+            res.AgentId__c = agentId;
+            res.No_Days__c = noDays;
+            res.Price__c = noDays * 100;
+            res.Start_Date__c = dt;
+            res.End_Date__c = dt2;
+            insert res;
+
+            Opportunity opp = new Opportunity();
+            opp.Name = whatId;
+            opp.RecordTypeId = '0127S000000xEZoQAM';         
+            opp.CloseDate = dt2;
+            opp.StageName = 'Qualified';
+            insert opp;
+        }    
     }
 
     @AuraEnabled
