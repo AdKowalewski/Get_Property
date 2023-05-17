@@ -243,9 +243,9 @@
 
                                                     </lightning-layout>
                                                 </lightning-layout-item>
-                                                <lightning-layout-item class="slds-size_12-of-12" style="margin-top: 20px; margin-bottom: 20px; align-items: center;">
+                                                <!-- <lightning-layout-item class="slds-size_12-of-12" style="margin-top: 20px; margin-bottom: 20px; align-items: center;">
                                                     <lightning-button variant="neutral" label="Buy Premise" onclick={winOpp}></lightning-button>
-                                                </lightning-layout-item>
+                                                </lightning-layout-item> -->
                                             </lightning-layout>
                                         </template>
                                     </template>
@@ -510,7 +510,7 @@
                                         <lightning-layout-item class="slds-size_12-of-12">
                                             <form class="slds-form_stacked">
                                                 <lightning-slider label="Period (in days)" value={resPeriod} step="1" min="1" max="14" onchange={handlePeriodChange}></lightning-slider>
-                                                <span style="font-size: 14px;">Current reservation price: {resPrice}</span>
+                                                <span style="font-size: 14px;">Current reservation price: {resPrice} EUR</span>
                                             </form>
                                         </lightning-layout-item>
                                     </lightning-layout>
