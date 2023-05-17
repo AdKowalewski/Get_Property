@@ -531,38 +531,45 @@ public without sharing class ProductController {
     }
 
     @AuraEnabled
-    public static void createQuote(String whatId, String whoId) {
-        date dt = date.today();
-        date dt2 = dt.addDays(7);
-        Contact con = [SELECT Id, Name, Email FROM Contact WHERE Id = :whoId];
-        Product2 prod = [SELECT Id, Name, Price__c FROM Product2 WHERE Id = :whatId];
-        List<Opportunity> opps = [SELECT Id FROM Opportunity WHERE ProductId__c = :whatId];
-        List<Quote> qts = [SELECT Id FROM Quote WHERE ProductId__c = :whatId];
+    public static String createQuote(String whatId, String whoId) {
+        String jsonStr = '';
+        try{
+            date dt = date.today();
+            date dt2 = dt.addDays(7);
+            Contact con = [SELECT Id, Name, Email FROM Contact WHERE Id = :whoId];
+            Product2 prod = [SELECT Id, Name, Price__c FROM Product2 WHERE Id = :whatId];
+            List<Opportunity> opps = [SELECT Id FROM Opportunity WHERE ProductId__c = :whatId];
+            List<Quote> qts = [SELECT Id FROM Quote WHERE ProductId__c = :whatId];
 
-        if(opps.size() == 0) {
-            Opportunity opp = new Opportunity();
-            opp.Name = con.Name + ' - ' + prod.Name;
-            opp.RecordTypeId = '0127S000000xEZoQAM';         
-            opp.CloseDate = dt2;
-            opp.StageName = 'Qualified';
-            opp.ProductId__c = whatId;
-            insert opp;
+            if(opps.size() == 0) {
+                Opportunity opp = new Opportunity();
+                opp.Name = con.Name + ' - ' + prod.Name;
+                opp.RecordTypeId = '0127S000000xEZoQAM';         
+                opp.CloseDate = dt2;
+                opp.StageName = 'Qualified';
+                opp.ProductId__c = whatId;
+                insert opp;
 
-            if(qts.size() == 0) {
-                Quote qt = new Quote();
-                qt.ProductId__c = whatId;
-                qt.ContactId = whoId;
-                qt.Email = con.Email;
-                qt.OpportunityId = opp.Id;
-                insert qt;
-    
-                QuoteLineItem qli = new QuoteLineItem();
-                qli.Product2Id = whatId;
-                qli.Quantity = 1;
-                qli.QuoteId = qt.Id;
-                qli.UnitPrice = prod.Price__c;
-                insert qli;
+                if(qts.size() == 0) {
+                    Quote qt = new Quote();
+                    qt.ProductId__c = whatId;
+                    qt.ContactId = whoId;
+                    qt.Email = con.Email;
+                    qt.OpportunityId = opp.Id;
+                    insert qt;
+        
+                    QuoteLineItem qli = new QuoteLineItem();
+                    qli.Product2Id = whatId;
+                    qli.Quantity = 1;
+                    qli.QuoteId = qt.Id;
+                    qli.UnitPrice = prod.Price__c;
+                    insert qli;
+                }
             }
+            return jsonStr;
+        } catch (Exception e) {
+            jsonStr = e.getMessage();
+            return jsonStr;
         }
     }
 
