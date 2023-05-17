@@ -482,13 +482,13 @@ public without sharing class ProductController {
         Integer nDays = (Integer) noDays;
         date dt = date.today();
         date dt2 = dt.addDays(nDays);
-        Contact con = [SELECT Id, Name, Email FROM Contact WHERE Id = :whoId];
-        Product2 prod = [SELECT Id, Name, Price__c FROM Product2 WHERE Id = :whatId];
+        List<Contact> con = [SELECT Id, Name, Email FROM Contact WHERE Id = :whoId];
+        List<Product2> prod = [SELECT Id, Name, Price__c FROM Product2 WHERE Id = :whatId];
         List<Event> events = [SELECT Id FROM Event WHERE WhatId = :whatId];
         List<Opportunity> opps = [SELECT Id FROM Opportunity WHERE ProductId__c = :whatId];
         List<Quote> qts = [SELECT Id FROM Quote WHERE ProductId__c = :whatId];
         if(events.size() == 0) {
-            prod.IsReservation__c = true;
+            prod[0].IsReservation__c = true;
             update prod;
 
             Reservation__c res = new Reservation__c();
@@ -504,7 +504,7 @@ public without sharing class ProductController {
 
             if(opps.size() == 0) {
                 Opportunity opp = new Opportunity();
-                opp.Name = con.Name + ' - ' + prod.Name;
+                opp.Name = con[0].Name + ' - ' + prod[0].Name;
                 opp.RecordTypeId = '0127S000000xEZoQAM';         
                 opp.CloseDate = dt2;
                 opp.StageName = 'Qualified';
@@ -515,7 +515,7 @@ public without sharing class ProductController {
                     Quote qt = new Quote();
                     qt.ProductId__c = whatId;
                     qt.ContactId = whoId;
-                    qt.Email = con.Email;
+                    qt.Email = con[0].Email;
                     qt.OpportunityId = opp.Id;
                     insert qt;
     
@@ -523,7 +523,7 @@ public without sharing class ProductController {
                     qli.Product2Id = whatId;
                     qli.Quantity = 1;
                     qli.QuoteId = qt.Id;
-                    qli.UnitPrice = prod.Price__c;
+                    qli.UnitPrice = prod[0].Price__c;
                     insert qli;
                 }
             }
@@ -536,14 +536,14 @@ public without sharing class ProductController {
         try{
             date dt = date.today();
             date dt2 = dt.addDays(7);
-            Contact con = [SELECT Id, Name, Email FROM Contact WHERE Id = :whoId];
-            Product2 prod = [SELECT Id, Name, Price__c FROM Product2 WHERE Id = :whatId];
+            List<Contact> con = [SELECT Id, Name, Email FROM Contact WHERE Id = :whoId];
+            List<Product2> prod = [SELECT Id, Name, Price__c FROM Product2 WHERE Id = :whatId];
             List<Opportunity> opps = [SELECT Id FROM Opportunity WHERE ProductId__c = :whatId];
             List<Quote> qts = [SELECT Id FROM Quote WHERE ProductId__c = :whatId];
 
             if(opps.size() == 0) {
                 Opportunity opp = new Opportunity();
-                opp.Name = con.Name + ' - ' + prod.Name;
+                opp.Name = con[0].Name + ' - ' + prod[0].Name;
                 opp.RecordTypeId = '0127S000000xEZoQAM';         
                 opp.CloseDate = dt2;
                 opp.StageName = 'Qualified';
@@ -554,7 +554,7 @@ public without sharing class ProductController {
                     Quote qt = new Quote();
                     qt.ProductId__c = whatId;
                     qt.ContactId = whoId;
-                    qt.Email = con.Email;
+                    qt.Email = con[0].Email;
                     qt.OpportunityId = opp.Id;
                     insert qt;
         
@@ -562,7 +562,7 @@ public without sharing class ProductController {
                     qli.Product2Id = whatId;
                     qli.Quantity = 1;
                     qli.QuoteId = qt.Id;
-                    qli.UnitPrice = prod.Price__c;
+                    qli.UnitPrice = prod[0].Price__c;
                     insert qli;
                 }
             }
