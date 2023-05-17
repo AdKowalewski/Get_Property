@@ -482,8 +482,11 @@ public without sharing class ProductController {
         Integer nDays = (Integer) noDays;
         date dt = date.today();
         date dt2 = dt.addDays(nDays);
-        Product2 prod = [SELECT Id, Name FROM Product2 WHERE Id = :whatId];
+        Contact con = [SELECT Id, Name, Email FROM Contact WHERE Id = :whoId];
+        Product2 prod = [SELECT Id, Name, Price__c FROM Product2 WHERE Id = :whatId];
         List<Event> events = [SELECT Id FROM Event WHERE WhatId = :whatId];
+        List<Opportunity> opps = [SELECT Id FROM Opportunity WHERE ProductId__c = :whatId];
+        List<Quote> qts = [SELECT Id FROM Quote WHERE ProductId__c = :whatId];
         if(events.size() == 0) {
             prod.IsReservation__c = true;
             update prod;
@@ -499,50 +502,105 @@ public without sharing class ProductController {
             res.End_Date__c = dt2;
             insert res;
 
+            if(opps.size() == 0) {
+                Opportunity opp = new Opportunity();
+                opp.Name = whatId;
+                opp.RecordTypeId = '0127S000000xEZoQAM';         
+                opp.CloseDate = dt2;
+                opp.StageName = 'Qualified';
+                opp.ProductId__c = whatId;
+                insert opp;
+
+                if(qts.size() == 0) {
+                    Quote qt = new Quote();
+                    qt.ProductId__c = whatId;
+                    qt.ContactId = whoId;
+                    qt.Email = con.Email;
+                    qt.OpportunityId = opp.Id;
+                    insert qt;
+    
+                    QuoteLineItem qli = new QuoteLineItem();
+                    qli.Product2Id = whatId;
+                    qli.Quantity = 1;
+                    qli.QuoteId = qt.Id;
+                    qli.UnitPrice = prod.Price__c;
+                    insert qli;
+                }
+            }
+        }    
+    }
+
+    @AuraEnabled
+    public static void createQuote(String whatId, String whoId) {
+        date dt = date.today();
+        date dt2 = dt.addDays(7);
+        Contact con = [SELECT Id, Name, Email FROM Contact WHERE Id = :whoId];
+        Product2 prod = [SELECT Id, Name, Price__c FROM Product2 WHERE Id = :whatId];
+        List<Opportunity> opps = [SELECT Id FROM Opportunity WHERE ProductId__c = :whatId];
+        List<Quote> qts = [SELECT Id FROM Quote WHERE ProductId__c = :whatId];
+
+        if(opps.size() == 0) {
             Opportunity opp = new Opportunity();
             opp.Name = whatId;
             opp.RecordTypeId = '0127S000000xEZoQAM';         
             opp.CloseDate = dt2;
             opp.StageName = 'Qualified';
+            opp.ProductId__c = whatId;
             insert opp;
-        }    
-    }
 
-    @AuraEnabled
-    public static String winOpportunity(String whatId, String whoId) {
-        String jsonStr = '';
-        try {
-            Opportunity opp = [
-                SELECT Id, Name, StageName
-                FROM Opportunity
-                WHERE Name = :whatId
-                ORDER BY CreatedDate DESC
-                LIMIT 1
-            ];
-            opp.StageName = 'Closed Won';
-            update opp;
-
-            Account acc = new Account();
-            User user = [SELECT Id, ContactId FROM User WHERE Id = :whoId];
-            Contact con = [SELECT Id, Name FROM Contact WHERE Id = :user.ContactId];
-            acc.Name = con.Name;
-            insert acc;
-
-            Contract ctr = new Contract();
-            ctr.AccountId = acc.Id;
-            ctr.Status = 'Draft';
-            ctr.StartDate = System.today();
-            ctr.ContractTerm = 24;
-            Product2 prod = [SELECT Id, Name FROM Product2 WHERE Id = :whatId];
-            ctr.Description = 'Premise: ' + whatId + ' ' + prod.Name;
-            insert ctr;
-
-            return jsonStr;
-        } catch(Exception e) {
-            jsonStr = e.getMessage();
-            return jsonStr;
+            if(qts.size() == 0) {
+                Quote qt = new Quote();
+                qt.ProductId__c = whatId;
+                qt.ContactId = whoId;
+                qt.Email = con.Email;
+                qt.OpportunityId = opp.Id;
+                insert qt;
+    
+                QuoteLineItem qli = new QuoteLineItem();
+                qli.Product2Id = whatId;
+                qli.Quantity = 1;
+                qli.QuoteId = qt.Id;
+                qli.UnitPrice = prod.Price__c;
+                insert qli;
+            }
         }
     }
+
+    // @AuraEnabled
+    // public static String winOpportunity(String whatId, String whoId) {
+    //     String jsonStr = '';
+    //     try {
+    //         Opportunity opp = [
+    //             SELECT Id, Name, StageName
+    //             FROM Opportunity
+    //             WHERE Name = :whatId
+    //             ORDER BY CreatedDate DESC
+    //             LIMIT 1
+    //         ];
+    //         opp.StageName = 'Closed Won';
+    //         update opp;
+
+    //         Account acc = new Account();
+    //         User user = [SELECT Id, ContactId FROM User WHERE Id = :whoId];
+    //         Contact con = [SELECT Id, Name FROM Contact WHERE Id = :user.ContactId];
+    //         acc.Name = con.Name;
+    //         insert acc;
+
+    //         Contract ctr = new Contract();
+    //         ctr.AccountId = acc.Id;
+    //         ctr.Status = 'Draft';
+    //         ctr.StartDate = System.today();
+    //         ctr.ContractTerm = 24;
+    //         Product2 prod = [SELECT Id, Name FROM Product2 WHERE Id = :whatId];
+    //         ctr.Description = 'Premise: ' + whatId + ' ' + prod.Name;
+    //         insert ctr;
+
+    //         return jsonStr;
+    //     } catch(Exception e) {
+    //         jsonStr = e.getMessage();
+    //         return jsonStr;
+    //     }
+    // }
 
     // @AuraEnabled
     // public static void addLastSeenItem(String userId, String productId) {
