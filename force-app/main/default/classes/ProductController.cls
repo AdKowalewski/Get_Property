@@ -504,7 +504,7 @@ public without sharing class ProductController {
 
             if(opps.size() == 0) {
                 Opportunity opp = new Opportunity();
-                opp.Name = whatId;
+                opp.Name = con.Name + ' - ' + prod.Name;
                 opp.RecordTypeId = '0127S000000xEZoQAM';         
                 opp.CloseDate = dt2;
                 opp.StageName = 'Qualified';
@@ -541,7 +541,7 @@ public without sharing class ProductController {
 
         if(opps.size() == 0) {
             Opportunity opp = new Opportunity();
-            opp.Name = whatId;
+            opp.Name = con.Name + ' - ' + prod.Name;
             opp.RecordTypeId = '0127S000000xEZoQAM';         
             opp.CloseDate = dt2;
             opp.StageName = 'Qualified';
