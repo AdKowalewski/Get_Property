@@ -478,56 +478,63 @@ public without sharing class ProductController {
     }
 
     @AuraEnabled
-    public static void createReservation(String whatId, String whoId, String agentId, Decimal noDays) {
-        Integer nDays = (Integer) noDays;
-        date dt = date.today();
-        date dt2 = dt.addDays(nDays);
-        List<Contact> con = [SELECT Id, Name, Email FROM Contact WHERE Id = :whoId];
-        List<Product2> prod = [SELECT Id, Name, Price__c FROM Product2 WHERE Id = :whatId];
-        List<Event> events = [SELECT Id FROM Event WHERE WhatId = :whatId];
-        List<Opportunity> opps = [SELECT Id FROM Opportunity WHERE ProductId__c = :whatId];
-        List<Quote> qts = [SELECT Id FROM Quote WHERE ProductId__c = :whatId];
-        if(events.size() == 0) {
-            prod[0].IsReservation__c = true;
-            update prod;
+    public static String createReservation(String whatId, String whoId, String agentId, Decimal noDays) {
+        String jsonStr = '';
+        try{
+            Integer nDays = (Integer) noDays;
+            date dt = date.today();
+            date dt2 = dt.addDays(nDays);
+            List<Contact> con = [SELECT Id, Name, Email FROM Contact WHERE Id = :whoId];
+            List<Product2> prod = [SELECT Id, Name, Price__c FROM Product2 WHERE Id = :whatId];
+            List<Event> events = [SELECT Id FROM Event WHERE WhatId = :whatId];
+            List<Opportunity> opps = [SELECT Id FROM Opportunity WHERE ProductId__c = :whatId];
+            List<Quote> qts = [SELECT Id FROM Quote WHERE ProductId__c = :whatId];
+            if(events.size() == 0) {
+                prod[0].IsReservation__c = true;
+                update prod;
 
-            Reservation__c res = new Reservation__c();
-            res.WhatId__c = whatId;
-            User contact = [SELECT Id, ContactId FROM USER Where Id = :whoId];
-            res.WhoId__c = contact.ContactId;
-            res.AgentId__c = agentId;
-            res.No_Days__c = noDays;
-            res.Price__c = noDays * 100;
-            res.Start_Date__c = dt;
-            res.End_Date__c = dt2;
-            insert res;
+                Reservation__c res = new Reservation__c();
+                res.WhatId__c = whatId;
+                User contact = [SELECT Id, ContactId FROM USER Where Id = :whoId];
+                res.WhoId__c = contact.ContactId;
+                res.AgentId__c = agentId;
+                res.No_Days__c = noDays;
+                res.Price__c = noDays * 100;
+                res.Start_Date__c = dt;
+                res.End_Date__c = dt2;
+                insert res;
 
-            if(opps.size() == 0) {
-                Opportunity opp = new Opportunity();
-                opp.Name = con[0].Name + ' - ' + prod[0].Name;
-                opp.RecordTypeId = '0127S000000xEZoQAM';         
-                opp.CloseDate = dt2;
-                opp.StageName = 'Qualified';
-                opp.ProductId__c = whatId;
-                insert opp;
+                if(opps.size() == 0) {
+                    Opportunity opp = new Opportunity();
+                    opp.Name = con[0].Name + ' - ' + prod[0].Name;
+                    opp.RecordTypeId = '0127S000000xEZoQAM';         
+                    opp.CloseDate = dt2;
+                    opp.StageName = 'Qualified';
+                    opp.ProductId__c = whatId;
+                    insert opp;
 
-                if(qts.size() == 0) {
-                    Quote qt = new Quote();
-                    qt.ProductId__c = whatId;
-                    qt.ContactId = whoId;
-                    qt.Email = con[0].Email;
-                    qt.OpportunityId = opp.Id;
-                    insert qt;
-    
-                    QuoteLineItem qli = new QuoteLineItem();
-                    qli.Product2Id = whatId;
-                    qli.Quantity = 1;
-                    qli.QuoteId = qt.Id;
-                    qli.UnitPrice = prod[0].Price__c;
-                    insert qli;
+                    if(qts.size() == 0) {
+                        Quote qt = new Quote();
+                        qt.ProductId__c = whatId;
+                        qt.ContactId = whoId;
+                        qt.Email = con[0].Email;
+                        qt.OpportunityId = opp.Id;
+                        insert qt;
+        
+                        QuoteLineItem qli = new QuoteLineItem();
+                        qli.Product2Id = whatId;
+                        qli.Quantity = 1;
+                        qli.QuoteId = qt.Id;
+                        qli.UnitPrice = prod[0].Price__c;
+                        insert qli;
+                    }
                 }
             }
-        }    
+            return jsonStr;  
+        } catch(Exception e) {
+            jsonStr = e.getMessage();
+            return jsonStr;
+        }   
     }
 
     @AuraEnabled
