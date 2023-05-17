@@ -8,7 +8,7 @@ import productEvents from '@salesforce/apex/ProductController.getProductEventsFo
 import eventCreate from '@salesforce/apex/ProductController.createEvent';
 import eventDelete from '@salesforce/apex/ProductController.deleteEvent';
 import reservationCreate from '@salesforce/apex/ProductController.createReservation';
-import opportunityWin from '@salesforce/apex/ProductController.winOpportunity';
+import quoteCreate from '@salesforce/apex/ProductController.createQuote';
 
 export default class ProductDetails extends LightningElement {
 
@@ -468,17 +468,30 @@ export default class ProductDetails extends LightningElement {
             })
     }
 
-    winOpp() {
-        opportunityWin({whatId: this.product.id, whoId: this.userId})
+    quoteCreation() {
+        quoteCreate({whatId: this.product.id, whoId: this.userId})
             .then(result => {
-                console.log('win result: ' + JSON.stringify(result));
                 this.dispatchEvent(
                     new ShowToastEvent({
                         title: 'Success',
-                        message: 'Premise bought successfully',
+                        message: 'Quote generated successfully',
                         variant: 'success'
                     })
                 );
             })
     }
+
+    // winOpp() {
+    //     opportunityWin({whatId: this.product.id, whoId: this.userId})
+    //         .then(result => {
+    //             console.log('win result: ' + JSON.stringify(result));
+    //             this.dispatchEvent(
+    //                 new ShowToastEvent({
+    //                     title: 'Success',
+    //                     message: 'Premise bought successfully',
+    //                     variant: 'success'
+    //                 })
+    //             );
+    //         })
+    // }
 }   
