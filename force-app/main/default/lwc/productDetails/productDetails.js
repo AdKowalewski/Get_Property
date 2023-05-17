@@ -405,6 +405,7 @@ export default class ProductDetails extends LightningElement {
     saveReservation() {
         reservationCreate({whatId: this.product.id, whoId: this.userId, agentId: this.product.agentId, noDays: this.resPeriod})
             .then(result => {
+                console.log('reservation result: ' + JSON.stringify(result));
                 getProduct({id: this.productId})
                     .then(result => {
                         this.product = JSON.parse(result);
