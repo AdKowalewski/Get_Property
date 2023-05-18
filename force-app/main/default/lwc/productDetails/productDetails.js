@@ -27,6 +27,28 @@ import ends from '@salesforce/label/c.ends';
 import in2 from '@salesforce/label/c.in2';
 import with2 from '@salesforce/label/c.with2';
 import Email from '@salesforce/label/c.Email';
+import cancelmeeting from '@salesforce/label/c.cancelmeeting';
+import Address from '@salesforce/label/c.Address';
+import price from '@salesforce/label/c.price';
+import size from '@salesforce/label/c.size';
+import wifi from '@salesforce/label/c.wifi';
+import parking from '@salesforce/label/c.parking';
+import elevator from '@salesforce/label/c.elevator';
+import kitchen from '@salesforce/label/c.kitchen';
+import setmeeting from '@salesforce/label/c.setmeeting';
+import reserve from '@salesforce/label/c.reserve';
+import getquote from '@salesforce/label/c.getquote';
+import RESERVED from '@salesforce/label/c.RESERVED';
+import yourreservation from '@salesforce/label/c.yourreservation';
+import reservedfor from '@salesforce/label/c.reservedfor';
+import reservationprice from '@salesforce/label/c.reservationprice';
+import canbuyfor from '@salesforce/label/c.canbuyfor';
+import mustlogin from '@salesforce/label/c.mustlogin';
+import setnewmeeting from '@salesforce/label/c.setnewmeeting';
+import meetingdate from '@salesforce/label/c.meetingdate';
+import choosehour from '@salesforce/label/c.choosehour';
+import setreservation from '@salesforce/label/c.setreservation';
+import currentreservationprice from '@salesforce/label/c.currentreservationprice';
 
 export default class ProductDetails extends LightningElement {
 
@@ -47,7 +69,29 @@ export default class ProductDetails extends LightningElement {
         ends,
         in2,
         with2,
-        Email
+        Email,
+        cancelmeeting,
+        Address,
+        price,
+        size, 
+        wifi , 
+        parking, 
+        elevator,
+        kitchen,
+        setmeeting,
+        reserve,
+        getquote,
+        RESERVED,
+        yourreservation,
+        reservedfor, 
+        reservationprice, 
+        canbuyfor, 
+        mustlogin, 
+        setnewmeeting, 
+        meetingdate, 
+        choosehour, 
+        setreservation, 
+        currentreservationprice
     }
 
     @track product;

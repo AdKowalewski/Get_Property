@@ -84,7 +84,7 @@
                                                 </lightning-layout>
                                             </lightning-layout-item>
                                             <lightning-layout-item class="slds-size_12-of-12" style="margin-top: 20px; margin-bottom: 20px; align-items: center;">
-                                                <lightning-button variant="neutral" label="Cancel meeting" onclick={handleCancelMeeting}></lightning-button>
+                                                <lightning-button variant="neutral" label={label.cancelmeeting} onclick={handleCancelMeeting}></lightning-button>
                                             </lightning-layout-item>
                                         </lightning-layout>
                                     </template>
@@ -104,7 +104,7 @@
                                                         <lightning-layout-item size="12">
                                                             <lightning-layout>
                                                                 <lightning-layout-item size="6">
-                                                                    <span style="font-size: 14px;">Address</span>
+                                                                    <span style="font-size: 14px;">{label.Address}</span>
                                                                 </lightning-layout-item>
                                                                 <lightning-layout-item size="6">
                                                                     <span style="font-size: 14px; font-weight: 700;">{product.address}</span>
@@ -115,7 +115,7 @@
                                                         <lightning-layout-item size="12">
                                                             <lightning-layout>
                                                                 <lightning-layout-item size="6">
-                                                                    <span style="font-size: 14px;">Price</span>
+                                                                    <span style="font-size: 14px;">{label.price}</span>
                                                                 </lightning-layout-item>
                                                                 <lightning-layout-item size="6">
                                                                     <span style="font-size: 14px; font-weight: 700;">{product.price} EUR</span>
@@ -126,7 +126,7 @@
                                                         <lightning-layout-item size="12">
                                                             <lightning-layout>
                                                                 <lightning-layout-item size="6">
-                                                                    <span style="font-size: 14px;">Size</span>
+                                                                    <span style="font-size: 14px;">{label.size}</span>
                                                                 </lightning-layout-item>
                                                                 <lightning-layout-item size="6">
                                                                     <span style="font-size: 14px; font-weight: 700;">{product.size} m2</span>
@@ -137,7 +137,7 @@
                                                         <lightning-layout-item size="12">
                                                             <lightning-layout>
                                                                 <lightning-layout-item size="6">
-                                                                    <span style="font-size: 14px;">Wifi</span>
+                                                                    <span style="font-size: 14px;">{label.wifi}</span>
                                                                 </lightning-layout-item>
                                                                 <lightning-layout-item size="6">
                                                                     <span style="font-size: 14px; font-weight: 700;">{product.wifi}</span>
@@ -148,7 +148,7 @@
                                                         <lightning-layout-item size="12">
                                                             <lightning-layout>
                                                                 <lightning-layout-item size="6">
-                                                                    <span style="font-size: 14px;">Parking</span>
+                                                                    <span style="font-size: 14px;">{label.parking}</span>
                                                                 </lightning-layout-item>
                                                                 <lightning-layout-item size="6">
                                                                     <span style="font-size: 14px; font-weight: 700;">{product.parking}</span>
@@ -159,7 +159,7 @@
                                                         <lightning-layout-item size="12">
                                                             <lightning-layout>
                                                                 <lightning-layout-item size="6">
-                                                                    <span style="font-size: 14px;">Elevator</span>
+                                                                    <span style="font-size: 14px;">{label.elevator}</span>
                                                                 </lightning-layout-item>
                                                                 <lightning-layout-item size="6">
                                                                     <span style="font-size: 14px; font-weight: 700;">{product.elevator}</span>
@@ -170,7 +170,7 @@
                                                         <lightning-layout-item size="12">
                                                             <lightning-layout>
                                                                 <lightning-layout-item size="6">
-                                                                    <span style="font-size: 14px;">Kitchen</span>
+                                                                    <span style="font-size: 14px;">{label.kitchen}</span>
                                                                 </lightning-layout-item>
                                                                 <lightning-layout-item size="6">
                                                                     <span style="font-size: 14px; font-weight: 700;">{product.kitchen}</span>
@@ -182,16 +182,16 @@
                                                 </lightning-layout-item>
                                                 <template if:false={isRes}>
                                                     <lightning-layout-item class="slds-size_12-of-12" style="margin-top: 20px; margin-bottom: 20px; align-items: center;">
-                                                        <lightning-button variant="neutral" label="Set a meeting" onclick={displayEventModal}></lightning-button>
+                                                        <lightning-button variant="neutral" label={label.setmeeting} onclick={displayEventModal}></lightning-button>
                                                         <template if:false={hasAnyMeetings}>
-                                                            <lightning-button variant="neutral" label="Reserve" onclick={displayResModal}></lightning-button>
-                                                            <lightning-button variant="neutral" label="Get Quote" onclick={quoteCreation}></lightning-button>
+                                                            <lightning-button variant="neutral" label={label.reserve} onclick={displayResModal}></lightning-button>
+                                                            <lightning-button variant="neutral" label={label.getquote} onclick={quoteCreation}></lightning-button>
                                                         </template>
                                                     </lightning-layout-item>
                                                 </template>
                                                 <template if:true={isRes}>
                                                     <lightning-layout-item class="slds-size_12-of-12" style="margin-top: 20px; margin-bottom: 20px; align-items: center;">
-                                                        <span style="font-size: 14px; color: red;">RESERVED</span>
+                                                        <span style="font-size: 14px; color: red;">{label.RESERVED}</span>
                                                     </lightning-layout-item>
                                                 </template>
                                             </lightning-layout>
@@ -201,7 +201,7 @@
                                             <img style="width: 100%; height: 260px; object-fit: cover;" src={product.displayUrl} />
                                             <lightning-layout class="slds-p-around_medium tile slds-grid slds-grid_vertical-align-center slds-wrap">
                                                 <lightning-layout-item class="slds-size_12-of-12">
-                                                    <span class="slds-text-heading_small name">{product.name} - Your Reservation</span>
+                                                    <span class="slds-text-heading_small name">{product.name} - {label.yourreservation}</span>
                                                 </lightning-layout-item> 
                                                 <lightning-layout-item class="slds-size_12-of-12">
                                                     <div style="border-bottom: 1px solid lightgray; margin: 10px; min-width: 90%;"></div>
@@ -212,7 +212,7 @@
                                                         <lightning-layout-item size="12">
                                                             <lightning-layout>
                                                                 <lightning-layout-item size="6">
-                                                                    <span style="font-size: 14px;">You have reserved this premise for:</span>
+                                                                    <span style="font-size: 14px;">{label.reservedfor}</span>
                                                                 </lightning-layout-item>
                                                                 <lightning-layout-item size="6">
                                                                     <span style="font-size: 14px; font-weight: 700;">{myRes.noDays} days</span>
@@ -223,7 +223,7 @@
                                                         <lightning-layout-item size="12">
                                                             <lightning-layout>
                                                                 <lightning-layout-item size="6">
-                                                                    <span style="font-size: 14px;">Reservation Price:</span>
+                                                                    <span style="font-size: 14px;">{label.reservationprice}</span>
                                                                 </lightning-layout-item>
                                                                 <lightning-layout-item size="6">
                                                                     <span style="font-size: 14px; font-weight: 700;">{myRes.price} EUR</span>
@@ -234,7 +234,7 @@
                                                         <lightning-layout-item size="12">
                                                             <lightning-layout>
                                                                 <lightning-layout-item size="6">
-                                                                    <span style="font-size: 14px;">You can buy this premise for:</span>
+                                                                    <span style="font-size: 14px;">{label.canbuyfor}</span>
                                                                 </lightning-layout-item>
                                                                 <lightning-layout-item size="6">
                                                                     <span style="font-size: 14px; font-weight: 700;">{newprice} EUR</span>
@@ -263,7 +263,7 @@
                                                     <lightning-layout-item size="12">
                                                         <lightning-layout>
                                                             <lightning-layout-item size="6">
-                                                                <span style="font-size: 14px;">Address</span>
+                                                                <span style="font-size: 14px;">{label.Address}</span>
                                                             </lightning-layout-item>
                                                             <lightning-layout-item size="6">
                                                                 <span style="font-size: 14px; font-weight: 700;">{product.address}</span>
@@ -274,7 +274,7 @@
                                                     <lightning-layout-item size="12">
                                                         <lightning-layout>
                                                             <lightning-layout-item size="6">
-                                                                <span style="font-size: 14px;">Price</span>
+                                                                <span style="font-size: 14px;">{label.price}</span>
                                                             </lightning-layout-item>
                                                             <lightning-layout-item size="6">
                                                                 <span style="font-size: 14px; font-weight: 700;">{product.price} EUR</span>
@@ -285,7 +285,7 @@
                                                     <lightning-layout-item size="12">
                                                         <lightning-layout>
                                                             <lightning-layout-item size="6">
-                                                                <span style="font-size: 14px;">Size</span>
+                                                                <span style="font-size: 14px;">{label.size}</span>
                                                             </lightning-layout-item>
                                                             <lightning-layout-item size="6">
                                                                 <span style="font-size: 14px; font-weight: 700;">{product.size} m2</span>
@@ -296,7 +296,7 @@
                                                     <lightning-layout-item size="12">
                                                         <lightning-layout>
                                                             <lightning-layout-item size="6">
-                                                                <span style="font-size: 14px;">Wifi</span>
+                                                                <span style="font-size: 14px;">{label.wifi}</span>
                                                             </lightning-layout-item>
                                                             <lightning-layout-item size="6">
                                                                 <span style="font-size: 14px; font-weight: 700;">{product.wifi}</span>
@@ -307,7 +307,7 @@
                                                     <lightning-layout-item size="12">
                                                         <lightning-layout>
                                                             <lightning-layout-item size="6">
-                                                                <span style="font-size: 14px;">Parking</span>
+                                                                <span style="font-size: 14px;">{label.parking}</span>
                                                             </lightning-layout-item>
                                                             <lightning-layout-item size="6">
                                                                 <span style="font-size: 14px; font-weight: 700;">{product.parking}</span>
@@ -318,7 +318,7 @@
                                                     <lightning-layout-item size="12">
                                                         <lightning-layout>
                                                             <lightning-layout-item size="6">
-                                                                <span style="font-size: 14px;">Elevator</span>
+                                                                <span style="font-size: 14px;">{label.elevator}</span>
                                                             </lightning-layout-item>
                                                             <lightning-layout-item size="6">
                                                                 <span style="font-size: 14px; font-weight: 700;">{product.elevator}</span>
@@ -329,7 +329,7 @@
                                                     <lightning-layout-item size="12">
                                                         <lightning-layout>
                                                             <lightning-layout-item size="6">
-                                                                <span style="font-size: 14px;">Kitchen</span>
+                                                                <span style="font-size: 14px;">{label.kitchen}</span>
                                                             </lightning-layout-item>
                                                             <lightning-layout-item size="6">
                                                                 <span style="font-size: 14px; font-weight: 700;">{product.kitchen}</span>
@@ -340,7 +340,7 @@
                                                 </lightning-layout>
                                             </lightning-layout-item>
                                             <lightning-layout-item class="slds-size_12-of-12" style="margin-top: 20px; margin-bottom: 20px; align-items: center;">
-                                                <span style="font-size: 14px;">You must log in to manage meetings and reservations</span>
+                                                <span style="font-size: 14px;">{label.mustlogin}</span>
                                             </lightning-layout-item>
                                         </lightning-layout>
                                 </template>
@@ -375,7 +375,7 @@
                     ></lightning-button-icon>
         
                     <h2 id="id-of-modalheader-h2" class="slds-text-heading_large">
-                        Set a Meeting
+                        {label.setmeeting}
                     </h2>
                 </header>
                 
@@ -390,7 +390,7 @@
                                     <!-- TODO -->
                                     <lightning-layout class="slds-p-around_medium tile slds-grid slds-grid_vertical-align-center slds-wrap">
                                         <lightning-layout-item class="slds-size_12-of-12">
-                                            <span class="slds-text-heading_small name">Set a New Meeting</span>
+                                            <span class="slds-text-heading_small name">{label.setnewmeeting}</span>
                                         </lightning-layout-item>
                                         <lightning-layout-item class="slds-size_12-of-12">
                                             <div style="border-bottom: 1px solid lightgray; margin: 10px; min-width: 90%;"></div>
@@ -401,7 +401,7 @@
                                                 <lightning-layout-item size="12">
                                                     <lightning-layout>
                                                         <lightning-layout-item size="6" style="align-items: left;">
-                                                            <span style="font-size: 14px;">In</span>
+                                                            <span style="font-size: 14px;">{label.in2}</span>
                                                         </lightning-layout-item>
                                                         <lightning-layout-item size="6">
                                                             <span style="font-size: 14px; font-weight: 700;">{product.address}</span>
@@ -412,7 +412,7 @@
                                                 <lightning-layout-item size="12">
                                                     <lightning-layout>
                                                         <lightning-layout-item size="6" style="align-items: left;">
-                                                            <span style="font-size: 14px;">With</span>
+                                                            <span style="font-size: 14px;">{label.with2}</span>
                                                         </lightning-layout-item>
                                                         <lightning-layout-item size="6">
                                                             <span style="font-size: 14px; font-weight: 700;">{product.agentName}</span>
@@ -423,7 +423,7 @@
                                                 <lightning-layout-item size="12">
                                                     <lightning-layout>
                                                         <lightning-layout-item size="6" style="align-items: left;">
-                                                            <span style="font-size: 14px;">Email</span>
+                                                            <span style="font-size: 14px;">{label.Email}</span>
                                                         </lightning-layout-item>
                                                         <lightning-layout-item size="6">
                                                             <span style="font-size: 14px; font-weight: 700;">{product.agentEmail}</span>
@@ -437,14 +437,14 @@
                                             <form class="slds-form_stacked">
                                                 <lightning-input
                                                     type="date" 
-                                                    label="Meeting Date"
+                                                    label={label.meetingdate}
                                                     data-recid="Meeting Date"
                                                     value={meetingDate}
                                                     required="true"
                                                     min={tomorrow}
                                                     onchange={handleMeetingDateChange}
                                                     style="width: 50%; margin-left: 25%;"></lightning-input>
-                                                <span class="slds-text-heading_small name" style="margin-left: 30%; margin-bottom: 3%;">Choose an hour by clicking on it</span>
+                                                <span class="slds-text-heading_small name" style="margin-left: 30%; margin-bottom: 3%;">{label.choosehour}</span>
                                                 <template for:each={hours} for:item="h">
                                                     <div key={h.h} onclick={handleCreateEvent} data-class={h.class} data-hour={h.h} class={h.class}>{h.h}</div>
                                                 </template>
@@ -460,7 +460,7 @@
                 <footer class="slds-modal__footer slds-grid slds-grid_align-spread">
                     <lightning-button
                         variant="brand-outline"
-                        label="Cancel"
+                        label={label.Cancel}
                         onclick={closeEventModal}
                         title="Close"
                         class="slds-var-m-left_x-small"
@@ -491,7 +491,7 @@
                     ></lightning-button-icon>
         
                     <h2 id="id-of-modalheader-h3" class="slds-text-heading_large">
-                        Set a Reservation
+                        {label.setreservation}
                     </h2>
                 </header>
                 
@@ -508,7 +508,7 @@
                                         <lightning-layout-item class="slds-size_12-of-12">
                                             <form class="slds-form_stacked">
                                                 <lightning-slider label="Period (in days)" value={resPeriod} step="1" min="1" max="14" onchange={handlePeriodChange}></lightning-slider>
-                                                <span style="font-size: 14px;">Current reservation price: {resPrice} EUR</span>
+                                                <span style="font-size: 14px;">{label.currentreservationprice} {resPrice} EUR</span>
                                             </form>
                                         </lightning-layout-item>
                                     </lightning-layout>
@@ -521,14 +521,14 @@
                 <footer class="slds-modal__footer slds-grid slds-grid_align-spread">
                     <lightning-button
                         variant="brand"
-                        label="Save"
+                        label={label.Save}
                         onclick={saveReservation}
                         title="Save"
                         class="slds-var-m-left_x-small"
                     ></lightning-button>
                     <lightning-button
                         variant="brand-outline"
-                        label="Cancel"
+                        label={label.Cancel}
                         onclick={closeResModal}
                         title="Close"
                         class="slds-var-m-left_x-small"
