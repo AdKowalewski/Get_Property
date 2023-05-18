@@ -9,6 +9,13 @@
             if(state == "SUCCESS") {
                 $A.get("e.force:closeQuickAction").fire();
                 $A.get("e.force:refreshView").fire();
+                let showToast = $A.get("e.force:showToast");
+                showToast.setParams({
+                    title: 'Success',
+                    message: 'Email was sent successfully',
+                    type: 'success'
+                });
+                showToast.fire();
             } else {
                 let showToast = $A.get("e.force:showToast");
                 showToast.setParams({
