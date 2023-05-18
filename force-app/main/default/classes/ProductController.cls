@@ -484,12 +484,12 @@ public without sharing class ProductController {
             Integer nDays = (Integer) noDays;
             date dt = date.today();
             date dt2 = dt.addDays(nDays);
-            // List<User> us = [SELECT Id, Name, Email, ContactId FROM User WHERE Id = :whoId];
-            // List<Contact> con = [SELECT Id, Name, Email FROM Contact WHERE Id = :us[0].ContactId];
+            List<User> us = [SELECT Id, Name, Email, ContactId FROM User WHERE Id = :whoId];
+            List<Contact> con = [SELECT Id, Name, Email FROM Contact WHERE Id = :us[0].ContactId];
             List<Product2> prod = [SELECT Id, Name, Price__c FROM Product2 WHERE Id = :whatId];
             List<Event> events = [SELECT Id FROM Event WHERE WhatId = :whatId];
-            // List<Opportunity> opps = [SELECT Id FROM Opportunity WHERE ProductId__c = :whatId];
-            // List<Quote> qts = [SELECT Id FROM Quote WHERE ProductId__c = :whatId];
+            List<Opportunity> opps = [SELECT Id FROM Opportunity WHERE ProductId__c = :whatId];
+            List<Quote> qts = [SELECT Id FROM Quote WHERE ProductId__c = :whatId];
             if(events.size() == 0) {
                 prod[0].IsReservation__c = true;
                 update prod;
@@ -506,10 +506,10 @@ public without sharing class ProductController {
                 res.End_Date__c = dt2;
                 insert res;
 
-                // if(opps.size() == 0) {
+                if(opps.size() == 0) {
                     Opportunity opp = new Opportunity();
-                    // opp.Name = con[0].Name + ' - ' + prod[0].Name;
-                    opp.Name = whatId;
+                    opp.Name = con[0].Name + ' - ' + prod[0].Name;
+                    // opp.Name = whatId;
                     opp.RecordTypeId = '0127S000000xEZoQAM';         
                     opp.CloseDate = dt2;
                     opp.StageName = 'Qualified';
@@ -517,22 +517,23 @@ public without sharing class ProductController {
                     opp.OwnerId = agentId;
                     insert opp;
 
-                //     if(qts.size() == 0) {
-                //         Quote qt = new Quote();
-                //         qt.ProductId__c = whatId;
-                //         qt.ContactId = whoId;
-                //         qt.Email = con[0].Email;
-                //         qt.OpportunityId = opp.Id;
-                //         insert qt;
+                    if(qts.size() == 0) {
+                        Quote qt = new Quote();
+                        qt.Name = opp.Name;
+                        qt.ProductId__c = whatId;
+                        qt.ContactId = con[0].Id;
+                        qt.Email = con[0].Email;
+                        qt.OpportunityId = opp.Id;
+                        insert qt;
         
-                //         QuoteLineItem qli = new QuoteLineItem();
-                //         qli.Product2Id = whatId;
-                //         qli.Quantity = 1;
-                //         qli.QuoteId = qt.Id;
-                //         qli.UnitPrice = prod[0].Price__c;
-                //         insert qli;
-                //     }
-                // }
+                        QuoteLineItem qli = new QuoteLineItem();
+                        qli.Product2Id = whatId;
+                        qli.Quantity = 1;
+                        qli.QuoteId = qt.Id;
+                        qli.UnitPrice = prod[0].Price__c;
+                        insert qli;
+                    }
+                }
             }
             return jsonStr;  
         } catch(Exception e) {
@@ -565,8 +566,9 @@ public without sharing class ProductController {
 
                 if(qts.size() == 0) {
                     Quote qt = new Quote();
+                    qt.Name = opp.Name;
                     qt.ProductId__c = whatId;
-                    qt.ContactId = whoId;
+                    qt.ContactId = con[0].Id;
                     qt.Email = con[0].Email;
                     qt.OpportunityId = opp.Id;
                     insert qt;
