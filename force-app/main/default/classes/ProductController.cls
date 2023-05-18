@@ -528,32 +528,32 @@ public without sharing class ProductController {
                         qli.PricebookEntryId = entry[0].Id;
                         insert qli;
 
-                        String quoteUrl = Label.quoteurl1;
-                        quoteUrl += qt.Id;
-                        quoteUrl += Label.quoteurl2;
-                        PageReference pg = new PageReference(quoteUrl);
-                        QuoteDocument quotedoc = new QuoteDocument();
-                        Blob b = pg.getContentAsPDF();
-                        quotedoc.Document = b;
-                        quotedoc.QuoteId = qt.Id;
-                        insert quotedoc;
+                        // String quoteUrl = Label.quoteurl1;
+                        // quoteUrl += qt.Id;
+                        // quoteUrl += Label.quoteurl2;
+                        // PageReference pg = new PageReference(quoteUrl);
+                        // QuoteDocument quotedoc = new QuoteDocument();
+                        // Blob b = pg.getContentAsPDF();
+                        // quotedoc.Document = b;
+                        // quotedoc.QuoteId = qt.Id;
+                        // insert quotedoc;
 
-                        List<Messaging.SingleEmailMessage> mailList =  new List<Messaging.SingleEmailMessage>();
-                        Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
-                        EmailTemplate et = [SELECT Id, Subject, Body FROM EmailTemplate WHERE Id = :Label.EmailTemplateId];
-                        mail.setTemplateId(et.Id);
-                        List<string> toAddress = new List<string>();
-                        toAddress.add(qt.Email);
-                        mail.setToAddresses(toAddress);
-                        mail.setSubject(et.Subject);
-                        mail.setHTMLBody(et.Body);
-                        mail.setSaveAsActivity(false);
-                        mail.setUseSignature(false);
-                        List<String> docid = new List<String>();      
-                        docid.add(quotedoc.Id);
-                        mail.setEntityAttachments(docid);
-                        mailList.add(mail);
-                        Messaging.sendEmail(mailList, true);
+                        // List<Messaging.SingleEmailMessage> mailList =  new List<Messaging.SingleEmailMessage>();
+                        // Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
+                        // EmailTemplate et = [SELECT Id, Subject, Body FROM EmailTemplate WHERE Id = :Label.EmailTemplateId];
+                        // mail.setTemplateId(et.Id);
+                        // List<string> toAddress = new List<string>();
+                        // toAddress.add(qt.Email);
+                        // mail.setToAddresses(toAddress);
+                        // mail.setSubject(et.Subject);
+                        // mail.setHTMLBody(et.Body);
+                        // mail.setSaveAsActivity(false);
+                        // mail.setUseSignature(false);
+                        // List<String> docid = new List<String>();      
+                        // docid.add(quotedoc.Id);
+                        // mail.setEntityAttachments(docid);
+                        // mailList.add(mail);
+                        // Messaging.sendEmail(mailList, true);
                     }
                 }
             }
@@ -614,32 +614,32 @@ public without sharing class ProductController {
                     qli.PricebookEntryId = entry[0].Id;
                     insert qli;
 
-                    String quoteUrl = Label.quoteurl1;
-                    quoteUrl += qt.Id;
-                    quoteUrl += Label.quoteurl2;
-                    PageReference pg = new PageReference(quoteUrl);
-                    QuoteDocument quotedoc = new QuoteDocument();
-                    Blob b = pg.getContentAsPDF();
-                    quotedoc.Document = b;
-                    quotedoc.QuoteId = qt.Id;
-                    insert quotedoc;
+                    // String quoteUrl = Label.quoteurl1;
+                    // quoteUrl += qt.Id;
+                    // quoteUrl += Label.quoteurl2;
+                    // PageReference pg = new PageReference(quoteUrl);
+                    // QuoteDocument quotedoc = new QuoteDocument();
+                    // Blob b = pg.getContentAsPDF();
+                    // quotedoc.Document = b;
+                    // quotedoc.QuoteId = qt.Id;
+                    // insert quotedoc;
 
-                    List<Messaging.SingleEmailMessage> mailList =  new List<Messaging.SingleEmailMessage>();
-                    Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
-                    EmailTemplate et = [SELECT Id, Subject, Body FROM EmailTemplate WHERE Id = :Label.EmailTemplateId];
-                    mail.setTemplateId(et.Id);
-                    List<string> toAddress = new List<string>();
-                    toAddress.add(qt.Email);
-                    mail.setToAddresses(toAddress);
-                    mail.setSubject(et.Subject);
-                    mail.setHTMLBody(et.Body);
-                    mail.setSaveAsActivity(false);
-                    mail.setUseSignature(false);
-                    List<String> docid = new List<String>();      
-                    docid.add(quotedoc.Id);
-                    mail.setEntityAttachments(docid);
-                    mailList.add(mail);
-                    Messaging.sendEmail(mailList, true); 
+                    // List<Messaging.SingleEmailMessage> mailList =  new List<Messaging.SingleEmailMessage>();
+                    // Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
+                    // EmailTemplate et = [SELECT Id, Subject, Body FROM EmailTemplate WHERE Id = :Label.EmailTemplateId];
+                    // mail.setTemplateId(et.Id);
+                    // List<string> toAddress = new List<string>();
+                    // toAddress.add(qt.Email);
+                    // mail.setToAddresses(toAddress);
+                    // mail.setSubject(et.Subject);
+                    // mail.setHTMLBody(et.Body);
+                    // mail.setSaveAsActivity(false);
+                    // mail.setUseSignature(false);
+                    // List<String> docid = new List<String>();      
+                    // docid.add(quotedoc.Id);
+                    // mail.setEntityAttachments(docid);
+                    // mailList.add(mail);
+                    // Messaging.sendEmail(mailList, true); 
                 }
             }
             return jsonStr;
