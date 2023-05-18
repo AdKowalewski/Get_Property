@@ -484,19 +484,21 @@ public without sharing class ProductController {
             Integer nDays = (Integer) noDays;
             date dt = date.today();
             date dt2 = dt.addDays(nDays);
-            List<Contact> con = [SELECT Id, Name, Email FROM Contact WHERE Id = :whoId];
+            // List<User> us = [SELECT Id, Name, Email, ContactId FROM User WHERE Id = :whoId];
+            // List<Contact> con = [SELECT Id, Name, Email FROM Contact WHERE Id = :us[0].ContactId];
             List<Product2> prod = [SELECT Id, Name, Price__c FROM Product2 WHERE Id = :whatId];
             List<Event> events = [SELECT Id FROM Event WHERE WhatId = :whatId];
-            List<Opportunity> opps = [SELECT Id FROM Opportunity WHERE ProductId__c = :whatId];
-            List<Quote> qts = [SELECT Id FROM Quote WHERE ProductId__c = :whatId];
+            // List<Opportunity> opps = [SELECT Id FROM Opportunity WHERE ProductId__c = :whatId];
+            // List<Quote> qts = [SELECT Id FROM Quote WHERE ProductId__c = :whatId];
             if(events.size() == 0) {
                 prod[0].IsReservation__c = true;
                 update prod;
 
                 Reservation__c res = new Reservation__c();
                 res.WhatId__c = whatId;
-                User contact = [SELECT Id, ContactId FROM USER Where Id = :whoId];
-                res.WhoId__c = contact.ContactId;
+                List<User> contact = [SELECT Id, ContactId FROM User WHERE Id = :whoId];
+                res.WhoId__c = contact[0].ContactId;
+                // res.WhoId__c = '0037S00000N3p5KQAR';
                 res.AgentId__c = agentId;
                 res.No_Days__c = noDays;
                 res.Price__c = noDays * 100;
@@ -504,31 +506,33 @@ public without sharing class ProductController {
                 res.End_Date__c = dt2;
                 insert res;
 
-                if(opps.size() == 0) {
+                // if(opps.size() == 0) {
                     Opportunity opp = new Opportunity();
-                    opp.Name = con[0].Name + ' - ' + prod[0].Name;
+                    // opp.Name = con[0].Name + ' - ' + prod[0].Name;
+                    opp.Name = whatId;
                     opp.RecordTypeId = '0127S000000xEZoQAM';         
                     opp.CloseDate = dt2;
                     opp.StageName = 'Qualified';
                     opp.ProductId__c = whatId;
+                    opp.OwnerId = agentId;
                     insert opp;
 
-                    if(qts.size() == 0) {
-                        Quote qt = new Quote();
-                        qt.ProductId__c = whatId;
-                        qt.ContactId = whoId;
-                        qt.Email = con[0].Email;
-                        qt.OpportunityId = opp.Id;
-                        insert qt;
+                //     if(qts.size() == 0) {
+                //         Quote qt = new Quote();
+                //         qt.ProductId__c = whatId;
+                //         qt.ContactId = whoId;
+                //         qt.Email = con[0].Email;
+                //         qt.OpportunityId = opp.Id;
+                //         insert qt;
         
-                        QuoteLineItem qli = new QuoteLineItem();
-                        qli.Product2Id = whatId;
-                        qli.Quantity = 1;
-                        qli.QuoteId = qt.Id;
-                        qli.UnitPrice = prod[0].Price__c;
-                        insert qli;
-                    }
-                }
+                //         QuoteLineItem qli = new QuoteLineItem();
+                //         qli.Product2Id = whatId;
+                //         qli.Quantity = 1;
+                //         qli.QuoteId = qt.Id;
+                //         qli.UnitPrice = prod[0].Price__c;
+                //         insert qli;
+                //     }
+                // }
             }
             return jsonStr;  
         } catch(Exception e) {
@@ -538,12 +542,13 @@ public without sharing class ProductController {
     }
 
     @AuraEnabled
-    public static String createQuote(String whatId, String whoId) {
+    public static String createQuote(String whatId, String whoId, String agentId) {
         String jsonStr = '';
         try{
             date dt = date.today();
             date dt2 = dt.addDays(7);
-            List<Contact> con = [SELECT Id, Name, Email FROM Contact WHERE Id = :whoId];
+            List<User> us = [SELECT Id, Name, Email, ContactId FROM User WHERE Id = :whoId];
+            List<Contact> con = [SELECT Id, Name, Email FROM Contact WHERE Id = :us[0].ContactId];
             List<Product2> prod = [SELECT Id, Name, Price__c FROM Product2 WHERE Id = :whatId];
             List<Opportunity> opps = [SELECT Id FROM Opportunity WHERE ProductId__c = :whatId];
             List<Quote> qts = [SELECT Id FROM Quote WHERE ProductId__c = :whatId];
@@ -555,6 +560,7 @@ public without sharing class ProductController {
                 opp.CloseDate = dt2;
                 opp.StageName = 'Qualified';
                 opp.ProductId__c = whatId;
+                opp.OwnerId = agentId;
                 insert opp;
 
                 if(qts.size() == 0) {
