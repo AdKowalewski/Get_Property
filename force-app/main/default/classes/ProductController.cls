@@ -498,7 +498,6 @@ public without sharing class ProductController {
                 res.WhatId__c = whatId;
                 List<User> contact = [SELECT Id, ContactId FROM User WHERE Id = :whoId];
                 res.WhoId__c = contact[0].ContactId;
-                // res.WhoId__c = '0037S00000N3p5KQAR';
                 res.AgentId__c = agentId;
                 res.No_Days__c = noDays;
                 res.Price__c = noDays * 100;
@@ -509,7 +508,6 @@ public without sharing class ProductController {
                 if(opps.size() == 0) {
                     Opportunity opp = new Opportunity();
                     opp.Name = con[0].Name + ' - ' + prod[0].Name;
-                    // opp.Name = whatId;
                     opp.RecordTypeId = '0127S000000xEZoQAM';         
                     opp.CloseDate = dt2;
                     opp.StageName = 'Qualified';
@@ -524,6 +522,12 @@ public without sharing class ProductController {
                         qt.ContactId = con[0].Id;
                         qt.Email = con[0].Email;
                         qt.OpportunityId = opp.Id;
+                        List<Pricebook2> pb = [
+                            SELECT Id, Name
+                            FROM Pricebook2 
+                            WHERE Name = 'Standard Price Book'
+                        ];
+                        qt.Pricebook2Id = pb[0].Id;
                         insert qt;
         
                         QuoteLineItem qli = new QuoteLineItem();
@@ -531,7 +535,42 @@ public without sharing class ProductController {
                         qli.Quantity = 1;
                         qli.QuoteId = qt.Id;
                         qli.UnitPrice = prod[0].Price__c;
+                        List<PricebookEntry> entry = [
+                            SELECT Id, Product2.Id
+                            FROM PricebookEntry 
+                            WHERE Pricebook2.Name = 'Standard Price Book' AND Product2.Id = :whatId
+                        ];
+                        qli.PricebookEntryId = entry[0].Id;
                         insert qli;
+
+                        String quoteUrl = '/quote/quoteTemplateDataViewer.apexp?id=';
+                        quoteUrl += qt.Id;
+                        quoteUrl += '&headerHeight=190&footerHeight=188&summlid=';
+                        quoteUrl += '0EH7S000000dEFm' ;
+                        quoteUrl += '#toolbar=1&navpanes=0&zoom=90';
+                        PageReference pg = new PageReference(quoteUrl);
+                        QuoteDocument quotedoc = new QuoteDocument();
+                        Blob b = pg.getContentAsPDF();
+                        quotedoc.Document = b;
+                        quotedoc.QuoteId = qt.Id;
+                        insert quotedoc;
+
+                        // List<Messaging.SingleEmailMessage> mailList =  new List<Messaging.SingleEmailMessage>();
+                        // Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
+                        // EmailTemplate et = [SELECT Id, Subject, Body FROM EmailTemplate WHERE Id ='00X7S000000cwFA'];
+                        // mail.setTemplateId(et.Id);
+                        // List<string> toAddress = new List<string>();
+                        // toAddress.add(qt.Email);
+                        // mail.setToAddresses(toAddress);
+                        // mail.setSubject(et.Subject);
+                        // mail.setHTMLBody(et.Body);
+                        // mail.setSaveAsActivity(false);
+                        // mail.setUseSignature(false);
+                        // List<String> docid = new List<String>();      
+                        // docid.add(quotedoc.Id);
+                        // mail.setEntityAttachments(docid);
+                        // mailList.add(mail);
+                        // Messaging.sendEmail(mailList, true);
                     }
                 }
             }
@@ -545,6 +584,7 @@ public without sharing class ProductController {
     @AuraEnabled
     public static String createQuote(String whatId, String whoId, String agentId) {
         String jsonStr = '';
+        String quoteUrl = '';
         try{
             date dt = date.today();
             date dt2 = dt.addDays(7);
@@ -571,6 +611,12 @@ public without sharing class ProductController {
                     qt.ContactId = con[0].Id;
                     qt.Email = con[0].Email;
                     qt.OpportunityId = opp.Id;
+                    List<Pricebook2> pb = [
+                        SELECT Id, Name
+                        FROM Pricebook2 
+                        WHERE Name = 'Standard Price Book'
+                    ];
+                    qt.Pricebook2Id = pb[0].Id;
                     insert qt;
         
                     QuoteLineItem qli = new QuoteLineItem();
@@ -578,9 +624,46 @@ public without sharing class ProductController {
                     qli.Quantity = 1;
                     qli.QuoteId = qt.Id;
                     qli.UnitPrice = prod[0].Price__c;
+                    List<PricebookEntry> entry = [
+                        SELECT Id, Product2.Id
+                        FROM PricebookEntry 
+                        WHERE Pricebook2.Name = 'Standard Price Book' AND Product2.Id = :whatId
+                    ];
+                    qli.PricebookEntryId = entry[0].Id;
                     insert qli;
+
+                    quoteUrl += 'https://britenet-10a-dev-ed.develop.lightning.force.com/quote/quoteTemplateDataViewer.apexp?id=';
+                    quoteUrl += qt.Id;
+                    quoteUrl += '&headerHeight=190&footerHeight=188&summlid=';
+                    quoteUrl += '0EH7S000000dEFm' ;
+                    quoteUrl += '#toolbar=1&navpanes=0&zoom=90';
+                    // PageReference pg = new PageReference(quoteUrl);
+                    // QuoteDocument quotedoc = new QuoteDocument();
+                    // Blob b = pg.getContent();
+                    // Blob b = pg.getContentAsPDF();
+                    // quotedoc.Document = b;
+                    // quotedoc.QuoteId = qt.Id;
+                    // insert quotedoc;
+
+                    // List<Messaging.SingleEmailMessage> mailList =  new List<Messaging.SingleEmailMessage>();
+                    // Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
+                    // EmailTemplate et = [SELECT Id, Subject, Body FROM EmailTemplate WHERE Id ='00X7S000000cwFA'];
+                    // mail.setTemplateId(et.Id);
+                    // List<string> toAddress = new List<string>();
+                    // toAddress.add(qt.Email);
+                    // mail.setToAddresses(toAddress);
+                    // mail.setSubject(et.Subject);
+                    // mail.setHTMLBody(et.Body);
+                    // mail.setSaveAsActivity(false);
+                    // mail.setUseSignature(false);
+                    // List<String> docid = new List<String>();      
+                    // docid.add(quotedoc.Id);
+                    // mail.setEntityAttachments(docid);
+                    // mailList.add(mail);
+                    // Messaging.sendEmail(mailList, true); 
                 }
             }
+            jsonStr = quoteUrl;
             return jsonStr;
         } catch (Exception e) {
             jsonStr = e.getMessage();
