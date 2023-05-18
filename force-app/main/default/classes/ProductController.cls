@@ -89,22 +89,8 @@ public without sharing class ProductController {
         User agent = [SELECT Id, Name, SenderEmail FROM User WHERE Id = :product.Agent__c];
         wrapper.agentName = agent.Name;
         wrapper.agentEmail = agent.SenderEmail;
-        // date dt = date.today();
-        // List<Reservation__c> res = [
-        //     SELECT Id, No_Days__c, Price__c, WhoId__c, Start_Date__c, End_Date__c 
-        //     FROM Reservation__c 
-        //     WHERE WhatId__c = :id AND Start_Date__c <= :dt AND End_Date__c >= :dt
-        // ];
-        // if(res.size() != 0) {
-        //     wrapper.isReserved = true;
-        // } else {
-        //     wrapper.isReserved = false;
-        // }
         wrapper.isReserved = product.IsReservation__c;
-        System.debug(product.IsReservation__c);
-
         jsonStr = JSON.serialize(wrapper);
-        System.debug(jsonStr);
         return jsonStr;
     }
 
@@ -265,7 +251,7 @@ public without sharing class ProductController {
         User contact = [SELECT Id, ContactId FROM User WHERE Id = :whoId];
         event.WhoId = contact.ContactId;
         event.WhatId = whatId;
-        event.Subject = 'Business Premise Demonstration';
+        event.Subject = Label.business_premise_demo;
         Datetime start = Datetime.newInstance(
             Date.newInstance(year, month, day),
             Time.newInstance(hour, minute, 0, 0)
@@ -310,7 +296,7 @@ public without sharing class ProductController {
         List<PricebookEntry> entries = [
             SELECT Id, Product2Id, UnitPrice
             FROM PricebookEntry
-            WHERE Pricebook2Id = '01s7S000002VqAzQAK'
+            WHERE Pricebook2Id = :Label.pbid
         ];
         List<Product2> prods = [
             SELECT Id, Price__c
@@ -337,7 +323,7 @@ public without sharing class ProductController {
         Integer totalRecords = [
             SELECT COUNT() 
             FROM Product2
-            WHERE RecordType.Name = 'Business Premises' AND ((Name LIKE :name AND Product_Address__City__s LIKE :city AND Price__c <= :price) OR (Wi_Fi__c = :wifi AND Parking__c = :parking AND Elevator__c = :elevator AND Kitchen__c = :kitchen))
+            WHERE RecordType.Name = :Label.businesspremises AND ((Name LIKE :name AND Product_Address__City__s LIKE :city AND Price__c <= :price) OR (Wi_Fi__c = :wifi AND Parking__c = :parking AND Elevator__c = :elevator AND Kitchen__c = :kitchen))
         ];
         Integer recordEnd = pageSize * pageNumber;
 
@@ -348,14 +334,13 @@ public without sharing class ProductController {
         wrapper.recordEnd = totalRecords >= recordEnd ? recordEnd : totalRecords;
         wrapper.totalRecords = totalRecords;
         wrapper.products = [
-            SELECT Id, Name, Product_Address__City__s, Default_Image__c, DisplayUrl, (SELECT UnitPrice FROM PricebookEntries WHERE Pricebook2Id = '01s7S000002VqAzQAK'), Size__c, Agent__c, IsReservation__c
+            SELECT Id, Name, Product_Address__City__s, Default_Image__c, DisplayUrl, (SELECT UnitPrice FROM PricebookEntries WHERE Pricebook2Id = :Label.pbid), Size__c, Agent__c, IsReservation__c
             FROM Product2
-            WHERE RecordType.Name = 'Business Premises' AND ((Name LIKE :name AND Product_Address__City__s LIKE :city AND Price__c <= :price) OR (Wi_Fi__c = :wifi AND Parking__c = :parking AND Elevator__c = :elevator AND Kitchen__c = :kitchen))
+            WHERE RecordType.Name = :Label.businesspremises AND ((Name LIKE :name AND Product_Address__City__s LIKE :city AND Price__c <= :price) OR (Wi_Fi__c = :wifi AND Parking__c = :parking AND Elevator__c = :elevator AND Kitchen__c = :kitchen))
             LIMIT :pageSize
             OFFSET :offset
         ];
         jsonItem = JSON.serialize(wrapper);
-        System.debug(jsonItem);
         return jsonItem;
     }
 
@@ -399,13 +384,13 @@ public without sharing class ProductController {
         List<Product2> premises = [
             SELECT Id, Name
             FROM Product2
-            WHERE RecordType.Name = 'Business Premises'
+            WHERE RecordType.Name = :Label.businesspremises
         ];
         Integer length = premises.size();
         List<RecentlyViewed> last = [
             SELECT Id, Name, LastViewedDate
             FROM RecentlyViewed
-            WHERE Type IN ('Product2') AND RecordType.Name IN ('Business Premises')
+            WHERE Type IN (:Label.product2) AND RecordType.Name IN (:Label.businesspremises)
             ORDER BY LastViewedDate DESC
             LIMIT :length
         ];
@@ -441,13 +426,13 @@ public without sharing class ProductController {
         List<Product2> premises = [
             SELECT Id, Name
             FROM Product2
-            WHERE RecordType.Name = 'Business Premises'
+            WHERE RecordType.Name = :Label.businesspremises
         ];
         Integer length = premises.size();
         List<RecentlyViewed> last = [
             SELECT Id, Name, LastViewedDate
             FROM RecentlyViewed
-            WHERE Type IN ('Product2') AND RecordType.Name IN ('Business Premises')
+            WHERE Type IN (:Label.product2) AND RecordType.Name IN (:Label.businesspremises)
             ORDER BY LastViewedDate DESC
             LIMIT :length
         ];
@@ -467,7 +452,7 @@ public without sharing class ProductController {
         wrapper.recordEnd = totalRecords >= recordEnd ? recordEnd : totalRecords;
         wrapper.totalRecords = totalRecords;
         wrapper.products = [
-            SELECT Id, Name, Product_Address__City__s, Default_Image__c, DisplayUrl, (SELECT UnitPrice FROM PricebookEntries WHERE Pricebook2Id = '01s7S000002VqAzQAK'), Size__c, Agent__c, IsReservation__c
+            SELECT Id, Name, Product_Address__City__s, Default_Image__c, DisplayUrl, (SELECT UnitPrice FROM PricebookEntries WHERE Pricebook2Id = :Label.pbid), Size__c, Agent__c, IsReservation__c
             FROM Product2
             WHERE Id IN :ids AND (Name LIKE :name AND Product_Address__City__s LIKE :city)
             LIMIT :pageSize
@@ -508,9 +493,9 @@ public without sharing class ProductController {
                 if(opps.size() == 0) {
                     Opportunity opp = new Opportunity();
                     opp.Name = con[0].Name + ' - ' + prod[0].Name;
-                    opp.RecordTypeId = '0127S000000xEZoQAM';         
+                    opp.RecordTypeId = Label.recordtypeid;         
                     opp.CloseDate = dt2;
-                    opp.StageName = 'Qualified';
+                    opp.StageName = :Label.qualified;
                     opp.ProductId__c = whatId;
                     opp.OwnerId = agentId;
                     insert opp;
@@ -525,7 +510,7 @@ public without sharing class ProductController {
                         List<Pricebook2> pb = [
                             SELECT Id, Name
                             FROM Pricebook2 
-                            WHERE Name = 'Standard Price Book'
+                            WHERE Name = :Label.spb
                         ];
                         qt.Pricebook2Id = pb[0].Id;
                         insert qt;
@@ -538,39 +523,29 @@ public without sharing class ProductController {
                         List<PricebookEntry> entry = [
                             SELECT Id, Product2.Id
                             FROM PricebookEntry 
-                            WHERE Pricebook2.Name = 'Standard Price Book' AND Product2.Id = :whatId
+                            WHERE Pricebook2.Name = :Label.spb AND Product2.Id = :whatId
                         ];
                         qli.PricebookEntryId = entry[0].Id;
                         insert qli;
 
-                        String quoteUrl = '/quote/quoteTemplateDataViewer.apexp?id=';
-                        quoteUrl += qt.Id;
-                        quoteUrl += '&headerHeight=190&footerHeight=188&summlid=';
-                        quoteUrl += '0EH7S000000dEFm' ;
-                        quoteUrl += '#toolbar=1&navpanes=0&zoom=90';
-                        PageReference pg = new PageReference(quoteUrl);
-                        QuoteDocument quotedoc = new QuoteDocument();
-                        Blob b = pg.getContentAsPDF();
-                        quotedoc.Document = b;
-                        quotedoc.QuoteId = qt.Id;
-                        insert quotedoc;
+                        createPDF(qt.Id);
 
-                        // List<Messaging.SingleEmailMessage> mailList =  new List<Messaging.SingleEmailMessage>();
-                        // Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
-                        // EmailTemplate et = [SELECT Id, Subject, Body FROM EmailTemplate WHERE Id ='00X7S000000cwFA'];
-                        // mail.setTemplateId(et.Id);
-                        // List<string> toAddress = new List<string>();
-                        // toAddress.add(qt.Email);
-                        // mail.setToAddresses(toAddress);
-                        // mail.setSubject(et.Subject);
-                        // mail.setHTMLBody(et.Body);
-                        // mail.setSaveAsActivity(false);
-                        // mail.setUseSignature(false);
-                        // List<String> docid = new List<String>();      
-                        // docid.add(quotedoc.Id);
-                        // mail.setEntityAttachments(docid);
-                        // mailList.add(mail);
-                        // Messaging.sendEmail(mailList, true);
+                        List<Messaging.SingleEmailMessage> mailList =  new List<Messaging.SingleEmailMessage>();
+                        Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
+                        EmailTemplate et = [SELECT Id, Subject, Body FROM EmailTemplate WHERE Id = Label.EmailTemplateId];
+                        mail.setTemplateId(et.Id);
+                        List<string> toAddress = new List<string>();
+                        toAddress.add(qt.Email);
+                        mail.setToAddresses(toAddress);
+                        mail.setSubject(et.Subject);
+                        mail.setHTMLBody(et.Body);
+                        mail.setSaveAsActivity(false);
+                        mail.setUseSignature(false);
+                        List<String> docid = new List<String>();      
+                        docid.add(quotedoc.Id);
+                        mail.setEntityAttachments(docid);
+                        mailList.add(mail);
+                        Messaging.sendEmail(mailList, true);
                     }
                 }
             }
@@ -597,9 +572,9 @@ public without sharing class ProductController {
             if(opps.size() == 0) {
                 Opportunity opp = new Opportunity();
                 opp.Name = con[0].Name + ' - ' + prod[0].Name;
-                opp.RecordTypeId = '0127S000000xEZoQAM';         
+                opp.RecordTypeId = Label.recordtypeid;         
                 opp.CloseDate = dt2;
-                opp.StageName = 'Qualified';
+                opp.StageName = Label.qualified;
                 opp.ProductId__c = whatId;
                 opp.OwnerId = agentId;
                 insert opp;
@@ -614,7 +589,7 @@ public without sharing class ProductController {
                     List<Pricebook2> pb = [
                         SELECT Id, Name
                         FROM Pricebook2 
-                        WHERE Name = 'Standard Price Book'
+                        WHERE Name = :Label.spb
                     ];
                     qt.Pricebook2Id = pb[0].Id;
                     insert qt;
@@ -627,40 +602,29 @@ public without sharing class ProductController {
                     List<PricebookEntry> entry = [
                         SELECT Id, Product2.Id
                         FROM PricebookEntry 
-                        WHERE Pricebook2.Name = 'Standard Price Book' AND Product2.Id = :whatId
+                        WHERE Pricebook2.Name = :Label.spb AND Product2.Id = :whatId
                     ];
                     qli.PricebookEntryId = entry[0].Id;
                     insert qli;
 
-                    quoteUrl += 'https://britenet-10a-dev-ed.develop.lightning.force.com/quote/quoteTemplateDataViewer.apexp?id=';
-                    quoteUrl += qt.Id;
-                    quoteUrl += '&headerHeight=190&footerHeight=188&summlid=';
-                    quoteUrl += '0EH7S000000dEFm' ;
-                    quoteUrl += '#toolbar=1&navpanes=0&zoom=90';
-                    PageReference pg = new PageReference(quoteUrl);
-                    QuoteDocument quotedoc = new QuoteDocument();
-                    // Blob b = pg.getContent();
-                    Blob b = pg.getContentAsPDF();
-                    quotedoc.Document = b;
-                    quotedoc.QuoteId = qt.Id;
-                    insert quotedoc;
+                    createPDF(qt.Id);
 
-                    // List<Messaging.SingleEmailMessage> mailList =  new List<Messaging.SingleEmailMessage>();
-                    // Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
-                    // EmailTemplate et = [SELECT Id, Subject, Body FROM EmailTemplate WHERE Id ='00X7S000000cwFA'];
-                    // mail.setTemplateId(et.Id);
-                    // List<string> toAddress = new List<string>();
-                    // toAddress.add(qt.Email);
-                    // mail.setToAddresses(toAddress);
-                    // mail.setSubject(et.Subject);
-                    // mail.setHTMLBody(et.Body);
-                    // mail.setSaveAsActivity(false);
-                    // mail.setUseSignature(false);
-                    // List<String> docid = new List<String>();      
-                    // docid.add(quotedoc.Id);
-                    // mail.setEntityAttachments(docid);
-                    // mailList.add(mail);
-                    // Messaging.sendEmail(mailList, true); 
+                    List<Messaging.SingleEmailMessage> mailList =  new List<Messaging.SingleEmailMessage>();
+                    Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
+                    EmailTemplate et = [SELECT Id, Subject, Body FROM EmailTemplate WHERE Id = Label.EmailTemplateId];
+                    mail.setTemplateId(et.Id);
+                    List<string> toAddress = new List<string>();
+                    toAddress.add(qt.Email);
+                    mail.setToAddresses(toAddress);
+                    mail.setSubject(et.Subject);
+                    mail.setHTMLBody(et.Body);
+                    mail.setSaveAsActivity(false);
+                    mail.setUseSignature(false);
+                    List<String> docid = new List<String>();      
+                    docid.add(quotedoc.Id);
+                    mail.setEntityAttachments(docid);
+                    mailList.add(mail);
+                    Messaging.sendEmail(mailList, true); 
                 }
             }
             jsonStr = quoteUrl;
@@ -671,72 +635,17 @@ public without sharing class ProductController {
         }
     }
 
-    // @AuraEnabled
-    // public static String winOpportunity(String whatId, String whoId) {
-    //     String jsonStr = '';
-    //     try {
-    //         Opportunity opp = [
-    //             SELECT Id, Name, StageName
-    //             FROM Opportunity
-    //             WHERE Name = :whatId
-    //             ORDER BY CreatedDate DESC
-    //             LIMIT 1
-    //         ];
-    //         opp.StageName = 'Closed Won';
-    //         update opp;
-
-    //         Account acc = new Account();
-    //         User user = [SELECT Id, ContactId FROM User WHERE Id = :whoId];
-    //         Contact con = [SELECT Id, Name FROM Contact WHERE Id = :user.ContactId];
-    //         acc.Name = con.Name;
-    //         insert acc;
-
-    //         Contract ctr = new Contract();
-    //         ctr.AccountId = acc.Id;
-    //         ctr.Status = 'Draft';
-    //         ctr.StartDate = System.today();
-    //         ctr.ContractTerm = 24;
-    //         Product2 prod = [SELECT Id, Name FROM Product2 WHERE Id = :whatId];
-    //         ctr.Description = 'Premise: ' + whatId + ' ' + prod.Name;
-    //         insert ctr;
-
-    //         return jsonStr;
-    //     } catch(Exception e) {
-    //         jsonStr = e.getMessage();
-    //         return jsonStr;
-    //     }
-    // }
-
-    // @AuraEnabled
-    // public static void addLastSeenItem(String userId, String productId) {
-    //     UserProduct__c uprod = new UserProduct__c();
-    //     uprod.UserId__c = userId;
-    //     uprod.ProductId__c = productId;
-    //     insert uprod;
-
-    //     List<UserProduct__c> uprods = [
-    //         SELECT Id, UserId__c, ProductId__c
-    //         FROM UserProduct__c
-    //         WHERE UserId__c = :userId
-    //     ];
-    //     if(uprods.size() > 10) {
-    //         delete uprods.get(uprods.size() - 1);
-    //     }
-    // }
-
-    // @AuraEnabled
-    // public static String getUserLastSeenItems(String userId) {
-    //     String jsonStr = '';
-    //     List<UserProduct__c> uprods = [
-    //         SELECT Id, UserId__c, ProductId__c
-    //         FROM UserProduct__c
-    //         WHERE UserId__c = :userId
-    //     ];
-    //     LastSeenItemsWrapper wrapper = new LastSeenItemsWrapper();
-    //     for(UserProduct__c uprod : uprods) {
-    //         wrapper.uprods.add(uprod);
-    //     }
-    //     jsonStr = JSON.serialize(wrapper);
-    //     return jsonStr;
-    // }
+    @future(callout=true)
+    public static void createPDF(Id quoteId) {
+        String quoteUrl = '';
+        quoteUrl += Label.quoteurl1;
+        quoteUrl += quoteId;
+        quoteUrl += Label.quoteurl2;
+        PageReference pg = new PageReference(quoteUrl);
+        QuoteDocument quotedoc = new QuoteDocument();
+        Blob b = pg.getContentAsPDF();
+        quotedoc.Document = b;
+        quotedoc.QuoteId = quoteId;
+        insert quotedoc;
+    }
 }
