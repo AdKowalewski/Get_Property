@@ -473,7 +473,7 @@ export default class ProductDetails extends LightningElement {
         quoteCreate({whatId: this.product.id, whoId: this.userId, agentId: this.product.agentId})
             .then(result => {
                 console.log('quote result: ' + JSON.stringify(result));
-                window.location.href = result;
+                // window.location.href = result;
                 this.dispatchEvent(
                     new ShowToastEvent({
                         title: 'Success',
