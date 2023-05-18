@@ -495,7 +495,7 @@ public without sharing class ProductController {
                     opp.Name = con[0].Name + ' - ' + prod[0].Name;
                     opp.RecordTypeId = Label.recordtypeid;         
                     opp.CloseDate = dt2;
-                    opp.StageName = :Label.qualified;
+                    opp.StageName = Label.qualified;
                     opp.ProductId__c = whatId;
                     opp.OwnerId = agentId;
                     insert opp;
@@ -528,7 +528,15 @@ public without sharing class ProductController {
                         qli.PricebookEntryId = entry[0].Id;
                         insert qli;
 
-                        createPDF(qt.Id);
+                        String quoteUrl = Label.quoteurl1;
+                        quoteUrl += qt.Id;
+                        quoteUrl += Label.quoteurl2;
+                        PageReference pg = new PageReference(quoteUrl);
+                        QuoteDocument quotedoc = new QuoteDocument();
+                        Blob b = pg.getContentAsPDF();
+                        quotedoc.Document = b;
+                        quotedoc.QuoteId = qt.Id;
+                        insert quotedoc;
 
                         List<Messaging.SingleEmailMessage> mailList =  new List<Messaging.SingleEmailMessage>();
                         Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
@@ -559,7 +567,6 @@ public without sharing class ProductController {
     @AuraEnabled
     public static String createQuote(String whatId, String whoId, String agentId) {
         String jsonStr = '';
-        String quoteUrl = '';
         try{
             date dt = date.today();
             date dt2 = dt.addDays(7);
@@ -607,7 +614,15 @@ public without sharing class ProductController {
                     qli.PricebookEntryId = entry[0].Id;
                     insert qli;
 
-                    createPDF(qt.Id);
+                    String quoteUrl = Label.quoteurl1;
+                    quoteUrl += qt.Id;
+                    quoteUrl += Label.quoteurl2;
+                    PageReference pg = new PageReference(quoteUrl);
+                    QuoteDocument quotedoc = new QuoteDocument();
+                    Blob b = pg.getContentAsPDF();
+                    quotedoc.Document = b;
+                    quotedoc.QuoteId = qt.Id;
+                    insert quotedoc;
 
                     List<Messaging.SingleEmailMessage> mailList =  new List<Messaging.SingleEmailMessage>();
                     Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
@@ -627,7 +642,6 @@ public without sharing class ProductController {
                     Messaging.sendEmail(mailList, true); 
                 }
             }
-            jsonStr = quoteUrl;
             return jsonStr;
         } catch (Exception e) {
             jsonStr = e.getMessage();
