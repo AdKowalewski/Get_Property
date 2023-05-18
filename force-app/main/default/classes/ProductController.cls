@@ -532,7 +532,7 @@ public without sharing class ProductController {
 
                         List<Messaging.SingleEmailMessage> mailList =  new List<Messaging.SingleEmailMessage>();
                         Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
-                        EmailTemplate et = [SELECT Id, Subject, Body FROM EmailTemplate WHERE Id = Label.EmailTemplateId];
+                        EmailTemplate et = [SELECT Id, Subject, Body FROM EmailTemplate WHERE Id = :Label.EmailTemplateId];
                         mail.setTemplateId(et.Id);
                         List<string> toAddress = new List<string>();
                         toAddress.add(qt.Email);
@@ -611,7 +611,7 @@ public without sharing class ProductController {
 
                     List<Messaging.SingleEmailMessage> mailList =  new List<Messaging.SingleEmailMessage>();
                     Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
-                    EmailTemplate et = [SELECT Id, Subject, Body FROM EmailTemplate WHERE Id = Label.EmailTemplateId];
+                    EmailTemplate et = [SELECT Id, Subject, Body FROM EmailTemplate WHERE Id = :Label.EmailTemplateId];
                     mail.setTemplateId(et.Id);
                     List<string> toAddress = new List<string>();
                     toAddress.add(qt.Email);
