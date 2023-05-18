@@ -637,13 +637,13 @@ public without sharing class ProductController {
                     quoteUrl += '&headerHeight=190&footerHeight=188&summlid=';
                     quoteUrl += '0EH7S000000dEFm' ;
                     quoteUrl += '#toolbar=1&navpanes=0&zoom=90';
-                    // PageReference pg = new PageReference(quoteUrl);
-                    // QuoteDocument quotedoc = new QuoteDocument();
+                    PageReference pg = new PageReference(quoteUrl);
+                    QuoteDocument quotedoc = new QuoteDocument();
                     // Blob b = pg.getContent();
-                    // Blob b = pg.getContentAsPDF();
-                    // quotedoc.Document = b;
-                    // quotedoc.QuoteId = qt.Id;
-                    // insert quotedoc;
+                    Blob b = pg.getContentAsPDF();
+                    quotedoc.Document = b;
+                    quotedoc.QuoteId = qt.Id;
+                    insert quotedoc;
 
                     // List<Messaging.SingleEmailMessage> mailList =  new List<Messaging.SingleEmailMessage>();
                     // Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
