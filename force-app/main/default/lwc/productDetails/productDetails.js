@@ -10,9 +10,33 @@ import eventDelete from '@salesforce/apex/ProductController.deleteEvent';
 import reservationCreate from '@salesforce/apex/ProductController.createReservation';
 import quoteCreate from '@salesforce/apex/ProductController.createQuote';
 
-// import hourcontainer2 from '@salesforce/label/c.hourcontainer2';
+import hourcontainer1 from '@salesforce/label/c.hourcontainer1';
+import hourcontainer2 from '@salesforce/label/c.hourcontainer2';
+import quotesuccess from '@salesforce/label/c.quotesuccess';
+import reservationsuccess from '@salesforce/label/c.reservationsuccess';
+import meetingsuccess from '@salesforce/label/c.meetingsuccess';
+import meetingcancelsuccess from '@salesforce/label/c.meetingdeletesuccess';
+import success from '@salesforce/label/c.success';
+import error from '@salesforce/label/c.error';
+import yes from '@salesforce/label/c.yes';
+import no from '@salesforce/label/c.no';
+import dateerror from '@salesforce/label/c.dateerror';
 
 export default class ProductDetails extends LightningElement {
+
+    label = {
+        hourcontainer1,
+        hourcontainer2,
+        quotesuccess,
+        reservationsuccess,
+        meetingsuccess,
+        meetingcancelsuccess,
+        success,
+        error,
+        yes,
+        no,
+        dateerror
+    }
 
     @track product;
     @api productId;
@@ -23,67 +47,67 @@ export default class ProductDetails extends LightningElement {
     @track hours = [
         {
             h: '9:00',
-            class: 'hourContainer2'
+            class: hourcontainer2
         },
         {
             h: '9:30',
-            class: 'hourContainer2'
+            class: hourcontainer2
         },
         {
             h: '10:00',
-            class: 'hourContainer2'
+            class: hourcontainer2
         },
         {
             h: '10:30',
-            class: 'hourContainer2'
+            class: hourcontainer2
         },
         {
             h: '11:00',
-            class: 'hourContainer2'
+            class: hourcontainer2
         },
         {
             h: '11:30',
-            class: 'hourContainer2'
+            class: hourcontainer2
         },
         {
             h: '12:00',
-            class: 'hourContainer2'
+            class: hourcontainer2
         },
         {
             h: '12:30',
-            class: 'hourContainer2'
+            class: hourcontainer2
         },
         {
             h: '13:00',
-            class: 'hourContainer2'
+            class: hourcontainer2
         },
         {
             h: '13:30',
-            class: 'hourContainer2'
+            class: hourcontainer2
         },
         {
             h: '14:00',
-            class: 'hourContainer2'
+            class: hourcontainer2
         },
         {
             h: '14:30',
-            class: 'hourContainer2'
+            class: hourcontainer2
         },
         {
             h: '15:00',
-            class: 'hourContainer2'
+            class: hourcontainer2
         },
         {
             h: '15:30',
-            class: 'hourContainer2'
+            class: hourcontainer2
         },
         {
             h: '16:00',
-            class: 'hourContainer2'
+            class: hourcontainer2
         },
         {
             h: '16:30',
-            class: 'hourContainer2'
+            class: hourcontainer2
         }
     ];
     @track availableHours = [];
@@ -91,7 +115,7 @@ export default class ProductDetails extends LightningElement {
     @track meetingStart = new Date().toISOString();
     @track showEventModal = false;
     @track showResModal = false;
-    @track hourContainer = 'hourContainer2';
+    @track hourContainer = hourcontainer2;
     @track tomorrow = new Date(new Date().getTime() + (1*24*60*60*1000)).toISOString();
     @track resPeriod = 1;
     @track resPrice = 100;
@@ -102,24 +126,24 @@ export default class ProductDetails extends LightningElement {
             .then(result => {
                 this.product = JSON.parse(result);
                 if(this.product.wifi == true) {
-                    this.product.wifi = 'yes';
+                    this.product.wifi = yes;
                 } else {
-                    this.product.wifi = 'no';
+                    this.product.wifi = no;
                 }
                 if(this.product.parking == true) {
-                    this.product.parking = 'yes';
+                    this.product.parking = yes;
                 } else {
-                    this.product.parking = 'no';
+                    this.product.parking = no;
                 }
                 if(this.product.elevator == true) {
-                    this.product.elevator = 'yes';
+                    this.product.elevator = yes;
                 } else {
-                    this.product.elevator = 'no';
+                    this.product.elevator = no;
                 }
                 if(this.product.kitchen == true) {
-                    this.product.kitchen = 'yes';
+                    this.product.kitchen = yes;
                 } else {
-                    this.product.kitchen = 'no';
+                    this.product.kitchen = no;
                 }
                 userEvent({whoId: this.userId, whatId: this.product.id})
                     .then(result => {
@@ -137,12 +161,12 @@ export default class ProductDetails extends LightningElement {
                             this.productEvents = data.events;
                             this.availableHours = data.hours;
                             for(let j = 0; j < this.hours.length; j++) {
-                                this.hours[j].class = 'hourContainer2';
+                                this.hours[j].class = hourcontainer2;
                             }
                             for(let i = 0; i < this.availableHours.length; i++) {
                                 for(let j = 0; j < this.hours.length; j++) {
                                     if(this.hours[j].h == this.availableHours[i]) {
-                                        this.hours[j].class = 'hourContainer1';
+                                        this.hours[j].class = hourcontainer1;
                                         continue;
                                     }
                                 }
@@ -239,12 +263,12 @@ export default class ProductDetails extends LightningElement {
                     this.productEvents = data.events;
                     this.availableHours = data.hours;
                     for(let j = 0; j < this.hours.length; j++) {
-                        this.hours[j].class = 'hourContainer2';
+                        this.hours[j].class = hourcontainer2;
                     }
                     for(let i = 0; i < this.availableHours.length; i++) {
                         for(let j = 0; j < this.hours.length; j++) {
                             if(this.hours[j].h == this.availableHours[i]) {
-                                this.hours[j].class = 'hourContainer1';
+                                this.hours[j].class = hourcontainer1;
                                 continue;
                             }
                         }
@@ -255,8 +279,8 @@ export default class ProductDetails extends LightningElement {
             this.meetingDate = new Date(new Date().getTime() + (1*24*60*60*1000)).toISOString();
             this.dispatchEvent(
                 new ShowToastEvent({
-                    title: 'Error',
-                    message: 'Date cannot be earlier than tomorrow date',
+                    title: error,
+                    message: dateerror,
                     variant: 'error'
                 })
             );
@@ -289,12 +313,12 @@ export default class ProductDetails extends LightningElement {
                     this.productEvents = data.events;
                     this.availableHours = data.hours;
                     for(let j = 0; j < this.hours.length; j++) {
-                        this.hours[j].class = 'hourContainer2';
+                        this.hours[j].class = hourcontainer2;
                     }
                     for(let i = 0; i < this.availableHours.length; i++) {
                         for(let j = 0; j < this.hours.length; j++) {
                             if(this.hours[j].h == this.availableHours[i]) {
-                                this.hours[j].class = 'hourContainer1';
+                                this.hours[j].class = hourcontainer1;
                                 continue;
                             }
                         }
@@ -307,7 +331,7 @@ export default class ProductDetails extends LightningElement {
         let dd = new Date(new Date().getTime()).toISOString();
         if(this.meetingDate >= dd) {
             let hclass = event.target.dataset.class;
-            if(hclass == 'hourContainer1') {
+            if(hclass == hourcontainer1) {
                 let chosenHour = event.target.dataset.hour.split(':');
                 let meetData = this.meetingDate.split('-');
                 eventCreate({
@@ -332,12 +356,12 @@ export default class ProductDetails extends LightningElement {
                                     this.productEvents = data.events;
                                     this.availableHours = data.hours;
                                     for(let j = 0; j < this.hours.length; j++) {
-                                        this.hours[j].class = 'hourContainer2';
+                                        this.hours[j].class = hourcontainer2;
                                     }
                                     for(let i = 0; i < this.availableHours.length; i++) {
                                         for(let j = 0; j < this.hours.length; j++) {
                                             if(this.hours[j].h == this.availableHours[i]) {
-                                                this.hours[j].class = 'hourContainer1';
+                                                this.hours[j].class = hourcontainer1;
                                                 continue;
                                             }
                                         }
@@ -347,8 +371,8 @@ export default class ProductDetails extends LightningElement {
                         this.showEventModal = false;
                         this.dispatchEvent(
                             new ShowToastEvent({
-                                title: 'Success',
-                                message: 'Meeting scheduled successfully',
+                                title: success,
+                                message: meetingsuccess,
                                 variant: 'success'
                             })
                         );
@@ -358,8 +382,8 @@ export default class ProductDetails extends LightningElement {
             this.meetingDate = new Date(new Date().getTime() + (1*24*60*60*1000)).toISOString();
             this.dispatchEvent(
                 new ShowToastEvent({
-                    title: 'Error',
-                    message: 'Date cannot be earlier than tomorrow date',
+                    title: error,
+                    message: dateerror,
                     variant: 'error'
                 })
             );
@@ -381,12 +405,12 @@ export default class ProductDetails extends LightningElement {
                                 this.productEvents = data.events;
                                 this.availableHours = data.hours;
                                 for(let j = 0; j < this.hours.length; j++) {
-                                    this.hours[j].class = 'hourContainer2';
+                                    this.hours[j].class = hourcontainer2;
                                 }
                                 for(let i = 0; i < this.availableHours.length; i++) {
                                     for(let j = 0; j < this.hours.length; j++) {
                                         if(this.hours[j].h == this.availableHours[i]) {
-                                            this.hours[j].class = 'hourContainer1';
+                                            this.hours[j].class = hourcontainer1;
                                             continue;
                                         }
                                     }
@@ -395,8 +419,8 @@ export default class ProductDetails extends LightningElement {
                         })
                 this.dispatchEvent(
                     new ShowToastEvent({
-                        title: 'Success',
-                        message: 'Meeting cancelled successfully',
+                        title: success,
+                        message: meetingcancelsuccess,
                         variant: 'success'
                     })
                 );
@@ -410,24 +434,24 @@ export default class ProductDetails extends LightningElement {
                     .then(result => {
                         this.product = JSON.parse(result);
                         if(this.product.wifi == true) {
-                            this.product.wifi = 'yes';
+                            this.product.wifi = yes;
                         } else {
-                            this.product.wifi = 'no';
+                            this.product.wifi = no;
                         }
                         if(this.product.parking == true) {
-                            this.product.parking = 'yes';
+                            this.product.parking = yes;
                         } else {
-                            this.product.parking = 'no';
+                            this.product.parking = no;
                         }
                         if(this.product.elevator == true) {
-                            this.product.elevator = 'yes';
+                            this.product.elevator = yes;
                         } else {
-                            this.product.elevator = 'no';
+                            this.product.elevator = no;
                         }
                         if(this.product.kitchen == true) {
-                            this.product.kitchen = 'yes';
+                            this.product.kitchen = yes;
                         } else {
-                            this.product.kitchen = 'no';
+                            this.product.kitchen = no;
                         }
                         userEvent({whoId: this.userId, whatId: this.product.id})
                             .then(result => {
@@ -445,12 +469,12 @@ export default class ProductDetails extends LightningElement {
                                     this.productEvents = data.events;
                                     this.availableHours = data.hours;
                                     for(let j = 0; j < this.hours.length; j++) {
-                                        this.hours[j].class = 'hourContainer2';
+                                        this.hours[j].class = hourcontainer2;
                                     }
                                     for(let i = 0; i < this.availableHours.length; i++) {
                                         for(let j = 0; j < this.hours.length; j++) {
                                             if(this.hours[j].h == this.availableHours[i]) {
-                                                this.hours[j].class = 'hourContainer1';
+                                                this.hours[j].class = hourcontainer1;
                                                 continue;
                                             }
                                         }
@@ -461,8 +485,8 @@ export default class ProductDetails extends LightningElement {
                 this.showResModal = false;
                 this.dispatchEvent(
                     new ShowToastEvent({
-                        title: 'Success',
-                        message: 'Reservation scheduled successfully',
+                        title: success,
+                        message: reservationsuccess,
                         variant: 'success'
                     })
                 );
@@ -474,8 +498,8 @@ export default class ProductDetails extends LightningElement {
             .then(result => {
                 this.dispatchEvent(
                     new ShowToastEvent({
-                        title: 'Success',
-                        message: 'Quote generated successfully',
+                        title: success,
+                        message: quotesuccess,
                         variant: 'success'
                     })
                 );
