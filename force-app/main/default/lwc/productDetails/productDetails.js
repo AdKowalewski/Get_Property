@@ -10,6 +10,8 @@ import eventDelete from '@salesforce/apex/ProductController.deleteEvent';
 import reservationCreate from '@salesforce/apex/ProductController.createReservation';
 import quoteCreate from '@salesforce/apex/ProductController.createQuote';
 
+// import hourcontainer2 from '@salesforce/label/c.hourcontainer2';
+
 export default class ProductDetails extends LightningElement {
 
     @track product;
@@ -99,7 +101,6 @@ export default class ProductDetails extends LightningElement {
         getProduct({id: this.productId})
             .then(result => {
                 this.product = JSON.parse(result);
-                console.log('result: ' + JSON.stringify(JSON.parse(result)));
                 if(this.product.wifi == true) {
                     this.product.wifi = 'yes';
                 } else {
@@ -405,7 +406,6 @@ export default class ProductDetails extends LightningElement {
     saveReservation() {
         reservationCreate({whatId: this.product.id, whoId: this.userId, agentId: this.product.agentId, noDays: this.resPeriod})
             .then(result => {
-                console.log('reservation result: ' + JSON.stringify(result));
                 getProduct({id: this.productId})
                     .then(result => {
                         this.product = JSON.parse(result);
@@ -472,8 +472,6 @@ export default class ProductDetails extends LightningElement {
     quoteCreation() {
         quoteCreate({whatId: this.product.id, whoId: this.userId, agentId: this.product.agentId})
             .then(result => {
-                console.log('quote result: ' + JSON.stringify(result));
-                // window.location.href = result;
                 this.dispatchEvent(
                     new ShowToastEvent({
                         title: 'Success',
@@ -483,18 +481,4 @@ export default class ProductDetails extends LightningElement {
                 );
             })
     }
-
-    // winOpp() {
-    //     opportunityWin({whatId: this.product.id, whoId: this.userId})
-    //         .then(result => {
-    //             console.log('win result: ' + JSON.stringify(result));
-    //             this.dispatchEvent(
-    //                 new ShowToastEvent({
-    //                     title: 'Success',
-    //                     message: 'Premise bought successfully',
-    //                     variant: 'success'
-    //                 })
-    //             );
-    //         })
-    // }
 }   
