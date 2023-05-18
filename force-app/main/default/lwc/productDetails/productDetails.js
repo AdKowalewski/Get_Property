@@ -470,7 +470,7 @@ export default class ProductDetails extends LightningElement {
     }
 
     quoteCreation() {
-        quoteCreate({whatId: this.product.id, whoId: this.userId})
+        quoteCreate({whatId: this.product.id, whoId: this.userId, agentId: this.product.agentId})
             .then(result => {
                 console.log('quote result: ' + JSON.stringify(result));
                 this.dispatchEvent(
