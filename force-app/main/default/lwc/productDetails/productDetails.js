@@ -21,6 +21,12 @@ import error from '@salesforce/label/c.error';
 import yes from '@salesforce/label/c.yes';
 import no from '@salesforce/label/c.no';
 import dateerror from '@salesforce/label/c.dateerror';
+import yourmeeting from '@salesforce/label/c.yourmeeting';
+import starts from '@salesforce/label/c.starts';
+import ends from '@salesforce/label/c.ends';
+import in2 from '@salesforce/label/c.in2';
+import with2 from '@salesforce/label/c.with2';
+import Email from '@salesforce/label/c.Email';
 
 export default class ProductDetails extends LightningElement {
 
@@ -35,7 +41,13 @@ export default class ProductDetails extends LightningElement {
         error,
         yes,
         no,
-        dateerror
+        dateerror,
+        yourmeeting,
+        starts,
+        ends,
+        in2,
+        with2,
+        Email
     }
 
     @track product;
