@@ -1,14 +1,28 @@
 import { LightningElement, track, wire } from 'lwc';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
-import { getRecord } from 'lightning/uiRecordApi';
-import ID from '@salesforce/user/Id';
-import ROLE_NAME_FIELD from '@salesforce/schema/User.UserRole.Name';
 import getPremises from '@salesforce/apex/ProductController.getProductPremisesList';
-import getApartments from '@salesforce/apex/ProductController.getProductApartmentsList';
 import markAsViewed from '@salesforce/apex/ProductController.markProductAsRecentlyViewed';
 import getLastViewed from '@salesforce/apex/ProductController.getUserRecentlyViewedProducts2';
 import main_url from '@salesforce/label/c.main_url';
 import UserId from '@salesforce/user/Id';
+
+import first from '@salesforce/label/c.first';
+import previous from '@salesforce/label/c.previous';
+import next from '@salesforce/label/c.next';
+import last from '@salesforce/label/c.last';
+import recentlyviewedproperties from '@salesforce/label/c.recentlyviewedproperties';
+import mustlogin1 from '@salesforce/label/c.mustlogin1';
+import noproductsfound from '@salesforce/label/c.noproductsfound';
+import filter from '@salesforce/label/c.filter';
+import hidefilter from '@salesforce/label/c.hidefilter';
+import clearfilter from '@salesforce/label/c.clearfilter';
+import findproperty from '@salesforce/label/c.findproperty';
+import maxprice from '@salesforce/label/c.maxprice';
+import minsize from '@salesforce/label/c.minsize';
+import wifi from '@salesforce/label/c.wifi';
+import parking from '@salesforce/label/c.parking';
+import elevator from '@salesforce/label/c.elevator';
+import kitchen from '@salesforce/label/c.kitchen';
 
 export default class PremiseExplorer extends LightningElement {
 
@@ -50,7 +64,24 @@ export default class PremiseExplorer extends LightningElement {
     @track seenProductCity;
 
     label = {
-        main_url
+        main_url,
+        first,
+        previous,
+        next,
+        last,
+        noproductsfound,
+        mustlogin1,
+        recentlyviewedproperties,
+        filter,
+        hidefilter,
+        clearfilter,
+        findproperty,
+        maxprice,
+        minsize,
+        wifi,
+        parking,
+        elevator,
+        kitchen
     };
 
     get isLogged() {
@@ -90,7 +121,6 @@ export default class PremiseExplorer extends LightningElement {
             size: this.minSize
         })
             .then(result => {
-                // this.loading = false;
                 if(result) {
                     let data = JSON.parse(result);
                     this.recordEnd = data.recordEnd;
@@ -115,7 +145,6 @@ export default class PremiseExplorer extends LightningElement {
                     })
                 );
             });
-        // this.loading = false;
     }
 
     getProducts() {
@@ -135,7 +164,6 @@ export default class PremiseExplorer extends LightningElement {
             size: this.minSize
         })
             .then(result => {
-                // this.loading = false;
                 if(result) {
                     let data = JSON.parse(result);
                     this.recordEnd = data.recordEnd;
@@ -160,7 +188,6 @@ export default class PremiseExplorer extends LightningElement {
                     })
                 );
             });
-        // this.loading = false;
     }
 
     showRecentlyViewed() {
@@ -321,7 +348,6 @@ export default class PremiseExplorer extends LightningElement {
         this.selectedProductId = event.detail.productId;
         this.isDetail = true;
         markAsViewed({id: this.selectedProductId});
-        //window.open(main_url + this.selectedProductId, '_blank').focus();
     }
 
     selectLastProduct(event) {

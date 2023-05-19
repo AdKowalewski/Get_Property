@@ -3,7 +3,7 @@
         <template if:false={isDetail}>
             <lightning-layout title="Product Explorer" multiple-rows="true" class="slds-card">
                 <lightning-layout-item size="12" style="background-color: #000066;">
-                    <div class="slds-text-title" style="font-size: 25px; font-weight: bold; margin-left: 45%; width: 40%; margin-top: 1%; margin-bottom: 1%; color: white;">Find Property</div>
+                    <div class="slds-text-title" style="font-size: 25px; font-weight: bold; margin-left: 45%; width: 40%; margin-top: 1%; margin-bottom: 1%; color: white;">{label.findproperty}</div>
                 </lightning-layout-item>
                 <!-- search -->
                 <template if:false={isLastSeen}>
@@ -11,32 +11,32 @@
                         <div style="margin-left: 30%; width: 40%;">           
                             <lightning-layout horizontal-align="middle" multiple-rows="true">
                                 <lightning-layout-item size="12">
-                                    <lightning-input style="-webkit-text-fill-color:white;" type="text" label="Product Name" value={productName} onchange={handleProductNameChange}></lightning-input>
+                                    <lightning-input style="-webkit-text-fill-color:white;" type="text" label={label.productname} value={productName} onchange={handleProductNameChange}></lightning-input>
                                 </lightning-layout-item>
                                 <lightning-layout-item size="12">
-                                    <lightning-input style="-webkit-text-fill-color:white;" type="text" label="Product City" value={productCity} onchange={handleProductCityChange}></lightning-input>
+                                    <lightning-input style="-webkit-text-fill-color:white;" type="text" label={label.productcity} value={productCity} onchange={handleProductCityChange}></lightning-input>
                                 </lightning-layout-item>
                                 <template if:true={showFilter}>
                                     <lightning-layout style="width: 100%;" multiple-rows="true">
                                         <lightning-layout-item size="12">
-                                            <lightning-slider style="-webkit-text-fill-color:white;" label="Max Price (EUR)" value={maxPrice} step="0.01" min="0" max="200000" onchange={handleMaxPriceChange}></lightning-slider>
+                                            <lightning-slider style="-webkit-text-fill-color:white;" label={label.maxprice} value={maxPrice} step="0.01" min="0" max="200000" onchange={handleMaxPriceChange}></lightning-slider>
                                         </lightning-layout-item>
                                         <lightning-layout-item size="12">
-                                            <lightning-slider style="-webkit-text-fill-color:white;" label="Min Size (m2)" value={minSize} step="0.01" min="0" max="100" onchange={handleSizeChange}></lightning-slider>
+                                            <lightning-slider style="-webkit-text-fill-color:white;" label={label.minsize} value={minSize} step="0.01" min="0" max="100" onchange={handleSizeChange}></lightning-slider>
                                         </lightning-layout-item>
                                         <lightning-layout-item size="12">
                                             <lightning-layout>
                                                 <lightning-layout-item size="3">
-                                                    <lightning-input id="checkbox-wifi" style="-webkit-text-fill-color:white;" type="checkbox" name="wifi" label="Wi-Fi" value={wifi} onchange={handleWifiChange}></lightning-input>
+                                                    <lightning-input id="checkbox-wifi" style="-webkit-text-fill-color:white;" type="checkbox" name="wifi" label={label.wifi} value={wifi} onchange={handleWifiChange}></lightning-input>
                                                 </lightning-layout-item>
                                                 <lightning-layout-item size="3">
-                                                    <lightning-input id="checkbox-parking" style="-webkit-text-fill-color:white;" type="checkbox" name="parking" label="Parking" value={parking} onchange={handleParkingChange}></lightning-input>
+                                                    <lightning-input id="checkbox-parking" style="-webkit-text-fill-color:white;" type="checkbox" name="parking" label={label.parking} value={parking} onchange={handleParkingChange}></lightning-input>
                                                 </lightning-layout-item>
                                                 <lightning-layout-item size="3">
-                                                    <lightning-input id="checkbox-elevator" style="-webkit-text-fill-color:white;" type="checkbox" name="elevator" label="Elevator" value={elevator} onchange={handleElevatorChange}></lightning-input>
+                                                    <lightning-input id="checkbox-elevator" style="-webkit-text-fill-color:white;" type="checkbox" name="elevator" label={label.elevator} value={elevator} onchange={handleElevatorChange}></lightning-input>
                                                 </lightning-layout-item>
                                                 <lightning-layout-item size="3">
-                                                    <lightning-input id="checkbox-kitchen" style="-webkit-text-fill-color:white;" type="checkbox" name="kitchen" label="Kitchen" value={kitchen} onchange={handleKitchenChange}></lightning-input>
+                                                    <lightning-input id="checkbox-kitchen" style="-webkit-text-fill-color:white;" type="checkbox" name="kitchen" label={label.kitchen} value={kitchen} onchange={handleKitchenChange}></lightning-input>
                                                 </lightning-layout-item>
                                             </lightning-layout>
                                         </lightning-layout-item>
@@ -45,13 +45,13 @@
                             </lightning-layout>
                             <div class="slds-var-m-vertical_medium">
                                 <template if:true={showFilter}>
-                                    <lightning-button icon-name="utility:filterList" icon-position="right" variant="neutral" label="Hide Filter" onclick={hideFilter} class="search-button filter-button" style="margin-right: 5px;"></lightning-button>
+                                    <lightning-button icon-name="utility:filterList" icon-position="right" variant="neutral" label={label.hidefilter} onclick={hideFilter} class="search-button filter-button" style="margin-right: 5px;"></lightning-button>
                                 </template>
                                 <template if:false={showFilter}>
-                                    <lightning-button icon-name="utility:filterList" icon-position="right" variant="neutral" label="Filter" onclick={displayFilter} class="search-button filter-button" style="margin-right: 5px;"></lightning-button>
+                                    <lightning-button icon-name="utility:filterList" icon-position="right" variant="neutral" label={label.filter} onclick={displayFilter} class="search-button filter-button" style="margin-right: 5px;"></lightning-button>
                                 </template>
                                 <template if:true={showFilter}>
-                                    <lightning-button variant="neutral" label="Clear Filter" onclick={clearFilter} class="search-button filter-button" style="margin-right: 5px;"></lightning-button>
+                                    <lightning-button variant="neutral" label={label.clearfilter} onclick={clearFilter} class="search-button filter-button" style="margin-right: 5px;"></lightning-button>
                                 </template>
                                 <template if:true={isLogged}>
                                 </template>
@@ -83,7 +83,7 @@
                 <template if:false={isLastSeen}>
                     <lightning-layout-item size="12" style="margin-left: 1%; width: 99%;">
                         <template if:true={noProducts}>
-                            <h2>No products found</h2>
+                            <h2>{label.noproductsfound}</h2>
                         </template>
                         <template if:true={productsDisplayed}>
                             <div class="slds-scrollable_y">
@@ -105,15 +105,15 @@
                                 <lightning-button icon-name="utility:chevronleft" variant="neutral" label="Back" onclick={backFromRecentlyViewed} class="search-button filter-button" style="margin-right: 5px;"></lightning-button>
                             </lightning-layout-item>
                             <lightning-layout-item size="12">
-                                <div class="slds-text-title" style="font-size: 20px; padding: 10px; margin-left: 41%;">Recently Viewed Properties</div>
+                                <div class="slds-text-title" style="font-size: 20px; padding: 10px; margin-left: 41%;">{label.recentlyviewedproperties}</div>
                             </lightning-layout-item>
                             <lightning-layout-item size="12">
                                 <template if:false={isLogged}>
-                                    <h2>You should log in to view recently viewed properties</h2>
+                                    <h2>{label.mustlogin1}</h2>
                                 </template>
                                 <template if:true={isLogged}>
                                     <template if:false={arelastproducts}>
-                                        <h2>No products found</h2>
+                                        <h2>{label.noproductsfound}</h2>
                                     </template>
                                     <template if:true={arelastproducts}>
                                         <div class="slds-scrollable_y">
@@ -139,14 +139,14 @@
                             <template if:true={productsDisplayed}>
                                 <lightning-layout>
                                     <lightning-layout-item>
-                                        <lightning-button label="First" 
+                                        <lightning-button label={label.first}  
                                             icon-name="utility:arrow_left"
                                             onclick={handleFirst}
                                             disabled={isPrev}
                                             style="margin-right: 5px;"><a href="#page1"></a></lightning-button>
                                     </lightning-layout-item>
                                     <lightning-layout-item>
-                                        <lightning-button label="Previous" 
+                                        <lightning-button label={label.previous}  
                                             icon-name="utility:chevronleft"
                                             onclick={handlePrevious}
                                             disabled={isPrev}><a href="#page1"></a></lightning-button>
@@ -155,14 +155,14 @@
                                         <p class="slds-text-align_center">Page {pageNumber} of {totalPages}</p>
                                     </lightning-layout-item>
                                     <lightning-layout-item>
-                                        <lightning-button label="Next" 
+                                        <lightning-button label={label.next}  
                                             icon-name="utility:chevronright"
                                             icon-position="right"
                                             onclick={handleNext}
                                             disabled={isNext}><a href="#page1"></a></lightning-button>
                                     </lightning-layout-item>
                                     <lightning-layout-item>
-                                        <lightning-button label="Last" 
+                                        <lightning-button label={label.last}  
                                             icon-name="utility:arrow_right"
                                             icon-position="right"
                                             onclick={handleLast}
@@ -180,14 +180,14 @@
                             <template if:true={vProductsDisplayed}>
                                 <lightning-layout>
                                     <lightning-layout-item>
-                                        <lightning-button label="First" 
+                                        <lightning-button label={label.first}  
                                             icon-name="utility:arrow_left"
                                             onclick={handleFirstV}
                                             disabled={isPrevV}
                                             style="margin-right: 5px;"><a href="#page1"></a></lightning-button>
                                     </lightning-layout-item>
                                     <lightning-layout-item>
-                                        <lightning-button label="Previous" 
+                                        <lightning-button label={label.previous}  
                                             icon-name="utility:chevronleft"
                                             onclick={handlePreviousV}
                                             disabled={isPrevV}><a href="#page1"></a></lightning-button>
@@ -196,14 +196,14 @@
                                         <p class="slds-text-align_center">Page {pageNumber} of {totalPages}</p>
                                     </lightning-layout-item>
                                     <lightning-layout-item>
-                                        <lightning-button label="Next" 
+                                        <lightning-button label={label.next}  
                                             icon-name="utility:chevronright"
                                             icon-position="right"
                                             onclick={handleNextV}
                                             disabled={isNextV}><a href="#page1"></a></lightning-button>
                                     </lightning-layout-item>
                                     <lightning-layout-item>
-                                        <lightning-button label="Last" 
+                                        <lightning-button label={label.last} 
                                             icon-name="utility:arrow_right"
                                             icon-position="right"
                                             onclick={handleLastV}
