@@ -4,12 +4,20 @@ import UserId from '@salesforce/user/Id';
 import userEvents from '@salesforce/apex/ProductController.getAllUserEvents';
 import eventDelete from '@salesforce/apex/ProductController.deleteEvent';
 
+import meetingcancelsuccess from '@salesforce/label/c.meetingcancelsuccess';
+import success from '@salesforce/label/c.success';
+
 export default class MyMeetings extends LightningElement {
     
     @track userEvents = [];
     @track userId = UserId;
     @track idToDelete;
     @track displayModal = false;
+
+    label = {
+        meetingcancelsuccess,
+        success
+    }
 
     get areMeetings() {
         let flag = false;
@@ -57,8 +65,8 @@ export default class MyMeetings extends LightningElement {
                     })
                 this.dispatchEvent(
                     new ShowToastEvent({
-                        title: 'Success',
-                        message: 'Meeting cancelled successfully',
+                        title: success,
+                        message: meetingcancelsuccess,
                         variant: 'success'
                     })
                 );
