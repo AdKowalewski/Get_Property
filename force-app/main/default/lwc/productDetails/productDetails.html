@@ -185,7 +185,7 @@
                                                         <lightning-button variant="neutral" label={label.setmeeting} onclick={displayEventModal}></lightning-button>
                                                         <template if:false={hasAnyMeetings}>
                                                             <lightning-button variant="neutral" label={label.reserve} onclick={displayResModal}></lightning-button>
-                                                            <lightning-button variant="neutral" label={label.getquote} onclick={quoteCreation}></lightning-button>
+                                                            <lightning-button variant="neutral" label={label.getquote} onclick={quoteCreation} disabled={getQuoteDisabled}></lightning-button>
                                                         </template>
                                                     </lightning-layout-item>
                                                 </template>

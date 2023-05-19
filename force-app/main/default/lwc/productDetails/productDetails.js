@@ -261,6 +261,12 @@ export default class ProductDetails extends LightningElement {
         }
         return flag;
     }
+
+    get getQuoteDisabled() {
+        let flag = false;
+        
+        return flag;
+    }
  
     get backgroundStyle() {
         return 'background-image:url(' + this.product.displayUrl + ')';
