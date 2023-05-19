@@ -576,13 +576,6 @@ export default class ProductDetails extends LightningElement {
                     .then(result => {
                         this.isNotEmpty = JSON.stringify(result);
                     })
-                this.dispatchEvent(
-                    new ShowToastEvent({
-                        title: success,
-                        message: quotesuccess,
-                        variant: 'success'
-                    })
-                );
             })
     }
 }   
