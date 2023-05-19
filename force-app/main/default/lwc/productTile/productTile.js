@@ -1,4 +1,8 @@
 import { LightningElement, api, track } from 'lwc';
+import City from '@salesforce/label/c.City';
+import size from '@salesforce/label/c.size';
+import price from '@salesforce/label/c.price';
+import Reserved1 from '@salesforce/label/c.Reserved1';
 
 export default class ProductTile extends LightningElement {
 
@@ -10,6 +14,13 @@ export default class ProductTile extends LightningElement {
 
     @track
     productPrice;
+
+    label = {
+        City,
+        size,
+        price,
+        Reserved1
+    }
 
     get backgroundStyle() {
         return 'background-image:url('+ this.product.DisplayUrl +')';
