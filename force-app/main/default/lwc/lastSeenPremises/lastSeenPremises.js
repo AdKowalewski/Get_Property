@@ -3,6 +3,16 @@ import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import UserId from '@salesforce/user/Id';
 import getLastViewed from '@salesforce/apex/ProductController.getUserRecentlyViewedProducts2';
 
+import mustlogin1 from '@salesforce/label/c.mustlogin1';
+import recentlyviewedpremises from '@salesforce/label/c.recentlyviewedpremises';
+import noproductsfound from '@salesforce/label/c.noproductsfound';
+import first from '@salesforce/label/c.first';
+import previous from '@salesforce/label/c.previous';
+import next from '@salesforce/label/c.next';
+import last from '@salesforce/label/c.last';
+import productname from '@salesforce/label/c.kitchen';
+import productcity from '@salesforce/label/c.kitchen';
+
 export default class LastSeenPremises extends LightningElement {
     
     @track error = null;
@@ -20,6 +30,18 @@ export default class LastSeenPremises extends LightningElement {
     @track totalPages = 0;
     @track lastproducts = [];
     @track isDetail = false;
+
+    label = {
+        mustlogin1,
+        recentlyviewedpremises,
+        noproductsfound,
+        first,
+        previous,
+        next,
+        last,
+        productname,
+        productcity
+    }
 
     get isLogged() {
         let flag = false;

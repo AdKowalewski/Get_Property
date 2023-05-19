@@ -3,16 +3,16 @@
         <template if:false={isDetail}>
             <lightning-layout multiple-rows="true" class="slds-card">
                 <lightning-layout-item size="12" style="background-color: #000066;">
-                    <div class="slds-text-title" style="font-size: 25px; font-weight: bold; margin-left: 40%; width: 40%; margin-top: 1%; margin-bottom: 1%; color: white;">Recently Viewed Premises</div>
+                    <div class="slds-text-title" style="font-size: 25px; font-weight: bold; margin-left: 40%; width: 40%; margin-top: 1%; margin-bottom: 1%; color: white;">{label.recentlyviewedpremises}</div>
                 </lightning-layout-item>
                 <lightning-layout-item size="12" style="background-color: #000066;">
                     <div style="margin-left: 30%; width: 40%; margin-bottom: 2%;">           
                         <lightning-layout horizontal-align="middle" multiple-rows="true">
                             <lightning-layout-item size="12">
-                                <lightning-input style="-webkit-text-fill-color:white;" type="text" label="Product Name" value={seenProductName} onchange={handleSeenName}></lightning-input>
+                                <lightning-input style="-webkit-text-fill-color:white;" type="text" label={label.productname} value={seenProductName} onchange={handleSeenName}></lightning-input>
                             </lightning-layout-item>
                             <lightning-layout-item size="12">
-                                <lightning-input style="-webkit-text-fill-color:white;" type="text" label="Product City" value={seenProductCity} onchange={handleSeenCity}></lightning-input>
+                                <lightning-input style="-webkit-text-fill-color:white;" type="text" label={label.productcity} value={seenProductCity} onchange={handleSeenCity}></lightning-input>
                             </lightning-layout-item>
                         </lightning-layout>
                     </div>               
@@ -26,11 +26,11 @@
                     <lightning-layout multiple-rows="true">
                         <lightning-layout-item size="12">
                             <template if:false={isLogged}>
-                                <h2>You should log in to view recently viewed properties</h2>
+                                <h2>{label.mustlogin1}</h2>
                             </template>
                             <template if:true={isLogged}>
                                 <template if:false={arelastproducts}>
-                                    <h2>No products found</h2>
+                                    <h2>{label.noproductsfound}</h2>
                                 </template>
                                 <template if:true={arelastproducts}>
                                     <div class="slds-scrollable_y">
@@ -53,14 +53,14 @@
                         <template if:true={vProductsDisplayed}>
                             <lightning-layout>
                                 <lightning-layout-item>
-                                    <lightning-button label="First" 
+                                    <lightning-button label={label.first} 
                                         icon-name="utility:arrow_left"
                                         onclick={handleFirstV}
                                         disabled={isPrevV}
                                         style="margin-right: 5px;"><a href="#page1"></a></lightning-button>
                                 </lightning-layout-item>
                                 <lightning-layout-item>
-                                    <lightning-button label="Previous" 
+                                    <lightning-button label={label.previous} 
                                         icon-name="utility:chevronleft"
                                         onclick={handlePreviousV}
                                         disabled={isPrevV}><a href="#page1"></a></lightning-button>
@@ -69,14 +69,14 @@
                                     <p class="slds-text-align_center">Page {pageNumber} of {totalPages}</p>
                                 </lightning-layout-item>
                                 <lightning-layout-item>
-                                    <lightning-button label="Next" 
+                                    <lightning-button label={label.next} 
                                         icon-name="utility:chevronright"
                                         icon-position="right"
                                         onclick={handleNextV}
                                         disabled={isNextV}><a href="#page1"></a></lightning-button>
                                 </lightning-layout-item>
                                 <lightning-layout-item>
-                                    <lightning-button label="Last" 
+                                    <lightning-button label={label.last} 
                                         icon-name="utility:arrow_right"
                                         icon-position="right"
                                         onclick={handleLastV}
@@ -96,10 +96,10 @@
     <template if:false={isLogged}>
         <lightning-layout multiple-rows="true">
             <lightning-layout-item size="12">
-                <div class="slds-text-title" style="font-size: 20px; padding: 10px; margin-left: 41%;">Recently Viewed Premises</div>
+                <div class="slds-text-title" style="font-size: 20px; padding: 10px; margin-left: 41%;">{label.recentlyviewedpremises}</div>
             </lightning-layout-item>
             <lightning-layout-item size="12">
-                <h2 style="margin-left: 1%; margin-bottom: 1%;">You must log in to view recently viewed premises</h2>
+                <h2 style="margin-left: 1%; margin-bottom: 1%;">{label.mustlogin1}</h2>
             </lightning-layout-item>
         </lightning-layout>
     </template>
