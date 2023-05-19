@@ -122,28 +122,6 @@ public without sharing class FileController {
         return jsonStr;
     }
 
-    // @AuraEnabled
-    // public static void createContentDistributions(String recordId, Integer limitnum) {
-    //     List<ContentVersion> versions = [
-    //         SELECT Id, ContentDocumentId
-    //         FROM ContentVersion
-    //         WHERE FirstPublishLocationId = :recordId
-    //         ORDER BY CreatedDate DESC
-    //         LIMIT :limitnum
-    //     ];
-    //     for(ContentVersion cv : versions) {
-    //         ContentDistribution cd = new ContentDistribution();
-    //         cd.Name = 'test';
-    //         cd.ContentVersionId = cv.Id;
-    //         cd.PreferencesAllowViewInBrowser= true;
-    //         cd.PreferencesLinkLatestVersion=true;
-    //         cd.PreferencesNotifyOnVisit=false;
-    //         cd.PreferencesPasswordRequired=false;
-    //         cd.PreferencesAllowOriginalDownload= true;
-    //         insert cd;
-    //     }
-    // }
-
     @AuraEnabled
     public static String getProductDisplayUrl(String id) {
         String jsonStr = '';
@@ -155,7 +133,6 @@ public without sharing class FileController {
         ResponseWrapper wrapper = new ResponseWrapper();
         wrapper.message = prod.DisplayUrl;
         jsonStr = JSON.serialize(wrapper);
-        System.debug(jsonStr);
         return jsonStr;
     }
 
