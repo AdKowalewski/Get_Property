@@ -586,6 +586,39 @@ public without sharing class ProductController {
                     ];
                     qli.PricebookEntryId = entry[0].Id;
                     insert qli;
+
+                    // createPDF(qt.Id);
+                    createPDFInvoker(qt.Id);
+
+                    // String quoteUrl = 'https://britenet-10a-dev-ed.develop.my.salesforce.com/quote/quoteTemplateDataViewer.apexp?id=';
+                    // quoteUrl += qt.Id;
+                    // quoteUrl += '&headerHeight=190&footerHeight=188&summlid=0EH7S000000dEFm#toolbar=1&navpanes=0&zoom=90';
+                    // PageReference pg = new PageReference(quoteUrl);
+                    // QuoteDocument quotedoc = new QuoteDocument();
+                    // Blob b = pg.getContentAsPDF();
+                    // quotedoc.Document = b;
+                    // quotedoc.QuoteId = qt.Id;
+                    // insert quotedoc;
+
+                    // Messaging.EmailFileAttachment efa = new Messaging.EmailFileAttachment();
+                    // efa.setFileName(qt.Name + '.pdf');
+                    // efa.setBody(quotedoc.Document);
+                    // List<Messaging.SingleEmailMessage> mailList =  new List<Messaging.SingleEmailMessage>();
+                    // Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
+                    // EmailTemplate et = [SELECT Id, Subject, Body, HtmlValue FROM EmailTemplate WHERE Id = :Label.EmailTemplateId];
+                    // mail.setTemplateId(et.Id);
+                    // List<string> toAddress = new List<string>();
+                    // toAddress.add(qt.Email);
+                    // mail.setToAddresses(toAddress);
+                    // mail.setSubject(et.Subject);
+                    // mail.setHTMLBody(et.HtmlValue);
+                    // mail.setSaveAsActivity(false);
+                    // mail.setUseSignature(false);
+                    // List<Messaging.EmailFileAttachment> efaList = new List<Messaging.EmailFileAttachment>();
+                    // efaList.add(efa);
+                    // mail.setFileAttachments(efaList);
+                    // mailList.add(mail);
+                    // Messaging.sendEmail(mailList, true); 
                 }
             }
             return jsonStr;
@@ -608,12 +641,16 @@ public without sharing class ProductController {
         return jsonStr;
     }
 
+    @AuraEnabled
+    public static void createPDFInvoker(Id quoteId) {
+        createPDF(quoteId);
+    }
+
     @future(callout=true)
-    public static void createPDF(Id quoteId) {
-        String quoteUrl = '';
-        quoteUrl += Label.quoteurl1;
+    public static void createPDF(Id quoteId) {      
+        String quoteUrl = 'https://britenet-10a-dev-ed.develop.my.salesforce.com/quote/quoteTemplateDataViewer.apexp?id=';
         quoteUrl += quoteId;
-        quoteUrl += Label.quoteurl2;
+        quoteUrl += '&headerHeight=190&footerHeight=188&summlid=0EH7S000000dEFm#toolbar=1&navpanes=0&zoom=90';
         PageReference pg = new PageReference(quoteUrl);
         QuoteDocument quotedoc = new QuoteDocument();
         Blob b = pg.getContentAsPDF();
