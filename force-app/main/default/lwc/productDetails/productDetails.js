@@ -9,6 +9,7 @@ import eventCreate from '@salesforce/apex/ProductController.createEvent';
 import eventDelete from '@salesforce/apex/ProductController.deleteEvent';
 import reservationCreate from '@salesforce/apex/ProductController.createReservation';
 import quoteCreate from '@salesforce/apex/ProductController.createQuote';
+import oppsCheck from '@salesforce/apex/ProductController.checkOpps';
 
 import hourcontainer1 from '@salesforce/label/c.hourcontainer1';
 import hourcontainer2 from '@salesforce/label/c.hourcontainer2';
@@ -176,6 +177,7 @@ export default class ProductDetails extends LightningElement {
     @track resPeriod = 1;
     @track resPrice = 100;
     @track newprice;
+    @track isNotEmpty;
 
     connectedCallback() {
         getProduct({id: this.productId})
@@ -201,6 +203,10 @@ export default class ProductDetails extends LightningElement {
                 } else {
                     this.product.kitchen = no;
                 }
+                oppsCheck({whatId: this.product.id})
+                    .then(result => {
+                        this.isNotEmpty = JSON.stringify(result);
+                    })
                 userEvent({whoId: this.userId, whatId: this.product.id})
                     .then(result => {
                         this.myEvent = JSON.parse(result);
@@ -264,7 +270,11 @@ export default class ProductDetails extends LightningElement {
 
     get getQuoteDisabled() {
         let flag = false;
-        
+        if(this.isNotEmpty == 'empty') {
+            flag = false;
+        } else if(this.isNotEmpty == 'not empty') {
+            flag = true;
+        }
         return flag;
     }
  
@@ -515,6 +525,10 @@ export default class ProductDetails extends LightningElement {
                         } else {
                             this.product.kitchen = no;
                         }
+                        oppsCheck({whatId: this.product.id})
+                            .then(result => {
+                                this.isNotEmpty = JSON.stringify(result);
+                            })
                         userEvent({whoId: this.userId, whatId: this.product.id})
                             .then(result => {
                                 this.myEvent = JSON.parse(result);
@@ -558,6 +572,10 @@ export default class ProductDetails extends LightningElement {
     quoteCreation() {
         quoteCreate({whatId: this.product.id, whoId: this.userId, agentId: this.product.agentId})
             .then(result => {
+                oppsCheck({whatId: this.product.id})
+                    .then(result => {
+                        this.isNotEmpty = JSON.stringify(result);
+                    })
                 this.dispatchEvent(
                     new ShowToastEvent({
                         title: success,
