@@ -8,7 +8,8 @@ import productEvents from '@salesforce/apex/ProductController.getProductEventsFo
 import eventCreate from '@salesforce/apex/ProductController.createEvent';
 import eventDelete from '@salesforce/apex/ProductController.deleteEvent';
 import reservationCreate from '@salesforce/apex/ProductController.createReservation';
-import quoteCreate from '@salesforce/apex/ProductController.createQuoteAndPDF';
+import quoteCreate from '@salesforce/apex/ProductController.createQuote';
+import pdfCreate from '@salesforce/apex/ProductController.createPDF';
 import oppsCheck from '@salesforce/apex/ProductController.checkOpps';
 import makePDF from '@salesforce/apex/ProductController.createPDFInvoker';
 
@@ -571,13 +572,22 @@ export default class ProductDetails extends LightningElement {
     }
 
     quoteCreation() {
-        quoteCreate({whatId: this.product.id, whoId: this.userId, agentId: this.product.agentId})
+        pdfCreate({quoteId: '0Q07S000000zoK4SAI'})
             .then(result => {
-                oppsCheck({whatId: this.product.id})
-                    .then(result => {
-                        this.isNotEmpty = JSON.stringify(result);
-                    })
+
             })
+        // quoteCreate({whatId: this.product.id, whoId: this.userId, agentId: this.product.agentId})
+        //     .then(result => {
+        //         let data = JSON.parse(result);
+        //         pdfCreate({quoteId: data.id})
+        //             .then(result => {
+
+        //             })
+        //         oppsCheck({whatId: this.product.id})
+        //             .then(result => {
+        //                 this.isNotEmpty = JSON.stringify(result);
+        //             })
+        //     })
     }
 
     makePDFWrapper() {
