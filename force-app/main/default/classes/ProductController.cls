@@ -64,6 +64,10 @@ public without sharing class ProductController {
         public String agentId { get; set; }
     }
 
+    private class QuoteWrapper {
+        public String id { get; set; }
+    }
+
     @AuraEnabled
     public static String getProductById(String id) {
         String jsonStr = '';
@@ -537,21 +541,22 @@ public without sharing class ProductController {
         }   
     }
 
-    @AuraEnabled
-    public static String createQuoteAndPDF(String whatId, String whoId, String agentId) {
-        String jsonStr = '';
-        try {
-            Quote qt = createQuote(whatId, whoId, agentId);
-            createPDF(qt.Id);
-            return jsonStr;
-        } catch(Exception e) {
-            jsonStr = e.getMessage();
-            return jsonStr;
-        }
-    }
+    // @AuraEnabled
+    // public static String createQuoteAndPDF(String whatId, String whoId, String agentId) {
+    //     String jsonStr = '';
+    //     try {
+    //         Quote qt = createQuote(whatId, whoId, agentId);
+    //         createPDF(qt.Id);
+    //         return jsonStr;
+    //     } catch(Exception e) {
+    //         jsonStr = e.getMessage();
+    //         return jsonStr;
+    //     }
+    // }
 
-    public static Quote createQuote(String whatId, String whoId, String agentId) {
-        // String jsonStr = '';
+    @AuraEnabled
+    public static String createQuote(String whatId, String whoId, String agentId) {
+        String jsonStr = '';
         Quote qt = new Quote();
         // try{
             date dt = date.today();
@@ -633,7 +638,10 @@ public without sharing class ProductController {
                     // Messaging.sendEmail(mailList, true); 
                 }
             }
-            return qt;
+            QuoteWrapper wrapper = new QuoteWrapper();
+            wrapper.id = qt.Id;
+            jsonStr = JSON.serialize(wrapper);
+            return jsonStr;
             // return jsonStr;
         // } catch (Exception e) {
             // jsonStr = e.getMessage();
@@ -659,14 +667,17 @@ public without sharing class ProductController {
         createPDF(quoteId);
     }
 
-    @future(callout=true)
+    @AuraEnabled
     public static void createPDF(Id quoteId) {      
         String quoteUrl = 'https://britenet-10a-dev-ed.develop.my.salesforce.com/quote/quoteTemplateDataViewer.apexp?id=';
         quoteUrl += quoteId;
         quoteUrl += '&headerHeight=190&footerHeight=188&summlid=0EH7S000000dEFm#toolbar=1&navpanes=0&zoom=90';
+        System.debug('quoteurl: ' + quoteUrl);
         PageReference pg = new PageReference(quoteUrl);
         QuoteDocument quotedoc = new QuoteDocument();
         Blob b = pg.getContentAsPDF();
+        System.debug('blbo: ' + b);
+        System.debug('blbo: ' + EncodingUtil.base64Encode(b));
         quotedoc.Document = b;
         quotedoc.QuoteId = quoteId;
         insert quotedoc;
