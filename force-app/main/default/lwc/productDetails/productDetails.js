@@ -52,6 +52,8 @@ import meetingdate from '@salesforce/label/c.meetingdate';
 import choosehour from '@salesforce/label/c.choosehour';
 import setreservation from '@salesforce/label/c.setreservation';
 import currentreservationprice from '@salesforce/label/c.currentreservationprice';
+import Cancel from '@salesforce/label/c.Cancel';
+import Save from '@salesforce/label/c.Save';
 
 export default class ProductDetails extends LightningElement {
 
@@ -94,7 +96,9 @@ export default class ProductDetails extends LightningElement {
         meetingdate, 
         choosehour, 
         setreservation, 
-        currentreservationprice
+        currentreservationprice,
+        Cancel,
+        Save
     }
 
     @track product;
