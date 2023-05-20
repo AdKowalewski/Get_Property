@@ -10,8 +10,8 @@ import first from '@salesforce/label/c.first';
 import previous from '@salesforce/label/c.previous';
 import next from '@salesforce/label/c.next';
 import last from '@salesforce/label/c.last';
-import productname from '@salesforce/label/c.kitchen';
-import productcity from '@salesforce/label/c.kitchen';
+import productname from '@salesforce/label/c.productname';
+import productcity from '@salesforce/label/c.productcity';
 
 export default class LastSeenPremises extends LightningElement {
     

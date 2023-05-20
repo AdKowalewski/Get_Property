@@ -23,6 +23,8 @@ import wifi from '@salesforce/label/c.wifi';
 import parking from '@salesforce/label/c.parking';
 import elevator from '@salesforce/label/c.elevator';
 import kitchen from '@salesforce/label/c.kitchen';
+import productname from '@salesforce/label/c.productname';
+import productcity from '@salesforce/label/c.productcity';
 
 export default class PremiseExplorer extends LightningElement {
 
@@ -81,7 +83,9 @@ export default class PremiseExplorer extends LightningElement {
         wifi,
         parking,
         elevator,
-        kitchen
+        kitchen,
+        productname,
+        productcity
     };
 
     get isLogged() {
