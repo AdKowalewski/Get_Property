@@ -479,7 +479,8 @@ public without sharing class ProductController {
     @AuraEnabled
     public static String createReservation(String whatId, String whoId, String agentId, Decimal noDays, String userId) {
         String jsonStr = '';
-        try{
+        Quote qt = new Quote();
+        // try{
             Integer nDays = (Integer) noDays;
             date dt = date.today();
             date dt2 = dt.addDays(nDays);
@@ -520,7 +521,6 @@ public without sharing class ProductController {
                     insert opp;
 
                     if(qts.size() == 0) {
-                        Quote qt = new Quote();
                         qt.Name = opp.Name;
                         qt.ProductId__c = whatId;
                         qt.ContactId = con[0].Id;
@@ -549,11 +549,14 @@ public without sharing class ProductController {
                     }
                 }
             }
+            QuoteWrapper wrapper = new QuoteWrapper();
+            wrapper.id = qt.Id;
+            jsonStr = JSON.serialize(wrapper);
             return jsonStr;  
-        } catch(Exception e) {
-            jsonStr = e.getMessage();
-            return jsonStr;
-        }   
+        // } catch(Exception e) {
+        //     jsonStr = e.getMessage();
+        //     return jsonStr;
+        // }   
     }
 
     // @AuraEnabled
