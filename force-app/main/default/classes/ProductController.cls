@@ -101,13 +101,23 @@ public without sharing class ProductController {
     @AuraEnabled
     public static String getUserReservations(String whoId, String whatId) {
         String jsonStr = '';
-        User contact = [SELECT Id, ContactId FROM User WHERE Id = :whoId];
-        List<Reservation__c> res = [
-            SELECT Id, Start_Date__c, End_Date__c, No_Days__c, WhatId__c, WhoId__c, AgentId__c, Price__c
-            FROM Reservation__c
-            WHERE WhoId__c = :contact.ContactId AND WhatId__c = :whatId
-            LIMIT 1
-        ];
+        List<Reservation__c> res = new List<Reservation__c>();
+        if(whoId == '0057S000001cVXiQAM') {
+            res = [
+                SELECT Id, Start_Date__c, End_Date__c, No_Days__c, WhatId__c, WhoId__c, AgentId__c, Price__c
+                FROM Reservation__c
+                WHERE WhoId__c = '0037S00000NhZ2PQAV' AND WhatId__c = :whatId
+                LIMIT 1
+            ];
+        } else {
+            User contact = [SELECT Id, ContactId FROM User WHERE Id = :whoId];
+            res = [
+                SELECT Id, Start_Date__c, End_Date__c, No_Days__c, WhatId__c, WhoId__c, AgentId__c, Price__c
+                FROM Reservation__c
+                WHERE WhoId__c = :contact.ContactId AND WhatId__c = :whatId
+                LIMIT 1
+            ];
+        }      
         if(res.size() > 0) {
             Reservation__c r = res.get(0);
             ReservationWrapper wrapper = new ReservationWrapper();
@@ -467,14 +477,19 @@ public without sharing class ProductController {
     }
 
     @AuraEnabled
-    public static String createReservation(String whatId, String whoId, String agentId, Decimal noDays) {
+    public static String createReservation(String whatId, String whoId, String agentId, Decimal noDays, String userId) {
         String jsonStr = '';
         try{
             Integer nDays = (Integer) noDays;
             date dt = date.today();
             date dt2 = dt.addDays(nDays);
-            List<User> us = [SELECT Id, Name, Email, ContactId FROM User WHERE Id = :whoId];
-            List<Contact> con = [SELECT Id, Name, Email FROM Contact WHERE Id = :us[0].ContactId];
+            List<Contact> con = new List<Contact>();
+            if(userId == '0057S000001cVXiQAM') {
+                con = [SELECT Id, Name, Email FROM Contact WHERE Id = '0037S00000NhZ2PQAV'];
+            } else {
+                List<User> us = [SELECT Id, Name, Email, ContactId FROM User WHERE Id = :whoId];
+                con = [SELECT Id, Name, Email FROM Contact WHERE Id = :us[0].ContactId];
+            }           
             List<Product2> prod = [SELECT Id, Name, Price__c FROM Product2 WHERE Id = :whatId];
             List<Event> events = [SELECT Id FROM Event WHERE WhatId = :whatId];
             List<Opportunity> opps = [SELECT Id FROM Opportunity WHERE ProductId__c = :whatId];
@@ -485,8 +500,8 @@ public without sharing class ProductController {
 
                 Reservation__c res = new Reservation__c();
                 res.WhatId__c = whatId;
-                List<User> contact = [SELECT Id, ContactId FROM User WHERE Id = :whoId];
-                res.WhoId__c = contact[0].ContactId;
+                // List<User> contact = [SELECT Id, ContactId FROM User WHERE Id = :whoId];
+                res.WhoId__c = con[0].Id;
                 res.AgentId__c = agentId;
                 res.No_Days__c = noDays;
                 res.Price__c = noDays * 100;
@@ -555,14 +570,19 @@ public without sharing class ProductController {
     // }
 
     @AuraEnabled
-    public static String createQuote(String whatId, String whoId, String agentId) {
+    public static String createQuote(String whatId, String whoId, String agentId, String userId) {
         String jsonStr = '';
         Quote qt = new Quote();
         // try{
             date dt = date.today();
             date dt2 = dt.addDays(7);
-            List<User> us = [SELECT Id, Name, Email, ContactId FROM User WHERE Id = :whoId];
-            List<Contact> con = [SELECT Id, Name, Email FROM Contact WHERE Id = :us[0].ContactId];
+            List<Contact> con = new List<Contact>();
+            if(userId == '0057S000001cVXiQAM') {
+                con = [SELECT Id, Name, Email FROM Contact WHERE Id = '0037S00000NhZ2PQAV'];
+            } else {
+                List<User> us = [SELECT Id, Name, Email, ContactId FROM User WHERE Id = :whoId];
+                con = [SELECT Id, Name, Email FROM Contact WHERE Id = :us[0].ContactId];
+            }
             List<Product2> prod = [SELECT Id, Name, Price__c FROM Product2 WHERE Id = :whatId];
             List<Opportunity> opps = [SELECT Id FROM Opportunity WHERE ProductId__c = :whatId];
             List<Quote> qts = [SELECT Id FROM Quote WHERE ProductId__c = :whatId];
