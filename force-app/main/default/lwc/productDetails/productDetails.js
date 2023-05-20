@@ -8,7 +8,7 @@ import productEvents from '@salesforce/apex/ProductController.getProductEventsFo
 import eventCreate from '@salesforce/apex/ProductController.createEvent';
 import eventDelete from '@salesforce/apex/ProductController.deleteEvent';
 import reservationCreate from '@salesforce/apex/ProductController.createReservation';
-import quoteCreate from '@salesforce/apex/ProductController.createQuote';
+import quoteCreate from '@salesforce/apex/ProductController.createQuoteAndPDF';
 import oppsCheck from '@salesforce/apex/ProductController.checkOpps';
 import makePDF from '@salesforce/apex/ProductController.createPDFInvoker';
 
