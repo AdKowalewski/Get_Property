@@ -538,8 +538,15 @@ public without sharing class ProductController {
     }
 
     @AuraEnabled
-    public static String createQuote(String whatId, String whoId, String agentId) {
-        String jsonStr = '';
+    public static void createQuote(String whatId, String whoId, String agentId) {
+        createQuoteFuture(whatId, whoId, agentId);
+    }
+
+    // @future(callout=true)
+    // @AuraEnabled
+    @future(callout=true)
+    public static void createQuoteFuture(String whatId, String whoId, String agentId) {
+        // String jsonStr = '';
         try{
             date dt = date.today();
             date dt2 = dt.addDays(7);
@@ -588,17 +595,17 @@ public without sharing class ProductController {
                     insert qli;
 
                     // createPDF(qt.Id);
-                    createPDFInvoker(qt.Id);
+                    // createPDFInvoker(qt.Id);
 
-                    // String quoteUrl = 'https://britenet-10a-dev-ed.develop.my.salesforce.com/quote/quoteTemplateDataViewer.apexp?id=';
-                    // quoteUrl += qt.Id;
-                    // quoteUrl += '&headerHeight=190&footerHeight=188&summlid=0EH7S000000dEFm#toolbar=1&navpanes=0&zoom=90';
-                    // PageReference pg = new PageReference(quoteUrl);
-                    // QuoteDocument quotedoc = new QuoteDocument();
-                    // Blob b = pg.getContentAsPDF();
-                    // quotedoc.Document = b;
-                    // quotedoc.QuoteId = qt.Id;
-                    // insert quotedoc;
+                    String quoteUrl = 'https://britenet-10a-dev-ed.develop.my.salesforce.com/quote/quoteTemplateDataViewer.apexp?id=';
+                    quoteUrl += qt.Id;
+                    quoteUrl += '&headerHeight=190&footerHeight=188&summlid=0EH7S000000dEFm#toolbar=1&navpanes=0&zoom=90';
+                    PageReference pg = new PageReference(quoteUrl);
+                    QuoteDocument quotedoc = new QuoteDocument();
+                    Blob b = pg.getContentAsPDF();
+                    quotedoc.Document = b;
+                    quotedoc.QuoteId = qt.Id;
+                    insert quotedoc;
 
                     // Messaging.EmailFileAttachment efa = new Messaging.EmailFileAttachment();
                     // efa.setFileName(qt.Name + '.pdf');
@@ -621,10 +628,10 @@ public without sharing class ProductController {
                     // Messaging.sendEmail(mailList, true); 
                 }
             }
-            return jsonStr;
+            // return jsonStr;
         } catch (Exception e) {
-            jsonStr = e.getMessage();
-            return jsonStr;
+            // jsonStr = e.getMessage();
+            // return jsonStr;
         }
     }
 
