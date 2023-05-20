@@ -537,16 +537,15 @@ public without sharing class ProductController {
         }   
     }
 
-    @AuraEnabled
-    public static void createQuote(String whatId, String whoId, String agentId) {
-        createQuoteFuture(whatId, whoId, agentId);
-    }
+    // @AuraEnabled
+    // public static void createQuote(String whatId, String whoId, String agentId) {
+    //     createQuoteFuture(whatId, whoId, agentId);
+    // }
 
     // @future(callout=true)
-    // @AuraEnabled
-    @future(callout=true)
-    public static void createQuoteFuture(String whatId, String whoId, String agentId) {
-        // String jsonStr = '';
+    @AuraEnabled
+    public static String createQuote(String whatId, String whoId, String agentId) {
+        String jsonStr = '';
         try{
             date dt = date.today();
             date dt2 = dt.addDays(7);
@@ -628,10 +627,10 @@ public without sharing class ProductController {
                     // Messaging.sendEmail(mailList, true); 
                 }
             }
-            // return jsonStr;
+            return jsonStr;
         } catch (Exception e) {
-            // jsonStr = e.getMessage();
-            // return jsonStr;
+            jsonStr = e.getMessage();
+            return jsonStr;
         }
     }
 
