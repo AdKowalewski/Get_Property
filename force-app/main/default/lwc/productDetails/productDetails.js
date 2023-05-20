@@ -10,6 +10,7 @@ import eventDelete from '@salesforce/apex/ProductController.deleteEvent';
 import reservationCreate from '@salesforce/apex/ProductController.createReservation';
 import quoteCreate from '@salesforce/apex/ProductController.createQuote';
 import oppsCheck from '@salesforce/apex/ProductController.checkOpps';
+import makePDF from '@salesforce/apex/ProductController.createPDFInvoker';
 
 import hourcontainer1 from '@salesforce/label/c.hourcontainer1';
 import hourcontainer2 from '@salesforce/label/c.hourcontainer2';
@@ -577,5 +578,12 @@ export default class ProductDetails extends LightningElement {
                         this.isNotEmpty = JSON.stringify(result);
                     })
             })
+    }
+
+    makePDFWrapper() {
+        makePDF({quoteId: '0Q07S000000zoCfSAI'})
+        .then(result => {
+
+        })
     }
 }   
