@@ -106,70 +106,22 @@ export default class ProductDetails extends LightningElement {
     @track myRes = null;
     @track productEvents = [];
     @track hours = [
-        {
-            h: '9:00',
-            class: hourcontainer2
-        },
-        {
-            h: '9:30',
-            class: hourcontainer2
-        },
-        {
-            h: '10:00',
-            class: hourcontainer2
-        },
-        {
-            h: '10:30',
-            class: hourcontainer2
-        },
-        {
-            h: '11:00',
-            class: hourcontainer2
-        },
-        {
-            h: '11:30',
-            class: hourcontainer2
-        },
-        {
-            h: '12:00',
-            class: hourcontainer2
-        },
-        {
-            h: '12:30',
-            class: hourcontainer2
-        },
-        {
-            h: '13:00',
-            class: hourcontainer2
-        },
-        {
-            h: '13:30',
-            class: hourcontainer2
-        },
-        {
-            h: '14:00',
-            class: hourcontainer2
-        },
-        {
-            h: '14:30',
-            class: hourcontainer2
-        },
-        {
-            h: '15:00',
-            class: hourcontainer2
-        },
-        {
-            h: '15:30',
-            class: hourcontainer2
-        },
-        {
-            h: '16:00',
-            class: hourcontainer2
-        },
-        {
-            h: '16:30',
-            class: hourcontainer2
-        }
+        { h: '9:00', class: hourcontainer2 },
+        { h: '9:30', class: hourcontainer2 },
+        { h: '10:00', class: hourcontainer2 },
+        { h: '10:30', class: hourcontainer2 },
+        { h: '11:00', class: hourcontainer2 },
+        { h: '11:30', class: hourcontainer2 },
+        { h: '12:00', class: hourcontainer2 },
+        { h: '12:30', class: hourcontainer2 },
+        { h: '13:00', class: hourcontainer2 },
+        { h: '13:30', class: hourcontainer2 },
+        { h: '14:00', class: hourcontainer2 },
+        { h: '14:30', class: hourcontainer2 },
+        { h: '15:00', class: hourcontainer2 },
+        { h: '15:30', class: hourcontainer2 },
+        { h: '16:00', class: hourcontainer2 },
+        { h: '16:30', class: hourcontainer2 }
     ];
     @track availableHours = [];
     @track meetingDate = new Date(new Date().getTime() + (1*24*60*60*1000)).toISOString();
@@ -184,62 +136,7 @@ export default class ProductDetails extends LightningElement {
     @track isNotEmpty;
 
     connectedCallback() {
-        getProduct({id: this.productId})
-            .then(result => {
-                this.product = JSON.parse(result);
-                if(this.product.wifi == true) {
-                    this.product.wifi = yes;
-                } else {
-                    this.product.wifi = no;
-                }
-                if(this.product.parking == true) {
-                    this.product.parking = yes;
-                } else {
-                    this.product.parking = no;
-                }
-                if(this.product.elevator == true) {
-                    this.product.elevator = yes;
-                } else {
-                    this.product.elevator = no;
-                }
-                if(this.product.kitchen == true) {
-                    this.product.kitchen = yes;
-                } else {
-                    this.product.kitchen = no;
-                }
-                oppsCheck({whatId: this.product.id})
-                    .then(result => {
-                        this.isNotEmpty = JSON.stringify(result);
-                    })
-                userEvent({whoId: this.userId, whatId: this.product.id})
-                    .then(result => {
-                        this.myEvent = JSON.parse(result);
-                    })
-                userReservation({whoId: this.userId, whatId: this.product.id})
-                    .then(result => {
-                        this.myRes = JSON.parse(result);
-                        this.newprice = this.product.price - this.myRes.price;
-                    })
-                productEvents({whatId: this.product.id, start: this.meetingDate})
-                    .then(result => {
-                        if(result) {
-                            let data = JSON.parse(result);
-                            this.productEvents = data.events;
-                            this.availableHours = data.hours;
-                            for(let j = 0; j < this.hours.length; j++) {
-                                this.hours[j].class = hourcontainer2;
-                            }
-                            for(let i = 0; i < this.availableHours.length; i++) {
-                                for(let j = 0; j < this.hours.length; j++) {
-                                    if(this.hours[j].h == this.availableHours[i]) {
-                                        this.hours[j].class = hourcontainer1;
-                                        continue;
-                                    }
-                                }
-                            }
-                        }            
-                    })
-            })
+        this.getProductMethod();
     }
 
     get hasAnyMeetings() {
@@ -332,34 +229,10 @@ export default class ProductDetails extends LightningElement {
         this.meetingDate = event.target.value;
         let dd = new Date(new Date().getTime()).toISOString();
         if(this.meetingDate >= dd) {
-            productEvents({whatId: this.product.id, start: this.meetingDate})
-            .then(result => {
-                if(result) {
-                    let data = JSON.parse(result);
-                    this.productEvents = data.events;
-                    this.availableHours = data.hours;
-                    for(let j = 0; j < this.hours.length; j++) {
-                        this.hours[j].class = hourcontainer2;
-                    }
-                    for(let i = 0; i < this.availableHours.length; i++) {
-                        for(let j = 0; j < this.hours.length; j++) {
-                            if(this.hours[j].h == this.availableHours[i]) {
-                                this.hours[j].class = hourcontainer1;
-                                continue;
-                            }
-                        }
-                    }
-                }            
-            })
+            this.productEventsMethod();
         } else if(this.meetingDate < dd) {
             this.meetingDate = new Date(new Date().getTime() + (1*24*60*60*1000)).toISOString();
-            this.dispatchEvent(
-                new ShowToastEvent({
-                    title: error,
-                    message: dateerror,
-                    variant: 'error'
-                })
-            );
+            this.toastMethod(error, dateerror, 'error');
         }
     }
 
@@ -382,25 +255,7 @@ export default class ProductDetails extends LightningElement {
 
     displayEventModal() {
         this.showEventModal = true;
-        productEvents({whatId: this.product.id, start: this.meetingDate})
-            .then(result => {
-                if(result) {
-                    let data = JSON.parse(result);
-                    this.productEvents = data.events;
-                    this.availableHours = data.hours;
-                    for(let j = 0; j < this.hours.length; j++) {
-                        this.hours[j].class = hourcontainer2;
-                    }
-                    for(let i = 0; i < this.availableHours.length; i++) {
-                        for(let j = 0; j < this.hours.length; j++) {
-                            if(this.hours[j].h == this.availableHours[i]) {
-                                this.hours[j].class = hourcontainer1;
-                                continue;
-                            }
-                        }
-                    }
-                }            
-            })
+        this.productEventsMethod();
     }
 
     handleCreateEvent(event) {
@@ -421,48 +276,15 @@ export default class ProductDetails extends LightningElement {
                     hour: parseInt(chosenHour[0]) + 2,
                     minute: chosenHour[1] == '30' ? 30 : 0})
                     .then(result => {
-                        userEvent({whoId: this.userId, whatId: this.product.id})
-                            .then(result => {
-                                this.myEvent = JSON.parse(result);
-                            })
-                        productEvents({whatId: this.product.id, start: this.meetingDate})
-                            .then(result => {
-                                if(result) {
-                                    let data = JSON.parse(result);
-                                    this.productEvents = data.events;
-                                    this.availableHours = data.hours;
-                                    for(let j = 0; j < this.hours.length; j++) {
-                                        this.hours[j].class = hourcontainer2;
-                                    }
-                                    for(let i = 0; i < this.availableHours.length; i++) {
-                                        for(let j = 0; j < this.hours.length; j++) {
-                                            if(this.hours[j].h == this.availableHours[i]) {
-                                                this.hours[j].class = hourcontainer1;
-                                                continue;
-                                            }
-                                        }
-                                    }
-                                }            
-                            })
+                        this.userEventMethod();
+                        this.productEventsMethod();
                         this.showEventModal = false;
-                        this.dispatchEvent(
-                            new ShowToastEvent({
-                                title: success,
-                                message: meetingsuccess,
-                                variant: 'success'
-                            })
-                        );
+                        this.toastMethod(success, meetingsuccess, 'success');
                     })
             }
         } else if(this.meetingDate < dd) {
             this.meetingDate = new Date(new Date().getTime() + (1*24*60*60*1000)).toISOString();
-            this.dispatchEvent(
-                new ShowToastEvent({
-                    title: error,
-                    message: dateerror,
-                    variant: 'error'
-                })
-            );
+            this.toastMethod(error, dateerror, 'error');
         }
     }
 
@@ -470,137 +292,110 @@ export default class ProductDetails extends LightningElement {
         eventDelete({id: this.myEvent.id})
             .then(result => {
                 this.myEvent = null;
-                userEvent({whoId: this.userId, whatId: this.product.id})
-                    .then(result => {
-                        this.myEvent = JSON.parse(result);
-                    })
-                    productEvents({whatId: this.product.id, start: this.meetingDate})
-                        .then(async result => {
-                            if(result) {
-                                let data = JSON.parse(result);
-                                this.productEvents = data.events;
-                                this.availableHours = data.hours;
-                                for(let j = 0; j < this.hours.length; j++) {
-                                    this.hours[j].class = hourcontainer2;
-                                }
-                                for(let i = 0; i < this.availableHours.length; i++) {
-                                    for(let j = 0; j < this.hours.length; j++) {
-                                        if(this.hours[j].h == this.availableHours[i]) {
-                                            this.hours[j].class = hourcontainer1;
-                                            continue;
-                                        }
-                                    }
-                                }
-                            }            
-                        })
-                this.dispatchEvent(
-                    new ShowToastEvent({
-                        title: success,
-                        message: meetingcancelsuccess,
-                        variant: 'success'
-                    })
-                );
+                this.userEventMethod();
+                this.productEventsMethod();
+                this.toastMethod(success, meetingcancelsuccess, 'success');
             })
     }
 
     saveReservation() {
         reservationCreate({whatId: this.product.id, whoId: this.userId, agentId: this.product.agentId, noDays: this.resPeriod, userId: this.userId})
             .then(result => {
-                let data = JSON.parse(result);
-                // pdfCreate({quoteId: data.id})
-                //     .then(result => {
-
-                //     })
-                getProduct({id: this.productId})
-                    .then(result => {
-                        this.product = JSON.parse(result);
-                        if(this.product.wifi == true) {
-                            this.product.wifi = yes;
-                        } else {
-                            this.product.wifi = no;
-                        }
-                        if(this.product.parking == true) {
-                            this.product.parking = yes;
-                        } else {
-                            this.product.parking = no;
-                        }
-                        if(this.product.elevator == true) {
-                            this.product.elevator = yes;
-                        } else {
-                            this.product.elevator = no;
-                        }
-                        if(this.product.kitchen == true) {
-                            this.product.kitchen = yes;
-                        } else {
-                            this.product.kitchen = no;
-                        }
-                        oppsCheck({whatId: this.product.id})
-                            .then(result => {
-                                this.isNotEmpty = JSON.stringify(result);
-                            })
-                        userEvent({whoId: this.userId, whatId: this.product.id})
-                            .then(result => {
-                                this.myEvent = JSON.parse(result);
-                            })
-                        userReservation({whoId: this.userId, whatId: this.product.id})
-                            .then(result => {
-                                this.myRes = JSON.parse(result);
-                                this.newprice = this.product.price - this.myRes.price;
-                            })
-                        productEvents({whatId: this.product.id, start: this.meetingDate})
-                            .then(result => {
-                                if(result) {
-                                    let data = JSON.parse(result);
-                                    this.productEvents = data.events;
-                                    this.availableHours = data.hours;
-                                    for(let j = 0; j < this.hours.length; j++) {
-                                        this.hours[j].class = hourcontainer2;
-                                    }
-                                    for(let i = 0; i < this.availableHours.length; i++) {
-                                        for(let j = 0; j < this.hours.length; j++) {
-                                            if(this.hours[j].h == this.availableHours[i]) {
-                                                this.hours[j].class = hourcontainer1;
-                                                continue;
-                                            }
-                                        }
-                                    }
-                                }            
-                            })
-                    })
+                this.getProductMethod();
                 this.showResModal = false;
-                this.dispatchEvent(
-                    new ShowToastEvent({
-                        title: success,
-                        message: reservationsuccess,
-                        variant: 'success'
-                    })
-                );
+                this.toastMethod(success, reservationsuccess, 'success');
             })
     }
 
     quoteCreation() {
-        // pdfCreate({quoteId: '0Q07S000000zoLHSAY'})
-        //     .then(result => {
-
-        //     })
         quoteCreate({whatId: this.product.id, whoId: this.userId, agentId: this.product.agentId, userId: this.userId})
             .then(result => {
-                let data = JSON.parse(result);
-                // pdfCreate({quoteId: data.id})
-                //     .then(result => {
-
-                //     })
-                oppsCheck({whatId: this.product.id})
-                    .then(result => {
-                        this.isNotEmpty = JSON.stringify(result);
-                    })
+                this.oppsCheckMethod();
             })
     }
 
-    // makePDFWrapper() {
-    //     makePDF({quoteId: '0Q07S000000zoCfSAI'})
-    //     .then(result => {
+    toastMethod(title, message, variant) {
+        this.dispatchEvent(
+            new ShowToastEvent({
+                title: title,
+                message: message,
+                variant: variant
+            })
+        );
+    }
 
-    //     })
-    // }
+    getProductMethod() {
+        getProduct({id: this.productId})
+            .then(result => {
+                this.product = JSON.parse(result);
+                if(this.product.wifi == true) {
+                    this.product.wifi = yes;
+                } else {
+                    this.product.wifi = no;
+                }
+                if(this.product.parking == true) {
+                    this.product.parking = yes;
+                } else {
+                    this.product.parking = no;
+                }
+                if(this.product.elevator == true) {
+                    this.product.elevator = yes;
+                } else {
+                    this.product.elevator = no;
+                }
+                if(this.product.kitchen == true) {
+                    this.product.kitchen = yes;
+                } else {
+                    this.product.kitchen = no;
+                }
+                this.oppsCheckMethod();
+                this.userEventMethod();
+                this.userReservationMethod();
+                this.productEventsMethod();
+            })
+    }
+
+    oppsCheckMethod() {
+        oppsCheck({whatId: this.product.id})
+            .then(result => {
+                this.isNotEmpty = JSON.stringify(result);
+            })
+    }
+
+    userEventMethod() {
+        userEvent({whoId: this.userId, whatId: this.product.id})
+            .then(result => {
+                this.myEvent = JSON.parse(result);
+            })
+    }
+
+    userReservationMethod() {
+        userReservation({whoId: this.userId, whatId: this.product.id})
+            .then(result => {
+                this.myRes = JSON.parse(result);
+                this.newprice = this.product.price - this.myRes.price;
+            })
+    }
+
+    productEventsMethod() {
+        productEvents({whatId: this.product.id, start: this.meetingDate})
+            .then(result => {
+                if(result) {
+                    let data = JSON.parse(result);
+                    this.productEvents = data.events;
+                    this.availableHours = data.hours;
+                    for(let j = 0; j < this.hours.length; j++) {
+                        this.hours[j].class = hourcontainer2;
+                    }
+                    for(let i = 0; i < this.availableHours.length; i++) {
+                        for(let j = 0; j < this.hours.length; j++) {
+                            if(this.hours[j].h == this.availableHours[i]) {
+                                this.hours[j].class = hourcontainer1;
+                                continue;
+                            }
+                        }
+                    }
+                }            
+            })
+    }
 }   
