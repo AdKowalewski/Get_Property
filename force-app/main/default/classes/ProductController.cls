@@ -106,7 +106,7 @@ public without sharing class ProductController {
             res = [
                 SELECT Id, Start_Date__c, End_Date__c, No_Days__c, WhatId__c, WhoId__c, AgentId__c, Price__c
                 FROM Reservation__c
-                WHERE WhoId__c = '0037S00000NhZ2PQAV' AND WhatId__c = :whatId
+                WHERE WhoId__c = '0037S00000NhbkzQAB' AND WhatId__c = :whatId
                 LIMIT 1
             ];
         } else {
@@ -486,7 +486,7 @@ public without sharing class ProductController {
             date dt2 = dt.addDays(nDays);
             List<Contact> con = new List<Contact>();
             if(userId == '0057S000001cVXiQAM') {
-                con = [SELECT Id, Name, Email FROM Contact WHERE Id = '0037S00000NhZ2PQAV'];
+                con = [SELECT Id, Name, Email FROM Contact WHERE Id = '0037S00000NhbkzQAB'];
             } else {
                 List<User> us = [SELECT Id, Name, Email, ContactId FROM User WHERE Id = :whoId];
                 con = [SELECT Id, Name, Email FROM Contact WHERE Id = :us[0].ContactId];
@@ -532,6 +532,7 @@ public without sharing class ProductController {
                             WHERE Name = :Label.spb
                         ];
                         qt.Pricebook2Id = pb[0].Id;
+                        qt.Status = 'Approved';
                         insert qt;
         
                         QuoteLineItem qli = new QuoteLineItem();
@@ -581,7 +582,7 @@ public without sharing class ProductController {
             date dt2 = dt.addDays(7);
             List<Contact> con = new List<Contact>();
             if(userId == '0057S000001cVXiQAM') {
-                con = [SELECT Id, Name, Email FROM Contact WHERE Id = '0037S00000NhZ2PQAV'];
+                con = [SELECT Id, Name, Email FROM Contact WHERE Id = '0037S00000NhbkzQAB'];
             } else {
                 List<User> us = [SELECT Id, Name, Email, ContactId FROM User WHERE Id = :whoId];
                 con = [SELECT Id, Name, Email FROM Contact WHERE Id = :us[0].ContactId];
@@ -612,6 +613,7 @@ public without sharing class ProductController {
                         WHERE Name = :Label.spb
                     ];
                     qt.Pricebook2Id = pb[0].Id;
+                    qt.Status = 'Approved';
                     insert qt;
         
                     QuoteLineItem qli = new QuoteLineItem();
