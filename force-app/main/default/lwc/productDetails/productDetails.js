@@ -509,10 +509,10 @@ export default class ProductDetails extends LightningElement {
         reservationCreate({whatId: this.product.id, whoId: this.userId, agentId: this.product.agentId, noDays: this.resPeriod, userId: this.userId})
             .then(result => {
                 let data = JSON.parse(result);
-                // pdfCreate({quoteId: data.id})
-                //     .then(result => {
+                pdfCreate({quoteId: data.id})
+                    .then(result => {
 
-                //     })
+                    })
                 getProduct({id: this.productId})
                     .then(result => {
                         this.product = JSON.parse(result);
@@ -581,18 +581,22 @@ export default class ProductDetails extends LightningElement {
     }
 
     quoteCreation() {
-        quoteCreate({whatId: this.product.id, whoId: this.userId, agentId: this.product.agentId, userId: this.userId})
+        pdfCreate({quoteId: data.id})
             .then(result => {
-                let data = JSON.parse(result);
-                // pdfCreate({quoteId: data.id})
-                //     .then(result => {
 
-                //     })
-                oppsCheck({whatId: this.product.id})
-                    .then(result => {
-                        this.isNotEmpty = JSON.stringify(result);
-                    })
             })
+        // quoteCreate({whatId: this.product.id, whoId: this.userId, agentId: this.product.agentId, userId: this.userId})
+        //     .then(result => {
+        //         let data = JSON.parse(result);
+        //         pdfCreate({quoteId: data.id})
+        //             .then(result => {
+
+        //             })
+        //         oppsCheck({whatId: this.product.id})
+        //             .then(result => {
+        //                 this.isNotEmpty = JSON.stringify(result);
+        //             })
+        //     })
     }
 
     // makePDFWrapper() {
