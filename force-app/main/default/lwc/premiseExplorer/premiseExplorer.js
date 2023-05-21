@@ -1,8 +1,8 @@
 import { LightningElement, track, wire } from 'lwc';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import getPremises from '@salesforce/apex/ProductController.getProductPremisesList';
-import markAsViewed from '@salesforce/apex/ProductController.markProductAsRecentlyViewed';
-import getLastViewed from '@salesforce/apex/ProductController.getUserRecentlyViewedProducts2';
+import markAsViewed from '@salesforce/apex/LastSeenPremisesController.markProductAsRecentlyViewed';
+import getLastViewed from '@salesforce/apex/LastSeenPremisesController.getUserRecentlyViewedProducts2';
 import main_url from '@salesforce/label/c.main_url';
 import UserId from '@salesforce/user/Id';
 

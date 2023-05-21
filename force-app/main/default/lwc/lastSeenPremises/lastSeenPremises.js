@@ -1,7 +1,7 @@
 import { LightningElement, track, api, wire } from 'lwc';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import UserId from '@salesforce/user/Id';
-import getLastViewed from '@salesforce/apex/ProductController.getUserRecentlyViewedProducts2';
+import getLastViewed from '@salesforce/apex/LastSeenPremisesController.getUserRecentlyViewedProducts2';
 
 import mustlogin1 from '@salesforce/label/c.mustlogin1';
 import recentlyviewedpremises from '@salesforce/label/c.recentlyviewedpremises';
