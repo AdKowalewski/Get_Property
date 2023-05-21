@@ -2,7 +2,7 @@ import { LightningElement, track, wire } from 'lwc';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import getPremises from '@salesforce/apex/ProductController.getProductPremisesList';
 import markAsViewed from '@salesforce/apex/LastSeenPremisesController.markProductAsRecentlyViewed';
-import getLastViewed from '@salesforce/apex/LastSeenPremisesController.getUserRecentlyViewedProducts2';
+// import getLastViewed from '@salesforce/apex/LastSeenPremisesController.getUserRecentlyViewedProducts2';
 import main_url from '@salesforce/label/c.main_url';
 import UserId from '@salesforce/user/Id';
 
@@ -98,15 +98,15 @@ export default class PremiseExplorer extends LightningElement {
         return flag;
     }
 
-    get arelastproducts() {
-        let flag = false;
-        if(this.lastproducts.length > 0) {
-            flag = true;
-        } else if(this.lastproducts.length == 0) {
-            flag = false;
-        }
-        return flag;
-    }
+    // get arelastproducts() {
+    //     let flag = false;
+    //     if(this.lastproducts.length > 0) {
+    //         flag = true;
+    //     } else if(this.lastproducts.length == 0) {
+    //         flag = false;
+    //     }
+    //     return flag;
+    // }
 
     connectedCallback() {
         this.isDetail = false;
@@ -194,12 +194,12 @@ export default class PremiseExplorer extends LightningElement {
             });
     }
 
-    showRecentlyViewed() {
-        this.isDetail = false;
-        this.loading = true;
-        this.getLastViewedPremises();
-        this.isLastSeen = true;
-    }
+    // showRecentlyViewed() {
+    //     this.isDetail = false;
+    //     this.loading = true;
+    //     this.getLastViewedPremises();
+    //     this.isLastSeen = true;
+    // }
 
     displayFilter() {
         this.showFilter = true;
@@ -286,31 +286,31 @@ export default class PremiseExplorer extends LightningElement {
         this.getProducts();
     }
 
-    handleFirstV() {
-        this.pageNumber = 1;
-        this.getLastViewedPremises();
-    }
+    // handleFirstV() {
+    //     this.pageNumber = 1;
+    //     this.getLastViewedPremises();
+    // }
 
-    handlePreviousV() {
-        this.pageNumber = this.pageNumber - 1;
-        if(this.pageNumber < 1) {
-            this.pageNumber = 1;
-        }
-        this.getLastViewedPremises();
-    }
+    // handlePreviousV() {
+    //     this.pageNumber = this.pageNumber - 1;
+    //     if(this.pageNumber < 1) {
+    //         this.pageNumber = 1;
+    //     }
+    //     this.getLastViewedPremises();
+    // }
 
-    handleNextV() {
-        this.pageNumber = this.pageNumber + 1;
-        if(this.pageNumber > this.totalPages) {
-            this.pageNumber = this.totalPages;
-        }
-        this.getLastViewedPremises();
-    }
+    // handleNextV() {
+    //     this.pageNumber = this.pageNumber + 1;
+    //     if(this.pageNumber > this.totalPages) {
+    //         this.pageNumber = this.totalPages;
+    //     }
+    //     this.getLastViewedPremises();
+    // }
 
-    handleLastV() {
-        this.pageNumber = this.totalPages;
-        this.getLastViewedPremises();
-    }
+    // handleLastV() {
+    //     this.pageNumber = this.totalPages;
+    //     this.getLastViewedPremises();
+    // }
 
     get noProducts() {
         let isDisplay = true;
@@ -336,17 +336,17 @@ export default class PremiseExplorer extends LightningElement {
         return flag;
     }
     
-    get vProductsDisplayed() {
-        let flag = true;
-        if(this.lastproducts) {
-            if(this.lastproducts.length == 0) {
-                flag = false;
-            } else {
-                flag = true;
-            }
-        }
-        return flag;
-    }
+    // get vProductsDisplayed() {
+    //     let flag = true;
+    //     if(this.lastproducts) {
+    //         if(this.lastproducts.length == 0) {
+    //             flag = false;
+    //         } else {
+    //             flag = true;
+    //         }
+    //     }
+    //     return flag;
+    // }
 
     selectProduct(event) {
         this.selectedProductId = event.detail.productId;
@@ -354,11 +354,11 @@ export default class PremiseExplorer extends LightningElement {
         markAsViewed({id: this.selectedProductId});
     }
 
-    selectLastProduct(event) {
-        this.selectedProductId = event.detail.productId;
-        this.isDetail = true;
-        markAsViewed({id: this.selectedProductId});
-    }
+    // selectLastProduct(event) {
+    //     this.selectedProductId = event.detail.productId;
+    //     this.isDetail = true;
+    //     markAsViewed({id: this.selectedProductId});
+    // }
 
     handleGoHome() {
         this.isDetail = false;
@@ -366,53 +366,53 @@ export default class PremiseExplorer extends LightningElement {
         this.getLastViewedPremises();
     }
 
-    getLastViewedPremises() {
-        getLastViewed({pageSize: this.pagesize, pageNumber: this.pageNumber, name: this.seenProductName, city: this.seenProductCity})
-            .then(result => {
-                if(result) {
-                    let data = JSON.parse(result);
-                    this.recordEnd = data.recordEnd;
-                    this.totalRecords = data.totalRecords;
-                    this.recordStart = data.recordStart;
-                    this.lastproducts = data.products;
-                    this.pageNumber = data.pageNumber;
-                    this.totalPages = Math.ceil(data.totalRecords / this.pagesize);
-                    this.isNextV = (this.pageNumber == this.totalPages || this.totalPages == 0);
-                    this.isPrevV = (this.pageNumber == 1 || this.totalRecords < this.pagesize);
-                }
-                this.loading = false;
-            })
-            .catch(error => {
-                this.loading = false;
-                this.error = error.message;
-                this.dispatchEvent(
-                    new ShowToastEvent({
-                        title: 'Error',
-                        message: this.error,
-                        variant: 'error'
-                    })
-                );
-            });
-    }
+    // getLastViewedPremises() {
+    //     getLastViewed({pageSize: this.pagesize, pageNumber: this.pageNumber, name: this.seenProductName, city: this.seenProductCity})
+    //         .then(result => {
+    //             if(result) {
+    //                 let data = JSON.parse(result);
+    //                 this.recordEnd = data.recordEnd;
+    //                 this.totalRecords = data.totalRecords;
+    //                 this.recordStart = data.recordStart;
+    //                 this.lastproducts = data.products;
+    //                 this.pageNumber = data.pageNumber;
+    //                 this.totalPages = Math.ceil(data.totalRecords / this.pagesize);
+    //                 this.isNextV = (this.pageNumber == this.totalPages || this.totalPages == 0);
+    //                 this.isPrevV = (this.pageNumber == 1 || this.totalRecords < this.pagesize);
+    //             }
+    //             this.loading = false;
+    //         })
+    //         .catch(error => {
+    //             this.loading = false;
+    //             this.error = error.message;
+    //             this.dispatchEvent(
+    //                 new ShowToastEvent({
+    //                     title: 'Error',
+    //                     message: this.error,
+    //                     variant: 'error'
+    //                 })
+    //             );
+    //         });
+    // }
 
-    backFromRecentlyViewed() {
-        this.isLastSeen = false;
-        this.isMyMeetings = false;
-    }
+    // backFromRecentlyViewed() {
+    //     this.isLastSeen = false;
+    //     this.isMyMeetings = false;
+    // }
 
-    handleSeenName(event) {
-        this.seenProductName = event.target.value;
-        this.getLastViewedPremises();
-    }
+    // handleSeenName(event) {
+    //     this.seenProductName = event.target.value;
+    //     this.getLastViewedPremises();
+    // }
 
-    handleSeenCity(event) {
-        this.seenProductCity = event.target.value;
-        this.getLastViewedPremises();
-    }
+    // handleSeenCity(event) {
+    //     this.seenProductCity = event.target.value;
+    //     this.getLastViewedPremises();
+    // }
 
-    viewMyMeetings() {
-        this.isMyMeetings = true;
-        this.isDetail = false;
-        this.isLastSeen = false;
-    }
+    // viewMyMeetings() {
+    //     this.isMyMeetings = true;
+    //     this.isDetail = false;
+    //     this.isLastSeen = false;
+    // }
 }
