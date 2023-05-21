@@ -695,8 +695,8 @@ public without sharing class ProductController {
         // createPDFFuture(quoteId);
         Map<String, Object> params = new Map<String, Object>();
         params.put('QuoteId', '0Q07S000000zoLHSAY');
-        Flow.Interview.AutolanchedPDFGeneration flow = new Flow.Interview.AutolanchedPDFGeneration(params);
-        flow.start();
+        Flow.Interview flow1 = new Flow.Interview.AutolanchedPDFGeneration(params);
+        flow1.start();
     }
 
     @future(callout=true)
