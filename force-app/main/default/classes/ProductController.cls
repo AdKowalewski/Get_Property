@@ -692,7 +692,11 @@ public without sharing class ProductController {
 
     @AuraEnabled
     public static void createPDF(Id quoteId) {
-        createPDFFuture(quoteId);
+        // createPDFFuture(quoteId);
+        Map<String, Object> params = new Map<String, Object>();
+        params.put('QuoteId', quoteId);
+        Flow.Interview.AutolanchedPDFGeneration flow = new Flow.Interview.AutolanchedPDFGeneration(params);
+        flow.start();
     }
 
     @future(callout=true)
