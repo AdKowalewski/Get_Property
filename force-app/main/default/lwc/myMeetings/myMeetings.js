@@ -1,8 +1,8 @@
 import { LightningElement, api, track, wire } from 'lwc';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import UserId from '@salesforce/user/Id';
-import userEvents from '@salesforce/apex/ProductController.getAllUserEvents';
-import eventDelete from '@salesforce/apex/ProductController.deleteEvent';
+import userEvents from '@salesforce/apex/EventController.getAllUserEvents';
+import eventDelete from '@salesforce/apex/EventController.deleteEvent';
 
 import meetingcancelsuccess from '@salesforce/label/c.meetingcancelsuccess';
 import success from '@salesforce/label/c.success';
