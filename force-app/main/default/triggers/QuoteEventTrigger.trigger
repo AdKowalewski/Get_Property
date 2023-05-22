@@ -6,27 +6,32 @@ trigger QuoteEventTrigger on QuoteEvent__e (after insert) {
     }
 
     List<Quote> quotes = [SELECT Id, Name, Email FROM Quote WHERE Id IN :ids];
-    EmailTemplate et = [SELECT Id, Subject, Body, HtmlValue FROM EmailTemplate WHERE Id = :Label.EmailTemplateId];
 
     for(Quote qt : quotes) {
+        createPDF(qt.Id, qt.Name, qt.Email);
+    }
+
+    @future(callout=true)
+    public static void createPDF(String quoteId, String quoteName, String quoteEmail) {
         String quoteUrl = 'https://britenet-10a-dev-ed.develop.my.salesforce.com/quote/quoteTemplateDataViewer.apexp?id=';
-        quoteUrl += qt.Id;
+        quoteUrl += quoteId;
         quoteUrl += '&headerHeight=190&footerHeight=188&summlid=0EH7S000000dEFm#toolbar=1&navpanes=0&zoom=90';
         PageReference pg = new PageReference(quoteUrl);
         Blob b = pg.getContentAsPDF();
         QuoteDocument quotedoc = new QuoteDocument();
         quotedoc.Document = b;
-        quotedoc.QuoteId = qt.Id;
+        quotedoc.QuoteId = quoteId;
         insert quotedoc;
 
         Messaging.EmailFileAttachment efa = new Messaging.EmailFileAttachment();
-        efa.setFileName(qt.Name + '.pdf');
+        efa.setFileName(quoteName + '.pdf');
         efa.setBody(b);
         List<Messaging.SingleEmailMessage> mailList =  new List<Messaging.SingleEmailMessage>();
-        Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();      
+        Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage(); 
+        EmailTemplate et = [SELECT Id, Subject, Body, HtmlValue FROM EmailTemplate WHERE Id = :Label.EmailTemplateId];     
         mail.setTemplateId(et.Id);
         List<string> toAddress = new List<string>();
-        toAddress.add(qt.Email);
+        toAddress.add(quoteEmail);
         mail.setToAddresses(toAddress);
         mail.setSubject(et.Subject);
         // mail.setSubject('New Quote');
