@@ -106,22 +106,22 @@ export default class ProductDetails extends LightningElement {
     @track myRes = null;
     @track productEvents = [];
     @track hours = [
-        { h: '9:00', class: hourcontainer2 },
-        { h: '9:30', class: hourcontainer2 },
-        { h: '10:00', class: hourcontainer2 },
-        { h: '10:30', class: hourcontainer2 },
-        { h: '11:00', class: hourcontainer2 },
-        { h: '11:30', class: hourcontainer2 },
-        { h: '12:00', class: hourcontainer2 },
-        { h: '12:30', class: hourcontainer2 },
-        { h: '13:00', class: hourcontainer2 },
-        { h: '13:30', class: hourcontainer2 },
-        { h: '14:00', class: hourcontainer2 },
-        { h: '14:30', class: hourcontainer2 },
-        { h: '15:00', class: hourcontainer2 },
-        { h: '15:30', class: hourcontainer2 },
-        { h: '16:00', class: hourcontainer2 },
-        { h: '16:30', class: hourcontainer2 }
+        { h: '9:00', class: 'hourContainer2' },
+        { h: '9:30', class: 'hourContainer2' },
+        { h: '10:00', class: 'hourContainer2' },
+        { h: '10:30', class: 'hourContainer2' },
+        { h: '11:00', class: 'hourContainer2' },
+        { h: '11:30', class: 'hourContainer2' },
+        { h: '12:00', class: 'hourContainer2' },
+        { h: '12:30', class: 'hourContainer2' },
+        { h: '13:00', class: 'hourContainer2' },
+        { h: '13:30', class: 'hourContainer2' },
+        { h: '14:00', class: 'hourContainer2' },
+        { h: '14:30', class: 'hourContainer2' },
+        { h: '15:00', class: 'hourContainer2' },
+        { h: '15:30', class: 'hourContainer2' },
+        { h: '16:00', class: 'hourContainer2' },
+        { h: '16:30', class: 'hourContainer2' }
     ];
     @track availableHours = [];
     @track meetingDate = new Date(new Date().getTime() + (1*24*60*60*1000)).toISOString();
@@ -136,7 +136,64 @@ export default class ProductDetails extends LightningElement {
     @track isNotEmpty;
 
     connectedCallback() {
-        this.getProductMethod();
+        // this.getProductMethod();
+
+        getProduct({id: this.productId})
+            .then(result => {
+                this.product = JSON.parse(result);
+                if(this.product.wifi == true) {
+                    this.product.wifi = yes;
+                } else {
+                    this.product.wifi = no;
+                }
+                if(this.product.parking == true) {
+                    this.product.parking = yes;
+                } else {
+                    this.product.parking = no;
+                }
+                if(this.product.elevator == true) {
+                    this.product.elevator = yes;
+                } else {
+                    this.product.elevator = no;
+                }
+                if(this.product.kitchen == true) {
+                    this.product.kitchen = yes;
+                } else {
+                    this.product.kitchen = no;
+                }
+                oppsCheck({whatId: this.product.id})
+                    .then(result => {
+                        this.isNotEmpty = JSON.stringify(result);
+                    })
+                userEvent({whoId: this.userId, whatId: this.product.id})
+                    .then(result => {
+                        this.myEvent = JSON.parse(result);
+                    })
+                userReservation({whoId: this.userId, whatId: this.product.id})
+                    .then(result => {
+                        this.myRes = JSON.parse(result);
+                        this.newprice = this.product.price - this.myRes.price;
+                    })
+                productEvents({whatId: this.product.id, start: this.meetingDate})
+                    .then(result => {
+                        if(result) {
+                            let data = JSON.parse(result);
+                            this.productEvents = data.events;
+                            this.availableHours = data.hours;
+                            for(let j = 0; j < this.hours.length; j++) {
+                                this.hours[j].class = 'hourContainer2';
+                            }
+                            for(let i = 0; i < this.availableHours.length; i++) {
+                                for(let j = 0; j < this.hours.length; j++) {
+                                    if(this.hours[j].h == this.availableHours[i]) {
+                                        this.hours[j].class = 'hourContainer1';
+                                        continue;
+                                    }
+                                }
+                            }
+                        }            
+                    })
+            })
     }
 
     get hasAnyMeetings() {
@@ -225,14 +282,49 @@ export default class ProductDetails extends LightningElement {
         }
     }
 
+    // handleMeetingDateChange(event) {
+    //     this.meetingDate = event.target.value;
+    //     let dd = new Date(new Date().getTime()).toISOString();
+    //     if(this.meetingDate >= dd) {
+    //         this.productEventsMethod();
+    //     } else if(this.meetingDate < dd) {
+    //         this.meetingDate = new Date(new Date().getTime() + (1*24*60*60*1000)).toISOString();
+    //         this.toastMethod(error, dateerror, 'error');
+    //     }
+    // }
+
     handleMeetingDateChange(event) {
         this.meetingDate = event.target.value;
         let dd = new Date(new Date().getTime()).toISOString();
         if(this.meetingDate >= dd) {
-            this.productEventsMethod();
+            productEvents({whatId: this.product.id, start: this.meetingDate})
+                .then(result => {
+                    if(result) {
+                        let data = JSON.parse(result);
+                        this.productEvents = data.events;
+                        this.availableHours = data.hours;
+                        for(let j = 0; j < this.hours.length; j++) {
+                            this.hours[j].class = 'hourContainer2';
+                        }
+                        for(let i = 0; i < this.availableHours.length; i++) {
+                            for(let j = 0; j < this.hours.length; j++) {
+                                if(this.hours[j].h == this.availableHours[i]) {
+                                    this.hours[j].class = 'hourContainer1';
+                                    continue;
+                                }
+                            }
+                        }
+                    }            
+                })
         } else if(this.meetingDate < dd) {
             this.meetingDate = new Date(new Date().getTime() + (1*24*60*60*1000)).toISOString();
-            this.toastMethod(error, dateerror, 'error');
+            this.dispatchEvent(
+                new ShowToastEvent({
+                    title: error,
+                    message: dateerror,
+                    variant: 'error'
+                })
+            );
         }
     }
 
@@ -253,16 +345,69 @@ export default class ProductDetails extends LightningElement {
         this.showResModal = true;
     }
 
+    // displayEventModal() {
+    //     this.showEventModal = true;
+    //     this.productEventsMethod();
+    // }
+
     displayEventModal() {
         this.showEventModal = true;
-        this.productEventsMethod();
+        productEvents({whatId: this.product.id, start: this.meetingDate})
+            .then(result => {
+                if(result) {
+                    let data = JSON.parse(result);
+                    this.productEvents = data.events;
+                    this.availableHours = data.hours;
+                    for(let j = 0; j < this.hours.length; j++) {
+                        this.hours[j].class = 'hourContainer2';
+                    }
+                    for(let i = 0; i < this.availableHours.length; i++) {
+                        for(let j = 0; j < this.hours.length; j++) {
+                            if(this.hours[j].h == this.availableHours[i]) {
+                                this.hours[j].class = 'hourContainer1';
+                                continue;
+                            }
+                        }
+                    }
+                }            
+            })
     }
+
+    // handleCreateEvent(event) {
+    //     let dd = new Date(new Date().getTime()).toISOString();
+    //     if(this.meetingDate >= dd) {
+    //         let hclass = event.target.dataset.class;
+    //         if(hclass == hourcontainer1) {
+    //             let chosenHour = event.target.dataset.hour.split(':');
+    //             let meetData = this.meetingDate.split('-');
+    //             eventCreate({
+    //                 agentId: this.product.agentId, 
+    //                 whoId: this.userId, 
+    //                 whatId: this.product.id, 
+    //                 location: this.product.address,
+    //                 year: parseInt(meetData[0]),
+    //                 month: parseInt(meetData[1]),
+    //                 day: parseInt(meetData[2]),
+    //                 hour: parseInt(chosenHour[0]) + 2,
+    //                 minute: chosenHour[1] == '30' ? 30 : 0})
+    //                 .then(result => {
+    //                     this.userEventMethod();
+    //                     this.productEventsMethod();
+    //                     this.showEventModal = false;
+    //                     this.toastMethod(success, meetingsuccess, 'success');
+    //                 })
+    //         }
+    //     } else if(this.meetingDate < dd) {
+    //         this.meetingDate = new Date(new Date().getTime() + (1*24*60*60*1000)).toISOString();
+    //         this.toastMethod(error, dateerror, 'error');
+    //     }
+    // }
 
     handleCreateEvent(event) {
         let dd = new Date(new Date().getTime()).toISOString();
         if(this.meetingDate >= dd) {
             let hclass = event.target.dataset.class;
-            if(hclass == hourcontainer1) {
+            if(hclass == 'hourContainer1') {
                 let chosenHour = event.target.dataset.hour.split(':');
                 let meetData = this.meetingDate.split('-');
                 eventCreate({
@@ -276,41 +421,191 @@ export default class ProductDetails extends LightningElement {
                     hour: parseInt(chosenHour[0]) + 2,
                     minute: chosenHour[1] == '30' ? 30 : 0})
                     .then(result => {
-                        this.userEventMethod();
-                        this.productEventsMethod();
+                        userEvent({whoId: this.userId, whatId: this.product.id})
+                            .then(result => {
+                                this.myEvent = JSON.parse(result);
+                            })
+                        productEvents({whatId: this.product.id, start: this.meetingDate})
+                            .then(result => {
+                                if(result) {
+                                    let data = JSON.parse(result);
+                                    this.productEvents = data.events;
+                                    this.availableHours = data.hours;
+                                    for(let j = 0; j < this.hours.length; j++) {
+                                        this.hours[j].class = 'hourContainer2';
+                                    }
+                                    for(let i = 0; i < this.availableHours.length; i++) {
+                                        for(let j = 0; j < this.hours.length; j++) {
+                                            if(this.hours[j].h == this.availableHours[i]) {
+                                                this.hours[j].class = 'hourContainer1';
+                                                continue;
+                                            }
+                                        }
+                                    }
+                                }            
+                            })
                         this.showEventModal = false;
-                        this.toastMethod(success, meetingsuccess, 'success');
+                        this.dispatchEvent(
+                            new ShowToastEvent({
+                                title: success,
+                                message: meetingsuccess,
+                                variant: 'success'
+                            })
+                        );
                     })
             }
         } else if(this.meetingDate < dd) {
             this.meetingDate = new Date(new Date().getTime() + (1*24*60*60*1000)).toISOString();
-            this.toastMethod(error, dateerror, 'error');
+            this.dispatchEvent(
+                new ShowToastEvent({
+                    title: error,
+                    message: dateerror,
+                    variant: 'error'
+                })
+            );
         }
     }
+
+    // handleCancelMeeting() {
+    //     eventDelete({id: this.myEvent.id})
+    //         .then(result => {
+    //             this.myEvent = null;
+    //             this.userEventMethod();
+    //             this.productEventsMethod();
+    //             this.toastMethod(success, meetingcancelsuccess, 'success');
+    //         })
+    // }
 
     handleCancelMeeting() {
         eventDelete({id: this.myEvent.id})
             .then(result => {
                 this.myEvent = null;
-                this.userEventMethod();
-                this.productEventsMethod();
-                this.toastMethod(success, meetingcancelsuccess, 'success');
+                userEvent({whoId: this.userId, whatId: this.product.id})
+                    .then(result => {
+                        this.myEvent = JSON.parse(result);
+                    })
+                    productEvents({whatId: this.product.id, start: this.meetingDate})
+                        .then(async result => {
+                            if(result) {
+                                let data = JSON.parse(result);
+                                this.productEvents = data.events;
+                                this.availableHours = data.hours;
+                                for(let j = 0; j < this.hours.length; j++) {
+                                    this.hours[j].class = 'hourContainer2';
+                                }
+                                for(let i = 0; i < this.availableHours.length; i++) {
+                                    for(let j = 0; j < this.hours.length; j++) {
+                                        if(this.hours[j].h == this.availableHours[i]) {
+                                            this.hours[j].class = 'hourContainer1';
+                                            continue;
+                                        }
+                                    }
+                                }
+                            }            
+                        })
+                this.dispatchEvent(
+                    new ShowToastEvent({
+                        title: success,
+                        message: meetingcancelsuccess,
+                        variant: 'success'
+                    })
+                );
             })
     }
+
+    // saveReservation() {
+    //     reservationCreate({whatId: this.product.id, whoId: this.userId, agentId: this.product.agentId, noDays: this.resPeriod, userId: this.userId})
+    //         .then(result => {
+    //             this.getProductMethod();
+    //             this.showResModal = false;
+    //             this.toastMethod(success, reservationsuccess, 'success');
+    //         })
+    // }
+
+    // quoteCreation() {
+    //     quoteCreate({whatId: this.product.id, whoId: this.userId, agentId: this.product.agentId, userId: this.userId})
+    //         .then(result => {
+    //             this.oppsCheckMethod();
+    //         })
+    // }
 
     saveReservation() {
         reservationCreate({whatId: this.product.id, whoId: this.userId, agentId: this.product.agentId, noDays: this.resPeriod, userId: this.userId})
             .then(result => {
-                this.getProductMethod();
+                getProduct({id: this.productId})
+                    .then(result => {
+                        this.product = JSON.parse(result);
+                        if(this.product.wifi == true) {
+                            this.product.wifi = yes;
+                        } else {
+                            this.product.wifi = no;
+                        }
+                        if(this.product.parking == true) {
+                            this.product.parking = yes;
+                        } else {
+                            this.product.parking = no;
+                        }
+                        if(this.product.elevator == true) {
+                            this.product.elevator = yes;
+                        } else {
+                            this.product.elevator = no;
+                        }
+                        if(this.product.kitchen == true) {
+                            this.product.kitchen = yes;
+                        } else {
+                            this.product.kitchen = no;
+                        }
+                        oppsCheck({whatId: this.product.id})
+                            .then(result => {
+                                this.isNotEmpty = JSON.stringify(result);
+                            })
+                        userEvent({whoId: this.userId, whatId: this.product.id})
+                            .then(result => {
+                                this.myEvent = JSON.parse(result);
+                            })
+                        userReservation({whoId: this.userId, whatId: this.product.id})
+                            .then(result => {
+                                this.myRes = JSON.parse(result);
+                                this.newprice = this.product.price - this.myRes.price;
+                            })
+                        productEvents({whatId: this.product.id, start: this.meetingDate})
+                            .then(result => {
+                                if(result) {
+                                    let data = JSON.parse(result);
+                                    this.productEvents = data.events;
+                                    this.availableHours = data.hours;
+                                    for(let j = 0; j < this.hours.length; j++) {
+                                        this.hours[j].class = hourcontainer2;
+                                    }
+                                    for(let i = 0; i < this.availableHours.length; i++) {
+                                        for(let j = 0; j < this.hours.length; j++) {
+                                            if(this.hours[j].h == this.availableHours[i]) {
+                                                this.hours[j].class = hourcontainer1;
+                                                continue;
+                                            }
+                                        }
+                                    }
+                                }            
+                            })
+                    })
                 this.showResModal = false;
-                this.toastMethod(success, reservationsuccess, 'success');
+                this.dispatchEvent(
+                    new ShowToastEvent({
+                        title: success,
+                        message: reservationsuccess,
+                        variant: 'success'
+                    })
+                );
             })
     }
 
     quoteCreation() {
         quoteCreate({whatId: this.product.id, whoId: this.userId, agentId: this.product.agentId, userId: this.userId})
             .then(result => {
-                this.oppsCheckMethod();
+                oppsCheck({whatId: this.product.id})
+                    .then(result => {
+                        this.isNotEmpty = JSON.stringify(result);
+                    })
             })
     }
 
@@ -385,12 +680,12 @@ export default class ProductDetails extends LightningElement {
                     this.productEvents = data.events;
                     this.availableHours = data.hours;
                     for(let j = 0; j < this.hours.length; j++) {
-                        this.hours[j].class = hourcontainer2;
+                        this.hours[j].class = 'hourContainer2';
                     }
                     for(let i = 0; i < this.availableHours.length; i++) {
                         for(let j = 0; j < this.hours.length; j++) {
                             if(this.hours[j].h == this.availableHours[i]) {
-                                this.hours[j].class = hourcontainer1;
+                                this.hours[j].class = 'hourContainer1';
                                 continue;
                             }
                         }
