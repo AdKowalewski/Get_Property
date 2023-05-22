@@ -169,12 +169,12 @@ export default class ProductDetails extends LightningElement {
         return flag;
     }
 
-    get getQuoteDisabled() {
+    get quoteDisabled() {
         let flag = false;
         if(this.isNotEmpty == 'empty') {
-            flag = false;
-        } else if(this.isNotEmpty == 'not empty') {
             flag = true;
+        } else if(this.isNotEmpty == 'not empty') {
+            flag = false;
         }
         return flag;
     }
@@ -359,6 +359,7 @@ export default class ProductDetails extends LightningElement {
         oppsCheck({whatId: this.product.id})
             .then(result => {
                 this.isNotEmpty = JSON.stringify(result);
+                console.log('status of emptiness: ' + this.isNotEmpty);
             })
     }
 
