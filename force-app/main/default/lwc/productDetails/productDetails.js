@@ -133,7 +133,7 @@ export default class ProductDetails extends LightningElement {
     @track resPeriod = 1;
     @track resPrice = 100;
     @track newprice;
-    @track isNotEmpty;
+    @track stateOfOppsAndQuotes = 'empty';
 
     connectedCallback() {
         this.getProductMethod();
@@ -171,10 +171,10 @@ export default class ProductDetails extends LightningElement {
 
     get quoteDisabled() {
         let flag = false;
-        if(this.isNotEmpty == 'empty') {
-            flag = true;
-        } else if(this.isNotEmpty == 'not empty') {
+        if(this.stateOfOppsAndQuotes == 'empty') {
             flag = false;
+        } else if(this.stateOfOppsAndQuotes == 'not empty') {
+            flag = true;
         }
         return flag;
     }
@@ -311,6 +311,7 @@ export default class ProductDetails extends LightningElement {
         quoteCreate({whatId: this.product.id, whoId: this.userId, agentId: this.product.agentId, userId: this.userId})
             .then(result => {
                 this.oppsCheckMethod();
+                this.toastMethod(success, 'Quote was generated successfully', 'success');
             })
     }
 
@@ -358,8 +359,8 @@ export default class ProductDetails extends LightningElement {
     oppsCheckMethod() {
         oppsCheck({whatId: this.product.id})
             .then(result => {
-                this.isNotEmpty = JSON.stringify(result);
-                console.log('status of emptiness: ' + this.isNotEmpty);
+                this.stateOfOppsAndQuotes = result;
+                console.log('status of emptiness: ' + this.stateOfOppsAndQuotes);
             })
     }
 
