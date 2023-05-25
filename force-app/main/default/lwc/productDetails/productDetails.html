@@ -182,10 +182,10 @@
                                                 </lightning-layout-item>
                                                 <template if:false={isRes}>
                                                     <lightning-layout-item class="slds-size_12-of-12" style="margin-top: 20px; margin-bottom: 20px; align-items: center;">
-                                                        <lightning-button variant="neutral" label={label.setmeeting} onclick={displayEventModal}></lightning-button>
+                                                        <lightning-button style="margin-right: 3px;" variant="neutral" label={label.setmeeting} onclick={displayEventModal}></lightning-button>
                                                         <template if:false={hasAnyMeetings}>
-                                                            <lightning-button variant="neutral" label={label.reserve} onclick={displayResModal}></lightning-button>
-                                                            <lightning-button variant="neutral" label={label.getquote} onclick={quoteCreation} disabled={quoteDisabled}></lightning-button>
+                                                            <lightning-button style="margin-right: 3px;" variant="neutral" label={label.reserve} onclick={displayResModal}></lightning-button>
+                                                            <lightning-button style="margin-right: 3px;" variant="neutral" label={label.getquote} onclick={quoteCreation} disabled={quoteDisabled}></lightning-button>
                                                         </template>
                                                     </lightning-layout-item>
                                                 </template>
