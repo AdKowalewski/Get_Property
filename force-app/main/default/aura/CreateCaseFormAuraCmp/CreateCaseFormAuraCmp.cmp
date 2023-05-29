@@ -1,0 +1,18 @@
+<aura:component implements="forceCommunity:availableForAllPageTypes" access="global" controller="CaseController">
+    <aura:attribute name="types" type="List" default="[]"/>
+    <aura:handler name="init" value="{!this}" action="{!c.initValues}"/>
+    <aura:registerEvent name="appEvent" type="selfService:caseCreateFieldChange"/>
+
+    <lightning:recordEditForm aura:id="recordEditForm" objectApiName="Case">
+        <lightning:combobox 
+            aura:id="typeId"
+            name="Type" 
+            value = "{!v.typeVal}"
+            placeholder = "Select Type"
+            options="{!v.types}" 
+            onchange="{!c.itemsChange}"/>
+        <lightning:inputField aura:id="subjectId" fieldName="Subject" value="{!v.subjectVal}" onchange="{!c.itemsChange}"/>
+        <lightning:inputField aura:id="descriptionId" fieldName="Description" value="{!v.descriptionVal}" onchange="{!c.itemsChange}"/>
+        <lightning:button class="slds-m-top_small" type="submit" label="Create new" onclick="{!c.submitForm}"/>
+    </lightning:recordEditForm>
+</aura:component>	
