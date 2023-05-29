@@ -9,13 +9,7 @@
         component.set('v.typeVal', 'Payment');
     },
 
-    itemsChange : function(component, event, helper) {
-        let typeVar = component.find('typeId').get('v.value'); 
-        let subjectVar = component.find('subjectId').get('v.value');
-        let descriptionVar = component.find('descriptionId').get('v.value');
-        component.set('v.typeVal', typeVar);
-        component.set('v.subjectVal', subjectVar);
-        component.set('v.descriptionVal', descriptionVar);        
+    itemsChange : function(component, event, helper) {        
         let appEvent = $A.get("e.selfService:caseCreateFieldChange");
         appEvent.setParams({
             'modifiedField': event.getSource().get('v.fieldName'),
@@ -29,9 +23,9 @@
         let action = component.get('c.createCase');
         action.setParams({
             'whoId': userId,
-            'subject': component.get('v.subjectVal'),
-            'type': component.get('v.typeVal'),
-            'description': component.get('v.descriptionVal')
+            'subject': component.find('subjectId').get('v.value'),
+            'type': component.find('typeId').get('v.value'),
+            'description': component.find('descriptionId').get('v.value')
         });
         action.setCallback(this, function(response) {
             component.set('v.typeVal', 'Payment');

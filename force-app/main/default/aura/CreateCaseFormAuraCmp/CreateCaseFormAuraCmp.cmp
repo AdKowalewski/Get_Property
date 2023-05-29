@@ -11,8 +11,8 @@
             placeholder = "Select Type"
             options="{!v.types}" 
             onchange="{!c.itemsChange}"/>
-        <lightning:inputField aura:id="subjectId" fieldName="Subject" value="{!v.subjectVal}" onchange="{!c.itemsChange}"/>
-        <lightning:inputField aura:id="descriptionId" fieldName="Description" value="{!v.descriptionVal}" onchange="{!c.itemsChange}"/>
+        <lightning:inputField aura:id="subjectId" fieldName="Subject" onchange="{!c.itemsChange}"/>
+        <lightning:inputField aura:id="descriptionId" fieldName="Description" onchange="{!c.itemsChange}"/>
         <lightning:button class="slds-m-top_small" type="submit" label="Create new" onclick="{!c.submitForm}"/>
     </lightning:recordEditForm>
 </aura:component>	
