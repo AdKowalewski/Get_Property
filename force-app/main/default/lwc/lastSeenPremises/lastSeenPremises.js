@@ -95,17 +95,6 @@ export default class LastSeenPremises extends LightningElement {
                     this.isPrevV = (this.pageNumber == 1 || this.totalRecords < this.pagesize);
                 }
                 this.loading = false;
-            })
-            .catch(error => {
-                this.loading = false;
-                this.error = error.message;
-                this.dispatchEvent(
-                    new ShowToastEvent({
-                        title: 'Error',
-                        message: this.error,
-                        variant: 'error'
-                    })
-                );
             });
     }
 
