@@ -34,6 +34,9 @@
             'description': component.get('v.descriptionVal')
         });
         action.setCallback(this, function(response) {
+            component.set('v.typeVal', 'Payment');
+            component.set('v.subjectVal', '');
+            component.set('v.descriptionVal', '');
             let toastEvent = $A.get("e.force:showToast");
             toastEvent.setParams({
                 'title': 'Success',

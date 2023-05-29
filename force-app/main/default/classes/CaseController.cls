@@ -24,20 +24,20 @@ public without sharing class CaseController {
         caseObj.Subject = subject;
         caseObj.Type = type;
         caseObj.Description = description;
-        Id paymentQueueId = [SELECT Queue.Id FROM queuesobject WHERE Queue.Name = 'Payment Cases'].Queue.Id;
-        Id technicalQueueId = [SELECT Queue.Id FROM queuesobject WHERE Queue.Name = 'Technical Cases'].Queue.Id;
-        Id invoicingQueueId = [SELECT Queue.Id FROM queuesobject WHERE Queue.Name = 'Invoicing Cases'].Queue.Id;
-        if(type == 'Payment') {
-            caseObj.OwnerId = paymentQueueId;
-        } else if(type == 'Technical') {
-            caseObj.OwnerId = technicalQueueId;
-        } else if(type == 'Invoicing') {
-            caseObj.OwnerId = invoicingQueueId;
-        }
-        // AssignmentRule ar = [SELECT Id FROM AssignmentRule WHERE Id = '01Q7S000000kK7y'];
-        // Database.DMLOptions dmlOpts = new Database.DMLOptions();
-        // dmlOpts.assignmentRuleHeader.assignmentRuleId = ar.Id;
-        // caseObj.setOptions(dmlOpts);
+        // Id paymentQueueId = [SELECT Queue.Id FROM queuesobject WHERE Queue.Name = 'Payment Cases'].Queue.Id;
+        // Id technicalQueueId = [SELECT Queue.Id FROM queuesobject WHERE Queue.Name = 'Technical Cases'].Queue.Id;
+        // Id invoicingQueueId = [SELECT Queue.Id FROM queuesobject WHERE Queue.Name = 'Invoicing Cases'].Queue.Id;
+        // if(type == 'Payment') {
+        //     caseObj.OwnerId = paymentQueueId;
+        // } else if(type == 'Technical') {
+        //     caseObj.OwnerId = technicalQueueId;
+        // } else if(type == 'Invoicing') {
+        //     caseObj.OwnerId = invoicingQueueId;
+        // }
+        AssignmentRule ar = [SELECT Id FROM AssignmentRule WHERE SobjectType = 'Case' AND Active = true LIMIT 1];
+        Database.DMLOptions dmlOpts = new Database.DMLOptions();
+        dmlOpts.assignmentRuleHeader.assignmentRuleId = ar.Id;
+        caseObj.setOptions(dmlOpts);
         insert caseObj;
     }
 
