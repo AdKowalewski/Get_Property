@@ -11,7 +11,7 @@
 
     <aura:if isTrue="{!v.isLoggedIn}">
         <div>
-            <p style="margin-top: 2%; margin-bottom: 2%; font-size: 20px;">Create Case</p>
+            <p style="margin-top: 2%; margin-bottom: 2%; font-size: 20px;">{!$Label.c.createcase}</p>
         </div>
 
         <lightning:recordEditForm aura:id="recordEditForm" objectApiName="Case">
@@ -28,29 +28,29 @@
         </lightning:recordEditForm>
 
         <div>
-            <p style="margin-top: 2%; margin-bottom: 2%; font-size: 20px;">My Cases</p>
+            <p style="margin-top: 2%; margin-bottom: 2%; font-size: 20px;">{!$Label.c.mycases}</p>
         </div>
 
         <aura:if isTrue="{!v.areCases}">
             <aura:iteration items="{!v.myCases}" var="c">
                 <div key="{!c.Id}" class="caseCard">
                     <lightning:card>
-                        <p class="caseData"><b>Subject: </b> {!c.Subject}</p>
-                        <p class="caseData"><b>Description: </b> {!c.Description}</p>
-                        <p class="caseData"><b>Type: </b> {!c.Type}</p>
+                        <p class="caseData"><b>{!$Label.c.Subject}: </b> {!c.Subject}</p>
+                        <p class="caseData"><b>{!$Label.c.Description}: </b> {!c.Description}</p>
+                        <p class="caseData"><b>{!$Label.c.Type}: </b> {!c.Type}</p>
                     </lightning:card>
                 </div>
             </aura:iteration>
         </aura:if>
         <aura:if isTrue="{!v.areNotCases}">
             <div>
-                <p style="font-size: 14px;">You have no any cases yet</p>
+                <p style="font-size: 14px;">{!$Label.c.nocasesyet}</p>
             </div>
         </aura:if>
     </aura:if>
     <aura:if isTrue="{!v.isNotLoggedIn}">
         <div>
-            <p style="font-size: 14px;">You must log in to manage cases</p>
+            <p style="font-size: 14px;">{!$Label.c.mustlogincases}</p>
         </div>
     </aura:if>
 </aura:component>	

@@ -9,10 +9,10 @@ public without sharing class GenerateQuotePDFDocument {
     @future(callout=true)
     public static void createQuoteFutureMethod (List<Id> quoteIds) {
         List<Quote> qt = [SELECT Id, Name, Email FROM Quote WHERE Id IN :quoteIds];
-        String quoteUrl = 'https://britenet-10a-dev-ed.develop.my.salesforce.com/quote/quoteTemplateDataViewer.apexp?id=';
+        String quoteUrl = Label.quoteurl1;
         for(Id quoteId : quoteIds) {           
             quoteUrl += quoteId;
-            quoteUrl += '&headerHeight=190&footerHeight=188&summlid=0EH7S000000dEFm#toolbar=1&navpanes=0&zoom=90';
+            quoteUrl += Label.quoteurl2;
             PageReference pg = new PageReference(quoteUrl);
             Blob b = pg.getContentAsPDF();
             QuoteDocument quotedoc = new QuoteDocument();
@@ -31,9 +31,7 @@ public without sharing class GenerateQuotePDFDocument {
             toAddress.add(qt[0].Email);
             mail.setToAddresses(toAddress);
             mail.setSubject(et.Subject);
-            // mail.setSubject('New Quote');
             mail.setHTMLBody(et.HtmlValue);
-            // mail.setPlainTextBody('New Quote PDF Document is in attachment.');
             mail.setSaveAsActivity(false);
             mail.setUseSignature(false);
             List<Messaging.EmailFileAttachment> efaList = new List<Messaging.EmailFileAttachment>();
