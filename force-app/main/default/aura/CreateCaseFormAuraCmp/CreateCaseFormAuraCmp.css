@@ -1,2 +1,13 @@
 .THIS {
+
+}
+
+.THIS .caseCard {
+    padding-left: 4%;
+    min-height: 75px;
+}
+
+.THIS .caseData {
+    font-size: 15px;
+    margin-left: 2%;
 }

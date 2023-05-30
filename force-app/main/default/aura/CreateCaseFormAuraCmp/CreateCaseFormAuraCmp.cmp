@@ -1,18 +1,56 @@
 <aura:component implements="forceCommunity:availableForAllPageTypes" access="global" controller="CaseController">
     <aura:attribute name="types" type="List" default="[]"/>
+    <aura:attribute name="typeName" type="String"/>
+    <aura:attribute name="isLoggedIn" type="boolean" default="false"/>
+    <aura:attribute name="areCases" type="boolean" default="false"/>
+    <aura:attribute name="isNotLoggedIn" type="boolean" default="true"/>
+    <aura:attribute name="areNotCases" type="boolean" default="true"/>
+    <aura:attribute name="myCases" type="Case[]" default="[]"/>
     <aura:handler name="init" value="{!this}" action="{!c.initValues}"/>
     <aura:registerEvent name="appEvent" type="selfService:caseCreateFieldChange"/>
 
-    <lightning:recordEditForm aura:id="recordEditForm" objectApiName="Case">
-        <lightning:combobox 
-            aura:id="typeId"
-            name="Type" 
-            value = "{!v.typeVal}"
-            placeholder = "Select Type"
-            options="{!v.types}" 
-            onchange="{!c.itemsChange}"/>
-        <lightning:inputField aura:id="subjectId" fieldName="Subject" onchange="{!c.itemsChange}"/>
-        <lightning:inputField aura:id="descriptionId" fieldName="Description" onchange="{!c.itemsChange}"/>
-        <lightning:button class="slds-m-top_small" type="submit" label="Create new" onclick="{!c.submitForm}"/>
-    </lightning:recordEditForm>
+    <aura:if isTrue="{!v.isLoggedIn}">
+        <div>
+            <p style="margin-top: 2%; margin-bottom: 2%; font-size: 20px;">Create Case</p>
+        </div>
+
+        <lightning:recordEditForm aura:id="recordEditForm" objectApiName="Case">
+            <lightning:combobox
+                style="width: 623px; margin-left: 33%; margin-bottom: 12px;"
+                aura:id="typeId"
+                name="Type"
+                placeholder="Select Case Type"
+                options="{!v.types}" 
+                onchange="{!c.comboboxChange}"/>
+            <lightning:inputField aura:id="subjectId" fieldName="Subject" onchange="{!c.itemsChange}"/>
+            <lightning:inputField aura:id="descriptionId" fieldName="Description" onchange="{!c.itemsChange}"/>
+            <lightning:button class="slds-m-top_small buttonF" type="submit" label="Add New Case" onclick="{!c.submitForm}"/>
+        </lightning:recordEditForm>
+
+        <div>
+            <p style="margin-top: 2%; margin-bottom: 2%; font-size: 20px;">My Cases</p>
+        </div>
+
+        <aura:if isTrue="{!v.areCases}">
+            <aura:iteration items="{!v.myCases}" var="c">
+                <div key="{!c.Id}" class="caseCard">
+                    <lightning:card>
+                        <p class="caseData"><b>Subject: </b> {!c.Subject}</p>
+                        <p class="caseData"><b>Description: </b> {!c.Description}</p>
+                        <p class="caseData"><b>Type: </b> {!c.Type}</p>
+                    </lightning:card>
+                </div>
+            </aura:iteration>
+        </aura:if>
+        <aura:if isTrue="{!v.areNotCases}">
+            <div>
+                <p style="font-size: 14px;">You have no any cases yet</p>
+            </div>
+        </aura:if>
+    </aura:if>
+    <aura:if isTrue="{!v.isNotLoggedIn}">
+        <div>
+            <p style="font-size: 14px;">You must log in to manage cases</p>
+        </div>
+    </aura:if>
 </aura:component>	

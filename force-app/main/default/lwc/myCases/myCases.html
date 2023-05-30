@@ -1,0 +1,79 @@
+<template>
+    <lightning-layout multiple-rows="true">
+        <lightning-layout-item size="12">
+            <div class="slds-text-title" style="font-size: 20px; padding: 10px; margin-left: 45%;">My Cases</div>
+        </lightning-layout-item>
+    </lightning-layout>
+    <lightning-layout-item size="12">
+        <template if:false={isLoggedIn}>
+            <h2 style="margin-left: 1%; margin-bottom: 1%;">You must log in to view your cases</h2>
+        </template>
+        <template if:true={isLoggedIn}>
+            <template if:false={areCases}>
+                <h2 style="margin-left: 1%; margin-bottom: 1%;">You have no any cases yet</h2>
+            </template>
+            <template if:true={areCases}>
+                <template for:each={myCases} for:item="c">
+                    <div key={c.id}>
+                        <lightning-layout class="slds-p-around_medium tile slds-grid slds-grid_vertical-align-center slds-wrap">
+                            
+                            <lightning-layout-item size="12">
+                                <lightning-layout>
+                                    <lightning-layout-item size="6">
+                                        <span style="font-size: 14px;">Subject:</span>
+                                    </lightning-layout-item>
+                                    <lightning-layout-item size="6">
+                                        <span style="font-size: 14px; font-weight: 700;">{c.subject}</span>
+                                    </lightning-layout-item>
+                                </lightning-layout>
+                            </lightning-layout-item>
+
+                            <lightning-layout-item size="12">
+                                <lightning-layout>
+                                    <lightning-layout-item size="6">
+                                        <span style="font-size: 14px;">Description:</span>
+                                    </lightning-layout-item>
+                                    <lightning-layout-item size="6">
+                                        <span style="font-size: 14px; font-weight: 700;">{c.description}</span>
+                                    </lightning-layout-item>
+                                </lightning-layout>
+                            </lightning-layout-item>
+
+                            <lightning-layout-item size="12">
+                                <lightning-layout>
+                                    <lightning-layout-item size="6">
+                                        <span style="font-size: 14px;">Type:</span>
+                                    </lightning-layout-item>
+                                    <lightning-layout-item size="6">
+                                        <span style="font-size: 14px; font-weight: 700;">{c.type}</span>
+                                        <!-- <template if:true={isPayment}>
+                                            <span style="font-size: 14px; font-weight: 700; color: green;">{c.type}</span>
+                                        </template>
+                                        <template if:true={isTechnical}>
+                                            <span style="font-size: 14px; font-weight: 700; color: blue;">{c.type}</span>
+                                        </template>
+                                        <template if:true={isInvoicing}>
+                                            <span style="font-size: 14px; font-weight: 700; color: orange;">{c.type}</span>
+                                        </template> -->
+                                    </lightning-layout-item>
+                                </lightning-layout>
+                            </lightning-layout-item>
+
+                            <!-- <lightning-layout-item size="12">
+                                <lightning-layout>
+                                    <lightning-layout-item size="6">
+                                        <span style="font-size: 14px;">Created:</span>
+                                    </lightning-layout-item>
+                                    <lightning-layout-item size="6">
+                                        <span style="font-size: 14px; font-weight: 700;">{c.dt}</span>
+                                    </lightning-layout-item>
+                                </lightning-layout>
+                            </lightning-layout-item> -->
+
+                        </lightning-layout>
+                    </div>
+                </template>
+            </template>
+        </template>
+    </lightning-layout-item>
+</template>

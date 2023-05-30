@@ -9,7 +9,7 @@ public without sharing class CaseController {
     }
 
     @AuraEnabled
-    public static void createCase(String whoId, String subject, String type, String description) {
+    public static void createCase(String whoId, String subject, String caseType, String description) {
         Case caseObj = new Case();
         List<Contact> con = new List<Contact>();
         if(whoId == Label.auserid) {
@@ -22,8 +22,9 @@ public without sharing class CaseController {
         caseObj.Status = 'New';
         caseObj.Origin = 'Web';
         caseObj.Subject = subject;
-        caseObj.Type = type;
+        caseObj.Type = caseType;
         caseObj.Description = description;
+        insert caseObj;
         // Id paymentQueueId = [SELECT Queue.Id FROM queuesobject WHERE Queue.Name = 'Payment Cases'].Queue.Id;
         // Id technicalQueueId = [SELECT Queue.Id FROM queuesobject WHERE Queue.Name = 'Technical Cases'].Queue.Id;
         // Id invoicingQueueId = [SELECT Queue.Id FROM queuesobject WHERE Queue.Name = 'Invoicing Cases'].Queue.Id;
@@ -34,11 +35,30 @@ public without sharing class CaseController {
         // } else if(type == 'Invoicing') {
         //     caseObj.OwnerId = invoicingQueueId;
         // }
-        AssignmentRule ar = [SELECT Id FROM AssignmentRule WHERE SobjectType = 'Case' AND Active = true LIMIT 1];
+
+        Case newCase = [SELECT Id FROM Case Where Id = :caseObj.Id];
+        AssignmentRule rule = [SELECT Id FROM AssignmentRule WHERE SobjectType = 'Case' AND Active = true LIMIT 1];
         Database.DMLOptions dmlOpts = new Database.DMLOptions();
-        dmlOpts.assignmentRuleHeader.assignmentRuleId = ar.Id;
-        caseObj.setOptions(dmlOpts);
-        insert caseObj;
+        dmlOpts.assignmentRuleHeader.assignmentRuleId = rule.id;
+        newCase.setOptions(dmlOpts);
+        update newCase;
+    }
+
+    @AuraEnabled
+    public static List<Case> getCasesAura(String whoId) {
+        List<Contact> con = new List<Contact>();
+        if(whoId == Label.auserid) {
+            con = [SELECT Id, Name, Email FROM Contact WHERE Id = :Label.acontactid];
+        } else {
+            List<User> us = [SELECT Id, Name, Email, ContactId FROM User WHERE Id = :whoId];
+            con = [SELECT Id, Name, Email FROM Contact WHERE Id = :us[0].ContactId];
+        }
+        List<Case> cases = [
+            SELECT Id, Subject, Type, Description, CreatedDate, ContactId
+            FROM Case
+            WHERE ContactId = :con[0].Id
+        ];
+        return cases;
     }
 
     @AuraEnabled
