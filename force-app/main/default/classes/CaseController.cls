@@ -19,22 +19,12 @@ public without sharing class CaseController {
             con = [SELECT Id, Name, Email FROM Contact WHERE Id = :us[0].ContactId];
         }
         caseObj.ContactId = con[0].Id;
-        caseObj.Status = 'New';
-        caseObj.Origin = 'Web';
+        caseObj.Status = Label.New;
+        caseObj.Origin = Label.Web;
         caseObj.Subject = subject;
         caseObj.Type = caseType;
         caseObj.Description = description;
         insert caseObj;
-        // Id paymentQueueId = [SELECT Queue.Id FROM queuesobject WHERE Queue.Name = 'Payment Cases'].Queue.Id;
-        // Id technicalQueueId = [SELECT Queue.Id FROM queuesobject WHERE Queue.Name = 'Technical Cases'].Queue.Id;
-        // Id invoicingQueueId = [SELECT Queue.Id FROM queuesobject WHERE Queue.Name = 'Invoicing Cases'].Queue.Id;
-        // if(type == 'Payment') {
-        //     caseObj.OwnerId = paymentQueueId;
-        // } else if(type == 'Technical') {
-        //     caseObj.OwnerId = technicalQueueId;
-        // } else if(type == 'Invoicing') {
-        //     caseObj.OwnerId = invoicingQueueId;
-        // }
 
         Case newCase = [SELECT Id FROM Case Where Id = :caseObj.Id];
         AssignmentRule rule = [SELECT Id FROM AssignmentRule WHERE SobjectType = 'Case' AND Active = true LIMIT 1];
